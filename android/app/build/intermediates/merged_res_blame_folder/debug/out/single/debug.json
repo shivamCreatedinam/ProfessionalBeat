@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.createdinam.professionbeat.app-merged_res-48:/drawable_ic_launcher_round.png.flat",
+        "source": "com.createdinam.professionbeat.app-main-50:/drawable/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.createdinam.professionbeat.app-merged_res-48:/xml_data_extraction_rules.xml.flat",
+        "source": "com.createdinam.professionbeat.app-main-50:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.createdinam.professionbeat.app-merged_res-48:/drawable_rn_edit_text_material.xml.flat",
+        "source": "com.createdinam.professionbeat.app-main-50:/drawable/rn_edit_text_material.xml"
+    }
+]

@@ -1,0 +1,46 @@
+{
+  "name": "react-native-agora",
+  "version": "4.2.1",
+  "summary": "Agora RTC SDK For React Native",
+  "homepage": "https://github.com/AgoraIO-Extensions/react-native-agora#readme",
+  "license": "MIT",
+  "authors": "HUI <luxuhui@agora.io> (https://github.com/LichKing-2234)",
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "https://github.com/AgoraIO-Extensions/react-native-agora.git",
+    "tag": "4.2.1"
+  },
+  "source_files": "ios/**/*.{h,m,mm}",
+  "dependencies": {
+    "React-Core": [
+
+    ],
+    "AgoraRtcEngine_iOS": [
+      "4.2.1"
+    ],
+    "AgoraIrisRTC_iOS": [
+      "4.2.1-build.1"
+    ]
+  },
+  "weak_frameworks": [
+    "AgoraAiNoiseSuppressionExtension",
+    "AgoraAudioBeautyExtension",
+    "AgoraClearVisionExtension",
+    "AgoraContentInspectExtension",
+    "AgoraSpatialAudioExtension",
+    "AgoraVideoSegmentationExtension",
+    "AgoraAiEchoCancellationExtension",
+    "AgoraDrmLoaderExtension",
+    "AgoraVideoQualityAnalyzerExtension",
+    "AgoraFaceDetectionExtension",
+    "AgoraVideoEncoderExtension",
+    "video_enc",
+    "AgoraVideoDecoderExtension",
+    "video_dec",
+    "AgoraReplayKitExtension"
+  ],
+  "libraries": "stdc++",
+  "frameworks": "ReplayKit"
+}
