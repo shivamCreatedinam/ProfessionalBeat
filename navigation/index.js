@@ -42,6 +42,7 @@ import TutorNotificationScreen from '../src/screens/TutorNotificationScreen';
 import TutorNewPostScreen from '../src/screens/TutorNewPostScreen';
 import TutorProfileScreen from '../src/screens/TutorProfileScreen';
 import EditTutorProfileScreen from '../src/screens/editProfileTutor';
+import QualificationScreen from '../src/screens/QualificationScreen';
 // Theme.
 const MyTheme = {
     dark: false,
@@ -612,9 +613,18 @@ function StackNavigation() {
                         headerTintColor: '#fff',
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
+                <Stack.Screen
+                    name="QualificationScreen"
+                    component={QualificationScreen}
+                    options={{
+                        title: 'QualificationScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
-export default StackNavigation; // EditTutorProfileScreen
+export default StackNavigation; // QualificationScreen

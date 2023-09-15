@@ -169,7 +169,7 @@ const TutorProfileScreen = () => {
     };
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{ padding: 5, zIndex: 9999, paddingBottom: 80 }}>
             <Spinner
                 visible={loading}
                 textContent={'Loading...'}
@@ -190,7 +190,7 @@ const TutorProfileScreen = () => {
                     style={[styles.profilePhoto, { backgroundColor: '#fff', borderRadius: 150, borderColor: '#0066cc', borderWidth: 1, resizeMode: 'contain' }]}
                     source={{ uri: globle.IMAGE_BASE_URL + data?.user?.profile_image }}
                 />
-                <Text style={styles.nameText}>{data?.user?.user_id}</Text>
+                <Text style={styles.nameText}>{data?.user?.name}</Text>
             </View>
             <View style={styles.bioContainer}>
                 <Text style={styles.bioText}>{data?.user?.email}</Text>
@@ -199,20 +199,44 @@ const TutorProfileScreen = () => {
                 <TouchableOpacity
                     onPress={() => navigate.navigate('EditTutorProfileScreen')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 5 }}>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Edit Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => showSuccessToast('Coming soon!')}
+                    onPress={() => navigate.navigate('QualificationScreen')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
-                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Edit Child Profile</Text>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/books.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Qualification</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => showSuccessToast('Coming soon!')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
-                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Privacy Policy</Text>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/verified.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Confirm tuition</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => showSuccessToast('Coming soon!')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/share.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Share</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => showSuccessToast('Coming soon!')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/help.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Help & Support</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => showSuccessToast('Coming soon!')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/referral_bonus.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Refer</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => showSuccessToast('Coming soon!')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/setting.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Setting</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => showSuccessToast('Coming soon!')}
@@ -220,8 +244,8 @@ const TutorProfileScreen = () => {
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Terms & Conditions</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { width: '100%', borderRadius: 50, marginTop: 15 }]} onPress={() => logoutX()}>
-                    <Text style={styles.buttonText}>Log Out</Text>
+                <TouchableOpacity style={[styles.button, { width: '100%', borderRadius: 5, marginTop: 15, elevation: 5 }]} onPress={() => logoutX()}>
+                    <Text style={[styles.buttonText, { textTransform: 'uppercase' }]}>Log Out</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
@@ -280,9 +304,9 @@ const styles = {
     },
     button: {
         with: '100%',
-        backgroundColor: '#0066cc',
+        backgroundColor: '#000000',
         borderRadius: 5,
-        padding: 10,
+        padding: 15,
         marginHorizontal: 20,
     },
     buttonText: {

@@ -84,7 +84,7 @@ const EditTutorProfileScreen = () => {
             .then((response) => {
                 setLoading(false)
                 setData(response.data);
-                setName(response.data?.user?.name); 
+                setName(response.data?.user?.name);
                 setEmail(response.data?.user?.email);
                 setAddress(response.data?.user?.localty);
                 setMobile(response.data?.user?.mobile);
@@ -366,7 +366,6 @@ const EditTutorProfileScreen = () => {
             </View>
         </View>
     );
-
 };
 
 const styles = StyleSheet.create({
