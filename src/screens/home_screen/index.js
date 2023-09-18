@@ -18,31 +18,24 @@ import {
     ImageBackground,
 } from 'react-native';
 import axios from 'axios';
-import Toast from 'react-native-toast-message';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import TutorHeader from '../../components/TutorHeader';
 import globle from '../../../common/env';
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import Geolocation from 'react-native-geolocation-service';
-const API_KEYS = 'AIzaSyDIpZFQnU2tms1EdAqK-H9K4PfNN17zLdc';
 import Spinner from 'react-native-loading-spinner-overlay';
-import ToggleSwitch from 'toggle-switch-react-native';
+import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Dialog, { DialogTitle, DialogContent } from 'react-native-popup-dialog';
 
 
-// {
-//     id: '1',
-//     image: 'https://www.sacredyatra.com/wp-content/uploads/2016/03/Yamunotri-Location.jpg',
-//     price: 'Noida to Gurgaon',
-//     address: '123 Main St',
-//     squareMeters: '150',
-//     beds: '3 Psg',
-//     baths: '54 min',
-//     parking: '122 Km'
-// }
-
-const propertyData = [];
+const propertyData = [{
+    id: '1',
+    image: 'https://www.sacredyatra.com/wp-content/uploads/2016/03/Yamunotri-Location.jpg',
+    price: 'Individual tuition at parent’s home',
+    address: '123 Main St',
+    squareMeters: '150',
+    beds: '3 Days ago',
+    baths: '54 min',
+    parking: '122 Km'
+}];
 
 const HomeScreen = () => {
 
@@ -50,6 +43,7 @@ const HomeScreen = () => {
     const [data, setData] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
     const [visible, setVisible] = React.useState(true);
+    const [alert, setAlert] = React.useState(false);
     let [driverData, setDriverData] = React.useState(false);
     const [dutyStatus, setDutyStatus] = React.useState('Off');
     const [driver_activated, setDriverActivated] = React.useState(false);
@@ -72,6 +66,41 @@ const HomeScreen = () => {
             // console.log('addEventListener'); 
         };
     }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getTutorPostForUser();
+            return () => {
+                // Useful for cleanup functions
+            };
+        }, [])
+    );
+
+    const getTutorPostForUser = async () => {
+        console.log('getTutorPostForUser');
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'get-post',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('getTutorPostForUser', config);
+        axios.request(config)
+            .then((response) => {
+                setLoading(false)
+                setData(response.data?.data);
+                console.log('getTutorPostForUser', JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error);
+            });
+    }
 
     const sendNotification = () => {
         var myHeaders = new Headers();
@@ -144,30 +173,52 @@ const HomeScreen = () => {
         <View style={styles.card}>
             {/* <Image source={{ uri: item.image }} style={styles.image} /> */}
             <View style={styles.cardFooter}>
-                <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/passenger.png')} />
+                <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/history.png')} />
                 <Text style={styles.beds}>{item.beds}</Text>
-                <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/time_icon.png')} />
-                <Text style={styles.baths}>{item.baths}</Text>
-                <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000' }} source={require('../../assets/trip.png')} />
-                <Text style={styles.parking}>{item.parking}</Text>
+                <TouchableOpacity>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', padding: 10, marginRight: 15 }} source={require('../../assets/star.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000' }} source={require('../../assets/share.png')} />
+                </TouchableOpacity>
             </View>
             <View style={styles.cardBody}>
-                <Text style={styles.price}>{item.price}</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image style={{ width: 17, height: 17, resizeMode: 'contain', tintColor: '#000' }} source={require('../../assets/clock.png')} />
-                    <Text style={[styles.address, { verticalAlign: 'center', marginTop: 2 }]}> 0:45 min</Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000' }} source={require('../../assets/routes.png')} />
-                    <Text style={[styles.address, { verticalAlign: 'center', marginTop: 2 }]}> 85 km</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 5, borderBottomColor: 'grey', borderBottomWidth: 0.5, }}>
+                    <View style={{ flex: 1 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/profile_icon.png')} />
+                            <Text style={{ fontWeight: 'bold' }}>CBSE, UP</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} />
+                            <Text style={{ fontWeight: 'bold' }}>NC to 8th </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/books.png')} />
+                            <Text style={{ fontWeight: 'bold' }}>CBSC</Text>
+                        </View>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/medium.png')} />
+                            <Text style={{ fontWeight: 'bold' }}>5+ years</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/search_books.png')} />
+                            <Text style={{ fontWeight: 'bold' }} numberOfLines={2}>Science, Math, English</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/placeholder.png')} />
+                            <Text style={{ fontWeight: 'bold' }}>Nagpur, Motinagar</Text>
+                        </View>
+                    </View>
                 </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 20, paddingRight: 20, paddingBottom: 20 }}>
-                <TouchableOpacity style={{ flex: 1, padding: 10, backgroundColor: '#22A699', elevation: 5, borderRadius: 60, marginRight: 15 }}>
-                    <Text style={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Accept</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setVisible(!visible)} style={{ flex: 1, padding: 10, backgroundColor: '#F24C3D', elevation: 5, borderRadius: 60 }}>
-                    <Text style={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Reject</Text>
+                <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000' }} source={require('../../assets/routes.png')} />
+                <Text style={{ flex: 1, marginLeft: 10 }}>2.5 km away</Text>
+                <TouchableOpacity onPress={() => setAlert(true)} style={{ flex: 1, padding: 10, backgroundColor: '#22A699', elevation: 5, borderRadius: 60 }}>
+                    <Text style={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Call</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -223,7 +274,7 @@ const HomeScreen = () => {
                     style={{ flex: 1, padding: 10, backgroundColor: '#F1F6F9' }}
                     contentContainerStyle={{ padding: 5, zIndex: 9999 }}>
                     <TutorHeader />
-                    <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
+                    {/* <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
                         <View>
                             <TextInput
                                 style={styles.searchInput}
@@ -236,11 +287,11 @@ const HomeScreen = () => {
                                 <Image style={{ width: 16, height: 16, resizeMode: 'contain' }} source={require('../../assets/search_icon.png')} />
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </View> */}
                     {propertyData.length > 0 ?
                         <FlatList
                             contentContainerStyle={styles.propertyListContainer}
-                            data={propertyData}
+                            data={data}
                             renderItem={renderItem}
                             keyExtractor={(item) => item.id}
                         />
@@ -250,6 +301,35 @@ const HomeScreen = () => {
                             <Text style={{ fontWeight: 'bold', fontSize: 12, color: '#000' }}>No Request Found</Text>
                         </View>}
                 </View>
+                <Dialog
+                    visible={alert}
+                    dialogAnimation={new SlideAnimation({
+                        slideFrom: 'bottom',
+                    })}
+                    dialogStyle={{ width: Dimensions.get('screen').width - 60 }}
+                    dialogTitle={<DialogTitle title="Calling" />}
+                    footer={
+                        <DialogFooter>
+                            <DialogButton
+                                text="CANCEL"
+                                onPress={() => setAlert(false)}
+                            />
+                            <DialogButton
+                                text="OK"
+                                onPress={() => setAlert(false)}
+                            />
+                        </DialogFooter>
+                    }
+                >
+                    <DialogContent>
+                        <View>
+                            <View>
+                                <Text style={{ fontWeight: 'bold', textAlign: 'center', marginTop: 20, fontSize: 18 }}>Do you want to call Pratik Shahu?</Text>
+                                <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 12 }}>Calling time: <Text style={{ fontWeight: 'bold', }}>9AM to 9pm only</Text></Text>
+                            </View>
+                        </View>
+                    </DialogContent>
+                </Dialog>
             </View>
         </View>
     );
@@ -323,14 +403,13 @@ const styles = StyleSheet.create({
     cardFooter: {
         padding: 10,
         flexDirection: 'row',
-        borderWidth: 1,
-        borderColor: '#dcdcdc',
         justifyContent: 'space-between',
     },
     beds: {
         fontSize: 14,
-        color: '#ffa500',
-        fontWeight: 'bold'
+        color: '#000000',
+        flex: 1,
+        marginLeft: 10
     },
     baths: {
         fontSize: 14,

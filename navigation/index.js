@@ -42,6 +42,7 @@ import TutorNotificationScreen from '../src/screens/TutorNotificationScreen';
 import TutorNewPostScreen from '../src/screens/TutorNewPostScreen';
 import TutorProfileScreen from '../src/screens/TutorProfileScreen';
 import EditTutorProfileScreen from '../src/screens/editProfileTutor';
+import QualificationScreen from '../src/screens/QualificationScreen';
 // Theme.
 const MyTheme = {
     dark: false,
@@ -103,8 +104,8 @@ function BottomNavigation() {
                 }}
             />
             <Tab.Screen
-                name="TutorTuitionScreen"
-                component={TutorTuitionScreen}
+                name="TutorCallHistoryScreen"
+                component={TutorCallHistoryScreen}
                 options={{
                     headerShown: false,
                     tabBarLabel: () => { return 'Ekart' },
@@ -113,9 +114,9 @@ function BottomNavigation() {
                             <View style={{ alignItems: 'center' }}>
                                 <Image
                                     style={{ width: focused ? 25 : 20, height: focused ? 25 : 20, tintColor: focused ? 'rgb(68,114,199)' : 'rgb(254,92,54)', resizeMode: 'contain' }}
-                                    source={require('../src/assets/skill.png')}
+                                    source={require('../src/assets/phone_call.png')}
                                 />
-                                <Text style={{ fontWeight: 'bold', fontSize: 10 }}>My tuitions</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 10 }}>Calls</Text>
                             </View>
                         );
                     },
@@ -612,9 +613,18 @@ function StackNavigation() {
                         headerTintColor: '#fff',
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
+                <Stack.Screen
+                    name="QualificationScreen"
+                    component={QualificationScreen}
+                    options={{
+                        title: 'QualificationScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
-export default StackNavigation; // EditTutorProfileScreen
+export default StackNavigation; // QualificationScreen

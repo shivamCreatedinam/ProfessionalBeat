@@ -35,7 +35,37 @@ const styles = StyleSheet.create({
         shadowRadius: 4.65,
 
         elevation: 7,
-    }
+    }, dropdown1: {
+        height: 45,
+        flexGrow:1,
+        paddingLeft: 25,
+        paddingRight: 25,
+        borderColor: 'gray',
+        borderRadius: 8,
+        paddingHorizontal: 8,
+    },
+    selectedTextStyle1: {
+        fontSize: 16,
+    },
+    dropdown: {
+        height: 45, 
+        flexGrow:1,
+        backgroundColor: '#fff',
+        borderBottomColor: 'gray',
+        borderBottomWidth: 0.5,
+        borderRadius: 40,
+        paddingLeft: 15,
+        paddingRight: 15,
+    },
+    placeholderStyle: {
+        fontSize: 16,
+    },
+    selectedTextStyle: {
+        fontSize: 14,
+    },
+    selectedStyle: {
+        borderRadius: 12,
+    },
 });
 
 export default styles;

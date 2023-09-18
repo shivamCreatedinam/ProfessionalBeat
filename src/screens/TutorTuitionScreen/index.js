@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import Dialog, { DialogFooter, DialogButton, DialogContent, DialogTitle, SlideAnimation } from 'react-native-popup-dialog';
 import { useNavigation, useRoute } from '@react-navigation/native';
+
 import TutorHeader from '../../components/TutorHeader';
 import styles from './styles';
 

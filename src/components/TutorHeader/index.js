@@ -89,19 +89,20 @@ const TutorHeader = () => {
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginBottom: 15 }}>
+                <View style={{ flexGrow: 1, }} >
+                    <Image style={{ height: 35, width: '100%', resizeMode: 'contain', }} source={require('../../assets/flat_icon_app_removebg.png')} />
+                </View>
+                <View style={{flex:1}} />
+                <TouchableOpacity onPress={() => openBellNotificationProfile()} style={{ width: 40, height: 40, borderRadius: 150, backgroundColor: 'rgb(68,114,199)', alignItems: 'center', elevation: 5, marginRight: 10 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginTop: 10 }} source={require('../../assets/bell_notification.png')} />
+                </TouchableOpacity>
+                {/* <TouchableOpacity onPress={() => openUserCallProfile()} style={{ width: 40, height: 40, borderRadius: 150, backgroundColor: 'rgb(68,114,199)', alignItems: 'center', elevation: 5, }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginTop: 10, tintColor: '#fff' }} source={require('../../assets/phone_call.png')} />
+                </TouchableOpacity> */}
                 <TouchableOpacity onPress={() => openUserProfile()} style={{ width: 40, height: 40, borderRadius: 150, backgroundColor: 'white', alignItems: 'center', elevation: 5, }}>
                     <Image style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 150, }}
                         source={{ uri: globle.IMAGE_BASE_URL + userData?.profile_image }} />
                     {loading ? <ActivityIndicator size={'large'} style={{ position: 'absolute', left: 1, top: 2, zIndex: 999 }} color={'#000'} /> : null}
-                </TouchableOpacity>
-                <View style={{ flex: 1 }} >
-                    <Image style={{ height: 35, width: '100%', resizeMode: 'contain' }} source={require('../../assets/flat_icon_app_removebg.png')} />
-                </View>
-                <TouchableOpacity onPress={() => openBellNotificationProfile()} style={{ width: 40, height: 40, borderRadius: 150, backgroundColor: 'rgb(68,114,199)', alignItems: 'center', elevation: 5, marginRight: 10 }}>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginTop: 10 }} source={require('../../assets/bell_notification.png')} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => openUserCallProfile()} style={{ width: 40, height: 40, borderRadius: 150, backgroundColor: 'rgb(68,114,199)', alignItems: 'center', elevation: 5, }}>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginTop: 10, tintColor: '#fff' }} source={require('../../assets/phone_call.png')} />
                 </TouchableOpacity>
             </View>
         </View>
