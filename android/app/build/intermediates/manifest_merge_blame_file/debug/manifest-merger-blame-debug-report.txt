@@ -9,57 +9,6 @@
 9        android:targetSdkVersion="33" />
 10
 11    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-<<<<<<< HEAD
-11-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/debug/AndroidManifest.xml:5:5-77
-11-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/debug/AndroidManifest.xml:5:22-75
-12    <!-- Added permissions -->
-13    <uses-permission android:name="android.permission.INTERNET" />
-13-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:5:5-67
-13-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:5:22-64
-14    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-14-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:6:5-79
-14-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:6:22-76
-15    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-15-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:7:5-81
-15-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:7:22-78
-16    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-16-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:8:5-79
-16-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:8:22-76
-17    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-17-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:9:5-77
-17-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:9:22-74
-18    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-18-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:8:5-79
-18-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:8:22-76
-19    <uses-permission
-19-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:11:5-12:36
-20        android:name="org.apache.http.legacy"
-20-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:11:22-59
-21        android:required="false" />
-21-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:12:9-33
-22    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Optional permissions -->
-22-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:13:5-77
-22-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:13:22-74
-23    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-23-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:15:5-85
-23-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:15:22-82
-24    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-24-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:16:5-80
-24-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:16:22-77
-25    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-25-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:17:5-18:40
-25-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:17:22-78
-26    <uses-permission android:name="android.permission.CAMERA" />
-26-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:19:5-65
-26-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:19:22-62
-27
-28    <uses-feature android:name="android.hardware.camera" />
-28-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:20:5-60
-28-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:20:19-57
-29    <uses-feature android:name="android.hardware.camera.autofocus" />
-29-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:21:5-70
-29-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:21:19-67
-=======
 11-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/debug/AndroidManifest.xml:5:5-77
 11-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/debug/AndroidManifest.xml:5:22-75
 12    <!-- Added permissions -->
@@ -109,33 +58,11 @@
 29    <uses-feature android:name="android.hardware.camera.autofocus" />
 29-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:21:5-70
 29-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:21:19-67
->>>>>>> 77cd16833b55be8b0355a85c2cdea8436f2a8c79
 30
 31    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 31-->[com.facebook.flipper:flipper:0.125.0] /Users/pooja/.gradle/caches/transforms-3/32e15e3c42606fd384da3acdee3b32b0/transformed/jetified-flipper-0.125.0/AndroidManifest.xml:16:5-76
 31-->[com.facebook.flipper:flipper:0.125.0] /Users/pooja/.gradle/caches/transforms-3/32e15e3c42606fd384da3acdee3b32b0/transformed/jetified-flipper-0.125.0/AndroidManifest.xml:16:22-73
 32    <uses-permission android:name="android.permission.WAKE_LOCK" />
-<<<<<<< HEAD
-32-->[:react-native-background-timer] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-background-timer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-68
-32-->[:react-native-background-timer] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-background-timer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:22-65
-33    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-33-->[:react-native-agora] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-agora/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-71
-33-->[:react-native-agora] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-agora/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:22-68
-34    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-34-->[:react-native-agora] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-agora/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-80
-34-->[:react-native-agora] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-agora/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:22-77
-35    <uses-permission android:name="android.permission.BLUETOOTH" />
-35-->[:react-native-agora] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-agora/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-68
-35-->[:react-native-agora] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-agora/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:22-65
-36
-37    <queries>
-37-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-13:15
-38        <intent>
-38-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-12:18
-39            <action android:name="android.media.action.IMAGE_CAPTURE" />
-39-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-73
-39-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:21-70
-=======
 32-->[:react-native-background-timer] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/react-native-background-timer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-68
 32-->[:react-native-background-timer] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/react-native-background-timer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:22-65
 33    <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -155,7 +82,6 @@
 39            <action android:name="android.media.action.IMAGE_CAPTURE" />
 39-->[:react-native-image-crop-picker] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-73
 39-->[:react-native-image-crop-picker] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:21-70
->>>>>>> 77cd16833b55be8b0355a85c2cdea8436f2a8c79
 40        </intent>
 41        <!-- Needs to be explicitly declared on Android R+ -->
 42        <package android:name="com.google.android.apps.maps" />
@@ -192,63 +118,14 @@
 57-->[androidx.core:core:1.9.0] /Users/pooja/.gradle/caches/transforms-3/fc3a2c9f8034c438b8aa8d751860061f/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
 58
 59    <application
-<<<<<<< HEAD
-59-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:23:5-48:19
-60        android:name="com.createdinam.professionbeat.MainApplication"
-60-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:24:7-38
-61        android:allowBackup="false"
-61-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:28:7-34
-=======
 59-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:23:5-48:19
 60        android:name="com.createdinam.professionbeat.MainApplication"
 60-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:24:7-38
 61        android:allowBackup="false"
 61-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:28:7-34
->>>>>>> 77cd16833b55be8b0355a85c2cdea8436f2a8c79
 62        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 62-->[androidx.core:core:1.9.0] /Users/pooja/.gradle/caches/transforms-3/fc3a2c9f8034c438b8aa8d751860061f/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
 63        android:dataExtractionRules="@xml/data_extraction_rules"
-<<<<<<< HEAD
-63-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:31:9-65
-64        android:debuggable="true"
-65        android:icon="@drawable/ic_launcher_round"
-65-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:26:7-49
-66        android:label="@string/app_name"
-66-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:25:7-39
-67        android:roundIcon="@drawable/ic_launcher_round"
-67-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:27:7-54
-68        android:theme="@style/AppTheme"
-68-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:30:7-38
-69        android:usesCleartextTraffic="true" >
-69-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:29:7-42
-70        <activity
-70-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/debug/AndroidManifest.xml:11:9-111
-71            android:name="com.facebook.react.devsupport.DevSettingsActivity"
-71-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/debug/AndroidManifest.xml:11:19-83
-72            android:exported="false" />
-72-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/debug/AndroidManifest.xml:11:84-108
-73        <activity
-73-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:34:7-44:18
-74            android:name="com.createdinam.professionbeat.MainActivity"
-74-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:35:9-37
-75            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
-75-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:36:9-118
-76            android:exported="true"
-76-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:39:9-32
-77            android:launchMode="singleTask"
-77-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:37:9-40
-78            android:windowSoftInputMode="adjustResize" >
-78-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:38:9-51
-79            <intent-filter>
-79-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:40:9-43:25
-80                <action android:name="android.intent.action.MAIN" />
-80-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:41:13-65
-80-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:41:21-62
-81
-82                <category android:name="android.intent.category.LAUNCHER" />
-82-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:42:13-73
-82-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:42:23-70
-=======
 63-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:31:9-65
 64        android:debuggable="true"
 65        android:icon="@drawable/ic_launcher_round"
@@ -288,94 +165,10 @@
 82                <category android:name="android.intent.category.LAUNCHER" />
 82-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:42:13-73
 82-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:42:23-70
->>>>>>> 77cd16833b55be8b0355a85c2cdea8436f2a8c79
 83            </intent-filter>
 84        </activity>
 85
 86        <meta-data
-<<<<<<< HEAD
-86-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:45:9-47:68
-87            android:name="com.google.android.geo.API_KEY"
-87-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:46:11-56
-88            android:value="AIzaSyA7jKr8cUZnMXeuccPPztmG1Ucp-RfBxVY" />
-88-->/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:47:11-66
-89
-90        <provider
-90-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-18:20
-91            android:name="cl.json.RNShareFileProvider"
-91-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-55
-92            android:authorities="com.createdinam.professionbeat.rnshare.fileprovider"
-92-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-72
-93            android:exported="false"
-93-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-37
-94            android:grantUriPermissions="true" >
-94-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:13-47
-95            <meta-data
-95-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-17:64
-96                android:name="android.support.FILE_PROVIDER_PATHS"
-96-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:17-67
-97                android:resource="@xml/share_download_paths" />
-97-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:17-61
-98        </provider>
-99
-100        <meta-data
-100-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:9-16:36
-101            android:name="firebase_analytics_collection_enabled"
-101-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-65
-102            android:value="true" />
-102-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:13-33
-103        <meta-data
-103-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:9-19:37
-104            android:name="firebase_analytics_collection_deactivated"
-104-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:13-69
-105            android:value="false" />
-105-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:13-34
-106        <meta-data
-106-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:9-22:36
-107            android:name="google_analytics_adid_collection_enabled"
-107-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:13-68
-108            android:value="true" />
-108-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:13-33
-109        <meta-data
-109-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:23:9-25:36
-110            android:name="google_analytics_ssaid_collection_enabled"
-110-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:13-69
-111            android:value="true" />
-111-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-33
-112        <meta-data
-112-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:9-28:36
-113            android:name="google_analytics_default_allow_ad_personalization_signals"
-113-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-85
-114            android:value="true" />
-114-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:13-33
-115        <meta-data
-115-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:9-31:36
-116            android:name="google_analytics_automatic_screen_reporting_enabled"
-116-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:13-79
-117            android:value="true" />
-117-->[:react-native-firebase_analytics] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:31:13-33
-118        <meta-data
-118-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:9-13:36
-119            android:name="app_data_collection_default_enabled"
-119-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-63
-120            android:value="true" />
-120-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-33
-121
-122        <service
-122-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:9-23:19
-123            android:name="com.google.firebase.components.ComponentDiscoveryService"
-123-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:13-84
-124            android:directBootAware="true"
-124-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:13-43
-125            android:exported="false" >
-125-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:13-37
-126            <meta-data
-126-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:13-22:85
-127                android:name="com.google.firebase.components:io.invertase.firebase.app.ReactNativeFirebaseAppRegistrar"
-127-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:17-120
-128                android:value="com.google.firebase.components.ComponentRegistrar" />
-128-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:17-82
-=======
 86-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:45:9-47:68
 87            android:name="com.google.android.geo.API_KEY"
 87-->/Users/pooja/Documents/personalproject/ProfessionalBeat/android/app/src/main/AndroidManifest.xml:46:11-56
@@ -457,7 +250,6 @@
 127-->[:react-native-firebase_app] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:17-120
 128                android:value="com.google.firebase.components.ComponentRegistrar" />
 128-->[:react-native-firebase_app] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:17-82
->>>>>>> 77cd16833b55be8b0355a85c2cdea8436f2a8c79
 129            <meta-data
 129-->[com.google.firebase:firebase-analytics-ktx:21.2.2] /Users/pooja/.gradle/caches/transforms-3/ac253a8b98fa76f36cd71e29fcf89734/transformed/jetified-firebase-analytics-ktx-21.2.2/AndroidManifest.xml:11:13-13:85
 130                android:name="com.google.firebase.components:com.google.firebase.analytics.ktx.FirebaseAnalyticsKtxRegistrar"
@@ -503,41 +295,6 @@
 150        </service>
 151
 152        <provider
-<<<<<<< HEAD
-152-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:9-29:38
-153            android:name="io.invertase.firebase.app.ReactNativeFirebaseAppInitProvider"
-153-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:13-88
-154            android:authorities="com.createdinam.professionbeat.reactnativefirebaseappinitprovider"
-154-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-86
-155            android:exported="false"
-155-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:13-37
-156            android:initOrder="99" />
-156-->[:react-native-firebase_app] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-35
-157        <provider
-157-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:9-26:20
-158            android:name="com.reactnative.ivpusic.imagepicker.IvpusicImagePickerFileProvider"
-158-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:13-94
-159            android:authorities="com.createdinam.professionbeat.provider"
-159-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:13-60
-160            android:exported="false"
-160-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:13-37
-161            android:grantUriPermissions="true" >
-161-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:13-47
-162            <meta-data
-162-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-17:64
-163                android:name="android.support.FILE_PROVIDER_PATHS"
-163-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:17-67
-164                android:resource="@xml/ivpusic_imagepicker_provider_paths" />
-164-->[:react-native-share] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:17-61
-165        </provider>
-166
-167        <activity
-167-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:9-30:72
-168            android:name="com.yalantis.ucrop.UCropActivity"
-168-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-60
-169            android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <!-- Needs to be explicitly declared on P+ -->
-169-->[:react-native-image-crop-picker] /Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:13-69
-=======
 152-->[:react-native-firebase_app] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:9-29:38
 153            android:name="io.invertase.firebase.app.ReactNativeFirebaseAppInitProvider"
 153-->[:react-native-firebase_app] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:13-88
@@ -571,7 +328,6 @@
 168-->[:react-native-image-crop-picker] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-60
 169            android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <!-- Needs to be explicitly declared on P+ -->
 169-->[:react-native-image-crop-picker] /Users/pooja/Documents/personalproject/ProfessionalBeat/node_modules/react-native-image-crop-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:13-69
->>>>>>> 77cd16833b55be8b0355a85c2cdea8436f2a8c79
 170        <uses-library
 170-->[com.google.android.gms:play-services-maps:18.1.0] /Users/pooja/.gradle/caches/transforms-3/8c63c7ea3970204ff5f90484433bed70/transformed/jetified-play-services-maps-18.1.0/AndroidManifest.xml:39:9-41:40
 171            android:name="org.apache.http.legacy"

@@ -431,7 +431,7 @@ const UserHomeScreen = () => {
                             <Text style={{ paddingLeft: 10, paddingTop: 4, fontSize: 12 }}>05:30PM to 07:00PM</Text>
                         </View>
                         <TouchableOpacity style={{ alignSelf: 'center', marginTop: 15, padding: 4, borderRadius: 8, borderWidth: 1, borderColor: '#fff', backgroundColor: 'rgb(254,92,54)', width: '40%' }}
-                            onPress={() => setTutEndPopup(!tutionEndPopup)}
+                            
                         >
                             <Text style={{ color: '#fff', alignSelf: 'center' }}>Confirm</Text>
                         </TouchableOpacity>

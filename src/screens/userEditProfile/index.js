@@ -79,18 +79,19 @@ const userEditProfile = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('Profile', config);
+        // console.log('Profile', config);
         axios.request(config)
             .then((response) => {
+                console.log("response", response)
                 setLoading(false)
                 setData(response.data);
-                setName(response.data?.user?.name); 
+                setName(response.data?.user?.name);
                 setEmail(response.data?.user?.email);
                 setAddress(response.data?.user?.localty);
                 setMobile(response.data?.user?.mobile);
                 setStreet(response.data?.user?.street);
                 setPincode(response.data?.user?.pincode);
-                console.log('loadProfilex', JSON.stringify(response.data?.user?.mobile));
+                // console.log('loadProfilex', JSON.stringify(response.data?.user?.mobile));
             })
             .catch((error) => {
                 setLoading(false)
@@ -221,6 +222,9 @@ const userEditProfile = () => {
         formdata.append('longitude', '23.065083094');
         formdata.append('password', '123456');
         formdata.append('pincode', pincode);
+        formdata.append('gender', valueGender);
+        formdata.append('city', valueCity);
+        formdata.append('state', value);
         // formdata.append("profile_image", { uri: uploadProfile, name: 'file_aadhar_photo.png', filename: 'file_aadhar_photo.png', type: 'image/png' });
         formdata.append('gender', valueGender);
         console.log('formdata', formdata)
@@ -232,11 +236,11 @@ const userEditProfile = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('uploadProfile', JSON.stringify(requestOptions))
+        // console.log('uploadProfile', JSON.stringify(requestOptions))
         fetch(globle.API_BASE_URL + 'updateProfile', requestOptions)
             .then(response => response.json())
             .then(result => {
-                console.log('uploadProfileX', result)
+                // console.log('uploadProfileX', result)
                 if (result.status) {
                     setLoading(false)
                     Toast.show({

@@ -65,6 +65,8 @@ import com.sensors.RNSensorsPackage;
 import cl.json.RNSharePackage;
 // react-native-svg
 import com.horcrux.svg.SvgPackage;
+// react-native-vector-icons
+import com.oblador.vectoricons.VectorIconsPackage;
 
 public class PackageList {
   private Application application;
@@ -136,7 +138,8 @@ public class PackageList {
       new RNScreensPackage(),
       new RNSensorsPackage(),
       new RNSharePackage(),
-      new SvgPackage()
+      new SvgPackage(),
+      new VectorIconsPackage()
     ));
   }
 }
