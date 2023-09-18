@@ -253,7 +253,7 @@ const TutorNewPostScreen = () => {
                 console.log(error);
             });
     }
-
+ 
 
     const updateUserDemoProfile = async () => {
         console.log('Class Save');
