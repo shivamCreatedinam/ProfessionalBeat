@@ -458,9 +458,7 @@ const UserHomeScreen = () => {
                             <View style={{ flexDirection: 'row', marginLeft: 10, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
                                 <Text style={{ justifyContent: 'center', fontSize: 15 }} numberOfLines={1}>Rajeev Gupta</Text>
                                 {/* <Text style={{ fontWeight: 'bold', flex: 1, fontSize: 12, color: '#b4b4b4' }} numberOfLines={1}>B-Tech, 4+ Years Exp</Text> */}
-
                             </View>
-
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Image style={{ width: 20, height: 20, resizeMode: 'contain', borderRadius: 140, marginLeft: 8, marginTop: 5 }} source={require('../../assets/cal.png')} />

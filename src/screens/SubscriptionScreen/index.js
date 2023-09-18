@@ -12,7 +12,6 @@ import {
     TouchableOpacity,
     Text,
     FlatList,
-    Pressable
 } from 'react-native';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
@@ -126,7 +125,6 @@ const SubscriptionScreen = () => {
             </View>
         </View>)
     }
-
 
     return (
         <View style={styles.container}>

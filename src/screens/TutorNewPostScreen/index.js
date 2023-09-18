@@ -72,8 +72,8 @@ const TutorNewPostScreen = () => {
             getQualificationData();
             getSubjectsData();
             getClasses();
-            // getFeeList();
             getBoard();
+            // getFeeList();
         }, [])
     );
 
