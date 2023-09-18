@@ -18,7 +18,11 @@ import {
     ImageBackground,
 } from 'react-native';
 import axios from 'axios';
+<<<<<<< HEAD
 import { useNavigation } from '@react-navigation/native';
+=======
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+>>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
 import TutorHeader from '../../components/TutorHeader';
 import globle from '../../../common/env';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -26,8 +30,11 @@ import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, Dialo
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
 const propertyData = [{
     id: '1',
     image: 'https://www.sacredyatra.com/wp-content/uploads/2016/03/Yamunotri-Location.jpg',
@@ -68,6 +75,41 @@ const HomeScreen = () => {
             // console.log('addEventListener'); 
         };
     }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getTutorPostForUser();
+            return () => {
+                // Useful for cleanup functions
+            };
+        }, [])
+    );
+
+    const getTutorPostForUser = async () => {
+        console.log('getTutorPostForUser');
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'get-post',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('getTutorPostForUser', config);
+        axios.request(config)
+            .then((response) => {
+                setLoading(false)
+                setData(response.data?.data);
+                console.log('getTutorPostForUser', JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error);
+            });
+    }
 
     const sendNotification = () => {
         var myHeaders = new Headers();
@@ -241,7 +283,7 @@ const HomeScreen = () => {
                     style={{ flex: 1, padding: 10, backgroundColor: '#F1F6F9' }}
                     contentContainerStyle={{ padding: 5, zIndex: 9999 }}>
                     <TutorHeader />
-                    <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
+                    {/* <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
                         <View>
                             <TextInput
                                 style={styles.searchInput}
@@ -254,11 +296,11 @@ const HomeScreen = () => {
                                 <Image style={{ width: 16, height: 16, resizeMode: 'contain' }} source={require('../../assets/search_icon.png')} />
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </View> */}
                     {propertyData.length > 0 ?
                         <FlatList
                             contentContainerStyle={styles.propertyListContainer}
-                            data={propertyData}
+                            data={data}
                             renderItem={renderItem}
                             keyExtractor={(item) => item.id}
                         />

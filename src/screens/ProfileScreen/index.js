@@ -200,7 +200,7 @@ const ProfileScreen = () => {
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Edit Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => showSuccessToast('Coming soon!')}
+                    onPress={() => navigate.navigate('AddChildProfileScreen')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Edit Child Profile</Text>

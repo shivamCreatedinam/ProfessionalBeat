@@ -16,8 +16,11 @@ import {
     TouchableOpacity,
     FlatList,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import globle from '../../../common/env';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import CommonHeader from '../../components/CommonHeader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 // import { PermissionModal, PermissionItem } from "react-native-permissions-modal";
@@ -30,7 +33,12 @@ const UserHomeScreen = () => {
 
     const permModal = useRef();
     const navigate = useNavigation();
+    const [data, setData] = React.useState([]);
     const [visible, setVisible] = React.useState(false);
+<<<<<<< HEAD
+=======
+    const [loading, setLoading] = React.useState(false);
+>>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
     const [visiblePopup, setVisiblePopup] = React.useState(false);
     const [scheduleCall, setScheduleCall] = React.useState(false);
     const [TimeSlotPopul, setTimeSlotPopup] = React.useState(false);
@@ -65,6 +73,41 @@ const UserHomeScreen = () => {
             }
         }
     };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getTutorPostForUser();
+            return () => {
+                // Useful for cleanup functions
+            };
+        }, [])
+    );
+
+    const getTutorPostForUser = async () => {
+        console.log('getTutorPostForUser');
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'get-post',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('getTutorPostForUser', config);
+        axios.request(config)
+            .then((response) => {
+                setLoading(false)
+                setData(response.data?.data);
+                console.log('getTutorPostForUser', JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error);
+            });
+    }
 
     const requestLocationPermission = async () => {
         try {
@@ -418,9 +461,13 @@ const UserHomeScreen = () => {
                             <View style={{ flexDirection: 'row', marginLeft: 10, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
                                 <Text style={{ justifyContent: 'center', fontSize: 15 }} numberOfLines={1}>Rajeev Gupta</Text>
                                 {/* <Text style={{ fontWeight: 'bold', flex: 1, fontSize: 12, color: '#b4b4b4' }} numberOfLines={1}>B-Tech, 4+ Years Exp</Text> */}
+<<<<<<< HEAD
 
                             </View>
 
+=======
+                            </View>
+>>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Image style={{ width: 20, height: 20, resizeMode: 'contain', borderRadius: 140, marginLeft: 8, marginTop: 5 }} source={require('../../assets/cal.png')} />
@@ -431,7 +478,11 @@ const UserHomeScreen = () => {
                             <Text style={{ paddingLeft: 10, paddingTop: 4, fontSize: 12 }}>05:30PM to 07:00PM</Text>
                         </View>
                         <TouchableOpacity style={{ alignSelf: 'center', marginTop: 15, padding: 4, borderRadius: 8, borderWidth: 1, borderColor: '#fff', backgroundColor: 'rgb(254,92,54)', width: '40%' }}
+<<<<<<< HEAD
                             
+=======
+                            onPress={() => setTutEndPopup(!tutionEndPopup)}
+>>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
                         >
                             <Text style={{ color: '#fff', alignSelf: 'center' }}>Confirm</Text>
                         </TouchableOpacity>
@@ -511,10 +562,17 @@ const UserHomeScreen = () => {
                             <Text style={{ marginTop: 20, marginBottom: 10, fontSize: 12 }}>Tutors feedback:</Text>
                             <TextInput multiline={true} style={{ height: 40, borderRadius: 10, borderWidth: 1, textAlignVertical: 'top', }} />
                         </View>
+<<<<<<< HEAD
                         <TouchableOpacity style={{ backgroundColor: 'rgb(68,114,199)', padding: 4, borderRadius: 5, borderWidth: 1, borderColor: '#fff', width: '28%',alignSelf:'center',marginTop:15 }}
                             onPress={() => setFeedbackPopup(!feedbackPopup)}
                         >
                             <Text style={{ color: '#fff', alignSelf: 'center',fontSize:14 }}>Done</Text>
+=======
+                        <TouchableOpacity style={{ backgroundColor: 'rgb(68,114,199)', padding: 4, borderRadius: 5, borderWidth: 1, borderColor: '#fff', width: '28%', alignSelf: 'center', marginTop: 15 }}
+                            onPress={() => setFeedbackPopup(!feedbackPopup)}
+                        >
+                            <Text style={{ color: '#fff', alignSelf: 'center', fontSize: 14 }}>Done</Text>
+>>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
                         </TouchableOpacity>
                     </View>
                 </DialogContent>

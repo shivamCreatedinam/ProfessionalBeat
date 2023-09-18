@@ -2,7 +2,8 @@ import { StyleSheet } from "react-native";
 import Colors from "../../../common/Colour";
 
 const styles = StyleSheet.create({
-    container: {},
+    container: { 
+    },
     mapContainer: {
         height: "50%"
     },

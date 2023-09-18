@@ -43,6 +43,10 @@ import TutorNewPostScreen from '../src/screens/TutorNewPostScreen';
 import TutorProfileScreen from '../src/screens/TutorProfileScreen';
 import EditTutorProfileScreen from '../src/screens/editProfileTutor';
 import QualificationScreen from '../src/screens/QualificationScreen';
+<<<<<<< HEAD
+=======
+import AddChildProfileScreen from '../src/screens/AddChildProfiles';
+>>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
 // Theme.
 const MyTheme = {
     dark: false,
@@ -104,8 +108,8 @@ function BottomNavigation() {
                 }}
             />
             <Tab.Screen
-                name="TutorTuitionScreen"
-                component={TutorTuitionScreen}
+                name="TutorCallHistoryScreen"
+                component={TutorCallHistoryScreen}
                 options={{
                     headerShown: false,
                     tabBarLabel: () => { return 'Ekart' },
@@ -114,9 +118,9 @@ function BottomNavigation() {
                             <View style={{ alignItems: 'center' }}>
                                 <Image
                                     style={{ width: focused ? 25 : 20, height: focused ? 25 : 20, tintColor: focused ? 'rgb(68,114,199)' : 'rgb(254,92,54)', resizeMode: 'contain' }}
-                                    source={require('../src/assets/skill.png')}
+                                    source={require('../src/assets/phone_call.png')}
                                 />
-                                <Text style={{ fontWeight: 'bold', fontSize: 10 }}>My tuitions</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 10 }}>Calls</Text>
                             </View>
                         );
                     },
@@ -622,9 +626,25 @@ function StackNavigation() {
                         headerTintColor: '#fff',
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
+<<<<<<< HEAD
+=======
+                <Stack.Screen
+                    name="AddChildProfileScreen"
+                    component={AddChildProfileScreen}
+                    options={{
+                        title: 'AddChildProfileScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+>>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
+<<<<<<< HEAD
 export default StackNavigation; // QualificationScreen
+=======
+export default StackNavigation; // AddChildProfileScreen
+>>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
