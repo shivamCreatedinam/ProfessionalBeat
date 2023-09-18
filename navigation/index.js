@@ -43,10 +43,7 @@ import TutorNewPostScreen from '../src/screens/TutorNewPostScreen';
 import TutorProfileScreen from '../src/screens/TutorProfileScreen';
 import EditTutorProfileScreen from '../src/screens/editProfileTutor';
 import QualificationScreen from '../src/screens/QualificationScreen';
-<<<<<<< HEAD
-=======
 import AddChildProfileScreen from '../src/screens/AddChildProfiles';
->>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
 // Theme.
 const MyTheme = {
     dark: false,
@@ -626,8 +623,6 @@ function StackNavigation() {
                         headerTintColor: '#fff',
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
-<<<<<<< HEAD
-=======
                 <Stack.Screen
                     name="AddChildProfileScreen"
                     component={AddChildProfileScreen}
@@ -637,14 +632,9 @@ function StackNavigation() {
                         headerTintColor: '#fff',
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
->>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
-<<<<<<< HEAD
-export default StackNavigation; // QualificationScreen
-=======
 export default StackNavigation; // AddChildProfileScreen
->>>>>>> 8c00bfc58f190ece3840e0d474829c45c86224c3
