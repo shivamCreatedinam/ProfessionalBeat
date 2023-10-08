@@ -12,7 +12,9 @@ import {
     Text,
     TouchableOpacity,
     ScrollView,
-    Image
+    Image,
+    Platform,
+    StatusBar
 } from 'react-native';
 import axios from 'axios';
 import globle from '../../../common/env';
@@ -22,6 +24,8 @@ import { showMessage } from "react-native-flash-message";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const API_KEYS = 'AIzaSyDIpZFQnU2tms1EdAqK-H9K4PfNN17zLdc';
+import { InAppBrowser } from 'react-native-inappbrowser-reborn'
+import Share from 'react-native-share';
 
 const ProfileScreen = () => {
 
@@ -112,8 +116,8 @@ const ProfileScreen = () => {
 
     const logoutX = () => {
         Alert.alert(
-            'End Trip',
-            'Are you sure, want end the trip?',
+            'Loggout',
+            'Are you sure, you want to Loggout?',
             [
                 { text: 'Cancel', onPress: () => console.log('cancel') },
                 { text: 'OK', onPress: () => loggoutUser() },
@@ -165,6 +169,35 @@ const ProfileScreen = () => {
         );
     };
 
+    const openPrivacyPolicy = async () => {
+        let url = 'https://createdinam.in/Profession-beat/privacy_policy.html';
+        // InAppBrowser.mayLaunchUrl(url, ["Other urls that user might open ordered by priority"]);
+        try {
+            const oldStyle = StatusBar.pushStackEntry({ barStyle: 'dark-content', animated: false });
+            await InAppBrowser.open(url)
+            StatusBar.popStackEntry(oldStyle);
+        } catch (error) {
+            Alert.alert(error.message)
+        }
+    }
+
+    const ShareApp = () => {
+        const options = Platform.select({
+            default: {
+                title: 'Amazing Tuition Bot Application',
+                subject: 'Download & install get Tuitour at your near by place',
+                message: `Tuition Bot tutor is an online classes app to help students with homework, questions & concepts. Link:https://play.google.com/store/apps/details?id=com.createdinam.professionbeat`,
+            },
+        });
+        Share.open(options)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                err && console.log(err);
+            });
+    }
+
     return (
         <ScrollView style={styles.container}>
             <Spinner
@@ -178,7 +211,7 @@ const ProfileScreen = () => {
                 </TouchableOpacity>
                 <Image
                     style={[styles.coverPhoto, { resizeMode: 'cover' }]}
-                    source={require('../../assets/user_profile_bg.jpg')}
+                    source={require('../../assets/back_school.png')}
                 />
             </View>
             <View
@@ -187,12 +220,12 @@ const ProfileScreen = () => {
                     style={[styles.profilePhoto, { backgroundColor: '#fff', borderRadius: 150, borderColor: '#0066cc', borderWidth: 1, resizeMode: 'contain' }]}
                     source={{ uri: globle.IMAGE_BASE_URL + data?.user?.profile_image }}
                 />
-                <Text style={styles.nameText}>{data?.user?.user_id}</Text>
+                <Text style={[styles.nameText, { textTransform: 'capitalize' }]}>{data?.user?.name}</Text>
             </View>
             <View style={styles.bioContainer}>
-                <Text style={styles.bioText}>{data?.user?.mobile}</Text>
+                <Text style={styles.bioText}>{data?.user?.email}</Text>
             </View>
-            <View style={{ padding: 20, alignItems: 'center' }}>
+            <View style={{ padding: 20, alignItems: 'center', marginBottom: 40 }}>
                 <TouchableOpacity
                     onPress={() => showSuccessToast('Coming soon!')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 5 }}>
@@ -206,18 +239,36 @@ const ProfileScreen = () => {
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Edit Child Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => showSuccessToast('Coming soon!')}
+                    onPress={() => ShareApp()}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/share.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Share</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigate.navigate('HelpOrSupportScreen')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/help.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Help & Support</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigate.navigate('SettingScreen')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/setting.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Setting</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => openPrivacyPolicy()}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Privacy Policy</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => showSuccessToast('Coming soon!')}
+                    onPress={() => openPrivacyPolicy()}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Terms & Conditions</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { width: '100%', borderRadius: 50, marginTop: 15 }]} onPress={() => logoutX()}>
+                <TouchableOpacity style={[styles.button, { width: '100%', borderRadius: 20, marginTop: 15 }]} onPress={() => logoutX()}>
                     <Text style={styles.buttonText}>Log Out</Text>
                 </TouchableOpacity>
             </View>
@@ -277,7 +328,7 @@ const styles = {
     },
     button: {
         with: '100%',
-        backgroundColor: '#0066cc',
+        backgroundColor: '#000000',
         borderRadius: 5,
         padding: 10,
         marginHorizontal: 20,

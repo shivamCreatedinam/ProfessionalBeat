@@ -121,7 +121,7 @@ const SplashAppScreen = () => {
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
             <ActivityIndicator style={{ position: 'absolute', alignItems: 'center', bottom: 160, alignSelf: 'center' }} color={'#FAD323'} size={'large'} />
             <View style={{ marginTop: Dimensions.get('screen').height / 6, alignItems: 'center' }}>
-                <Image style={{ height: 250, width: 250, resizeMode: 'cover' }} source={require('../../assets/logo.jpg')} />
+                <Image style={{ height: 250, width: 250, resizeMode: 'cover' }} source={require('../../assets/notification_logo.png')} />
             </View>
         </View>
     );

@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useRef } from 'react';
+import React, { useRef, useMemo, useState } from 'react';
 import {
     Image,
     View,
@@ -13,10 +13,16 @@ import {
     ScrollView,
     TextInput,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    Dimensions,
+    StatusBar,
+    Alert
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
+import RadioGroup from 'react-native-radio-buttons-group';
+import { InAppBrowser } from 'react-native-inappbrowser-reborn';
 import { useNavigation } from "@react-navigation/native";
 import Global from '../../../common/env';
 import axios from 'axios';
@@ -25,12 +31,26 @@ const LoginScreen = () => {
 
     const navigation = useNavigation();
     const [initializing, setInitializing] = React.useState(true);
-    const [secure, setSecure] = React.useState(true);
+    const [secure, setSecure] = React.useState(false);
     const [loader, serLoader] = React.useState(false);
     const [user, setUser] = React.useState();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [LoginType, setLoginType] = React.useState('');
     const [errors, setErrors] = React.useState('');
+    const [selectedId, setSelectedId] = React.useState();
+    const radioButtons = useMemo(() => ([
+        {
+            id: '1', // acts as primary key, should be unique and non-empty string
+            label: 'Parents',
+            value: 'Parent'
+        },
+        {
+            id: '2',
+            label: 'Tuitor',
+            value: 'Tutor'
+        }
+    ]), []);
 
     // Handle user state changes
     function onAuthStateChanged(user) {
@@ -52,7 +72,7 @@ const LoginScreen = () => {
         });
         setTimeout(() => {
             // setTimeout
-            navigation.replace('OTPSubmitScreen', { mobileNumber: email, userType: 'Parent' });
+            navigation.replace('OTPSubmitScreen', { mobileNumber: email, userType: LoginType });
         }, 2000);
     }
 
@@ -60,19 +80,42 @@ const LoginScreen = () => {
 
     }
 
-    const showErrorToast = () => Toast.show({ type: 'error', text1: 'Invalid Mobile Number', });
+    const openPrivacyPolicy = async () => {
+        try {
+            const oldStyle = StatusBar.pushStackEntry({ barStyle: 'dark-content', animated: false });
+            await InAppBrowser.open(Global.PRIVACY_POLICY)
+            StatusBar.popStackEntry(oldStyle);
+        } catch (error) {
+            Alert.alert(error.message)
+        }
+    }
+
+    const showErrorToast = () => Toast.show({ type: 'error', text1: 'Please accept terms & conditions', });
+
+    const showErrorMobileToast = () => Toast.show({ type: 'error', text1: 'Please Enter Valid Mobile Number', });
+
+    const showErrorIdentityToast = () => Toast.show({ type: 'error', text1: 'Please Select your identity', });
 
     const showPasswordToast = () => Toast.show({ type: 'error', text1: 'Invalid Password!', });
 
     const validation = () => {
-        console.log('validation3');
-        if (email.match(/^(\+\d{1,3}[- ]?)?\d{10}$/) && !(email.match(/0{5,}/))) {
-            console.log('validation4');
-            loggedUsingMobileIn();
-        }
-        else {
-            console.log('validation7');
+        console.log('validation3', secure + '' + selectedId);
+
+        if (secure === false) {
             showErrorToast();
+        } else {
+            if (selectedId === undefined) {
+                showErrorIdentityToast();
+            } else {
+                if (email.match(/^(\+\d{1,3}[- ]?)?\d{10}$/) && !(email.match(/0{5,}/))) {
+                    console.log('validation4');
+                    loggedUsingMobileIn();
+                }
+                else {
+                    console.log('validation7');
+                    showErrorMobileToast();
+                }
+            }
         }
     }
 
@@ -81,7 +124,7 @@ const LoginScreen = () => {
         var authOptions = {
             method: 'POST',
             url: Global.API_BASE_URL + 'requesting_for_otp',
-            data: JSON.stringify({ "mobile": email, 'user_type': 'Parent', refferal_id: '' }),
+            data: JSON.stringify({ "mobile": email, 'user_type': LoginType, refferal_id: '' }),
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -117,70 +160,83 @@ const LoginScreen = () => {
             });
     }
 
+    const setSelectedxId = (xx) => {
+        console.log('---->> ', LoginType);
+        if (Number(xx) === 1) {
+            console.log('Parent')
+            setSelectedId(xx)
+            setLoginType('Parent');
+        } else if (Number(xx) === 2) {
+            console.log('Tutor')
+            setSelectedId(xx)
+            setLoginType('Tutor');
+        }
+    }
+
     const moveToLogin = () => {
         navigation.navigate('RegisterScreen');
     }
 
     return (
-        <ScrollView
-            automaticallyAdjustKeyboardInsets={true}
-            keyboardShouldPersistTaps={'always'}
-            contentContainerStyle={{ flexGrow: 1 }}
-            style={{ padding: 20, flex: 1 }}>
-            <View style={{ elevation: 5, flex: 1, padding: 20, backgroundColor: '#FFEEBB', borderRadius: 10, marginBottom: 100, top: 35 }}>
-                <View style={{ padding: 20, flex: 1, alignItems: 'center' }}>
-                    <Image style={{ height: 200, width: 200, resizeMode: 'cover', marginBottom: 20, borderRadius: 150 }} source={require('../../assets/logo.jpg')} />
-                </View>
-                <View>
-                    <Text style={{ fontSize: 10, position: 'absolute', backgroundColor: '#FFEEBB', padding: 3, marginTop: -15, zIndex: 999, left: 2 }}>Mobile</Text>
-                    <TextInput autoCapitalize="none" autoCorrect={false} inputMode='tel' maxLength={10} placeholder='Enter 10 digit mobile number' style={{ borderWidth: 1, borderColor: '#b4b4b4', borderRadius: 4, padding: 10, fontWeight: 'bold' }} onChangeText={(e) => setEmail(e)} />
-                </View>
-                {/* <View style={{ marginTop: 25 }}>
-                    <Text style={{ fontSize: 10, position: 'absolute', backgroundColor: '#FFEEBB', padding: 3, marginTop: -15, zIndex: 999, left: 2 }}>Password</Text>
-                    <TextInput placeholder='Enter user password' secureTextEntry={secure} style={{ borderWidth: 1, borderColor: '#b4b4b4', borderRadius: 4, padding: 10 }} onChangeText={(e) => setPassword(e)} />
-                    <Pressable onPress={() => setSecure(!secure)} style={{ position: 'absolute', right: 15, top: 15 }}>
-                        <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/icons_eye.png')} />
-                    </Pressable>
-                </View> */}
-                <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
-                    <Image style={{ tintColor: 'green', width: 20, height: 20, marginRight: 5 }} source={{ uri: 'https://icons.veryicon.com/png/o/miscellaneous/8atour/check-box-4.png' }} />
-                    <Text style={{ fontSize: 8 }} >by clicking the button you agree with the <Text style={{ fontWeight: 'bold', color: '#000' }}>Terms & Conditions and Privacy Policy</Text></Text>
-                </View>
-                <TouchableOpacity style={{
-                    width: '100%',
-                    marginTop: 20,
-                    paddingHorizontal: 10,
-                    paddingVertical: 14,
-                    backgroundColor: 'rgb(68,114,199)',
-                    borderRadius: 5,
-                    elevation: 6,
-                }} onPress={validation}>
-                    {loader ? <ActivityIndicator color={'#fff'} size={'small'} /> :
-                        <Text style={{
-                            color: 'white',
-                            fontWeight: 'bold',
-                            textTransform: 'uppercase',
-                            textAlign: 'center',
-                        }}>Send OTP</Text>}
-                </TouchableOpacity>
-                <View style={{ marginTop: 20 }}>
-                    <Text style={{ color: '#FE0000', fontWeight: 'bold', fontSize: 10 }}>{errors}</Text>
-                </View>
-                <View style={{ marginTop: 20, alignSelf: 'center', marginRight: 10, flexDirection: 'row', alignItems: 'center' }}>
-                    <TouchableOpacity style={{ alignItems: 'center', marginRight: 5 }} onPress={() => moveToLogin()}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 13, color: 'rgb(254,92,54)', textTransform: 'uppercase' }}>Partner with us</Text>
+        <KeyboardAvoidingView
+            style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', padding: 10 }}
+            behavior='height'
+            enabled
+            keyboardVerticalOffset={10}>
+            <ScrollView>
+                <View style={{ elevation: 10, height: Dimensions.get('screen').height - 100, margin: 10, padding: 20, backgroundColor: '#ffffff', borderRadius: 10, marginBottom: 50, top: 35, }}>
+                    <View style={{ padding: 20, flex: 1, alignItems: 'center' }}>
+                        <Image style={{ height: 200, width: 200, resizeMode: 'cover', marginBottom: 10, borderRadius: 150 }} source={require('../../assets/notification_logo.png')} />
+                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
+                            Welcome to TuitionBot
+                        </Text>
+                    </View>
+                    <View style={{ marginBottom: 20 }}>
+                        <Text style={{ color: '#000', fontSize: 12 }}>Select your identity</Text>
+                        <RadioGroup
+                            containerStyle={{ flexDirection: 'row', alignItems: 'center' }}
+                            radioButtons={radioButtons}
+                            onPress={(ox) => setSelectedxId(ox)}
+                            selectedId={selectedId}
+                        />
+                    </View>
+                    <View>
+                        <Text style={{ fontSize: 10, position: 'absolute', backgroundColor: '#ffffff', padding: 3, marginTop: -15, zIndex: 999, left: 2 }}>Mobile</Text>
+                        <TextInput autoCapitalize="none" autoCorrect={false} inputMode='tel' maxLength={10} placeholder='Enter 10 digit mobile number' style={{ borderWidth: 1, borderColor: '#b4b4b4', borderRadius: 4, padding: 10, fontWeight: 'bold' }} onChangeText={(e) => setEmail(e)} />
+                    </View>
+                    {LoginType === 'Tutor' ? <View style={{ marginTop: 20 }}>
+                        <Text style={{ fontSize: 10, position: 'absolute', backgroundColor: '#ffffff', padding: 3, marginTop: -15, zIndex: 999, left: 2 }}>Refferal Code</Text>
+                        <TextInput autoCapitalize='characters' autoCorrect={false} inputMode='text' keyboardType='ascii-capable' maxLength={8} placeholder='Enter 8 digit refferal code' style={{ borderWidth: 1, borderColor: '#b4b4b4', borderRadius: 4, padding: 10, fontWeight: 'bold' }} onChangeText={(e) => setEmail(e)} />
+                    </View> : null}
+                    <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={() => setSecure(!secure)}>
+                            <Image style={{ tintColor: secure === false ? 'grey' : 'green', width: 20, height: 20, marginRight: 5 }} source={{ uri: 'https://icons.veryicon.com/png/o/miscellaneous/8atour/check-box-4.png' }} />
+                        </TouchableOpacity>
+                        <Text style={{ fontSize: 10, letterSpacing: 1.7 }} numberOfLines={2} >By clicking the button you agree with the <TouchableOpacity onPress={() => openPrivacyPolicy()}><Text style={{ fontWeight: 'bold', color: '#000', fontSize: 10 }}>Terms & Conditions and Privacy Policy</Text></TouchableOpacity></Text>
+                    </View>
+                    <TouchableOpacity style={{
+                        width: '100%',
+                        marginTop: 20,
+                        paddingHorizontal: 10,
+                        paddingVertical: 14,
+                        backgroundColor: 'rgb(68,114,199)',
+                        borderRadius: 5,
+                        elevation: 6,
+                    }} onPress={validation}>
+                        {loader ? <ActivityIndicator color={'#fff'} size={'small'} /> :
+                            <Text style={{
+                                color: 'white',
+                                fontWeight: 'bold',
+                                textTransform: 'uppercase',
+                                textAlign: 'center',
+                            }}>Send OTP</Text>}
                     </TouchableOpacity>
-                    <Image style={{ width: 14, height: 14, resizeMode: 'contain', tintColor: 'rgb(254,92,54)' }} source={require('../../assets/teach.png')} />
+                    <View style={{ marginTop: 20 }}>
+                        <Text style={{ color: '#FE0000', fontWeight: 'bold', fontSize: 10 }}>{errors}</Text>
+                    </View>
                 </View>
-                {/* <Pressable onPress={() => logOut()}>
-                    <Text>Logout</Text>
-                </Pressable>
-                <View>
-                    <Text>Welcome {user?.email}</Text>
-                    <Text>Welcome {JSON.stringify(user?.uid)}</Text>
-                </View> */}
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 

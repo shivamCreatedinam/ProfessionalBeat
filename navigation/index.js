@@ -44,6 +44,10 @@ import TutorProfileScreen from '../src/screens/TutorProfileScreen';
 import EditTutorProfileScreen from '../src/screens/editProfileTutor';
 import QualificationScreen from '../src/screens/QualificationScreen';
 import AddChildProfileScreen from '../src/screens/AddChildProfiles';
+import HelpOrSupportScreen from '../src/screens/HelpOrSupport';
+import SettingScreen from '../src/screens/SettingScreen';
+import DocumentUploadScreen from '../src/screens/DocumentUploadScreen';
+import MyTuitorPostScreen from '../src/screens/MyParentTutiorPost';
 // Theme.
 const MyTheme = {
     dark: false,
@@ -247,8 +251,8 @@ function UserBottomNavigation() {
                 }}
             />
             <Tab.Screen
-                name="MyTuitionScreen"
-                component={MyTuitionScreen}
+                name="CallHistoryScreen"
+                component={CallHistoryScreen}
                 options={{
                     headerShown: false,
                     tabBarLabel: () => { return <Text style={{ fontWeight: 'bold', fontSize: 10 }}>My Tuitions</Text> },
@@ -257,9 +261,9 @@ function UserBottomNavigation() {
                             <View style={{ alignItems: 'center' }}>
                                 <Image
                                     style={{ width: focused ? 25 : 20, height: focused ? 25 : 20, tintColor: focused ? 'rgb(68,114,199)' : 'rgb(254,92,54)', resizeMode: 'contain' }}
-                                    source={require('../src/assets/skill.png')}
+                                    source={require('../src/assets/phone_call.png')}
                                 />
-                                <Text style={{ fontWeight: 'bold', fontSize: 10 }}>My Tuitions</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 10 }}>Calls</Text>
                             </View>
                         );
                     },
@@ -632,9 +636,45 @@ function StackNavigation() {
                         headerTintColor: '#fff',
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
+                <Stack.Screen
+                    name="HelpOrSupportScreen"
+                    component={HelpOrSupportScreen}
+                    options={{
+                        title: 'HelpOrSupportScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+                <Stack.Screen
+                    name="SettingScreen"
+                    component={SettingScreen}
+                    options={{
+                        title: 'SettingScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+                <Stack.Screen
+                    name="DocumentUploadScreen"
+                    component={DocumentUploadScreen}
+                    options={{
+                        title: 'DocumentUploadScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+                <Stack.Screen
+                    name="MyTuitorPostScreen"
+                    component={MyTuitorPostScreen}
+                    options={{
+                        title: 'MyTuitorPostScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
-export default StackNavigation; // AddChildProfileScreen
+export default StackNavigation; // MyTuitorPostScreen

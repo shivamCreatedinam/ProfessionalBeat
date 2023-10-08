@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import globle from '../../../common/env';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import RazorpayCheckout from 'react-native-razorpay';
 import TutorHeader from '../../components/TutorHeader';
 import styles from './styles';
 import { Image } from 'react-native-elements';
@@ -110,7 +111,7 @@ const SubscriptionScreen = () => {
     const renderItem = (items) => {
 
         return (<View style={{ padding: 20, borderRadius: 10, backgroundColor: 'rgb(68,114,199)', flexGrow: 1, marginBottom: 40, elevation: 5 }}>
-            <TouchableOpacity onPress={() => purchasePackage(items?.item?.id)} style={{ backgroundColor: '#fff', paddingHorizontal: 60, paddingVertical: 10, marginBottom: 20, borderRadius: 6, elevation: 5 }}>
+            <TouchableOpacity onPress={() => paymentEnable(items?.item)} style={{ backgroundColor: '#fff', paddingHorizontal: 60, paddingVertical: 10, marginBottom: 20, borderRadius: 6, elevation: 5 }}>
                 <Text style={{ fontWeight: 'bold', color: '#000' }}>{items?.item?.title} – Rs {items?.item?.amount} /mo</Text>
             </TouchableOpacity>
             <View style={{ marginBottom: 10 }}>
@@ -126,6 +127,32 @@ const SubscriptionScreen = () => {
         </View>)
     }
 
+    const paymentEnable = async (info) => {
+        // WN2My6OSHRTb82joB1QKyfis
+        // key_secrate: PV2Cdatux4NC2NQsxvaLcj5G
+        var options = {
+            description: 'Credits towards consultation',
+            image: 'https://i.imgur.com/3g7nmJC.png',
+            currency: 'INR',
+            key: 'rzp_test_ab2tkx2iprYBt8', // Your api key
+            amount: (Number(info?.amount) * 100),
+            name: 'foo',
+            prefill: {
+                email: 'info@tutiorbot.com',
+                contact: '9999888877',
+                name: 'TutiorBot'
+            },
+            theme: { color: '#F37254' }
+        }
+        RazorpayCheckout.open(options).then((data) => {
+            // handle success
+            console.log(`Success:`, JSON.stringify(data));
+        }).catch((error) => {
+            // handle failure
+            console.log(`Error: ${error.code} | ${error.description}`, JSON.stringify(error));
+        });
+    }
+
     return (
         <View style={styles.container}>
             <TutorHeader />
@@ -135,10 +162,10 @@ const SubscriptionScreen = () => {
                     keyExtractor={(id) => id}
                     renderItem={(items) => renderItem(items)}
                 />
-                <View style={{ alignItems: 'center', padding: 20 }}>
+                <TouchableOpacity onPress={() => paymentEnable()} style={{ alignItems: 'center', padding: 20 }}>
                     <Text>Refer to any one person and get first <Text style={{ fontWeight: 'bold', color: 'rgb(68,114,199)' }}>2 calls</Text> for free</Text>
                     <Text>Refer ID: <Text style={{ fontWeight: 'bold', color: 'rgb(68,114,199)' }}>TM09B91</Text>  <Text style={{ fontWeight: 'bold', color: 'rgb(68,114,199)' }}>Refer now</Text></Text>
-                </View>
+                </TouchableOpacity>
             </View>
         </View>
     );

@@ -74,7 +74,9 @@ const styles = StyleSheet.create({
     },
     selectedTextStyle1: {
         fontSize: 16,
-    },
+    }, searchInputContainer: {
+
+    }
 });
 
 export default styles;

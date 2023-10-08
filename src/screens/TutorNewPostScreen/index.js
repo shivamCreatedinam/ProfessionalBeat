@@ -32,9 +32,11 @@ const TutorNewPostScreen = () => {
 
     const navigate = useNavigation();
     const [loading, setLoading] = React.useState(false);
+    const [Locality, setLocality] = React.useState('');
     // subjects 
     const [SubjectsData, setSubjectsData] = React.useState([]);
-    const [selectSubject, setSubjectsValue] = React.useState(null);
+    const [valueSubject, setSubjectValue] = React.useState(null);
+    const [selectSubject, setSubjectsValue] = React.useState([]);
     const [isSubjectFocus, setIssubjectFocus] = React.useState(false);
     // qualification
     const [Qualification, setQualification] = React.useState([]);
@@ -253,10 +255,82 @@ const TutorNewPostScreen = () => {
                 console.log(error);
             });
     }
- 
+
 
     const updateUserDemoProfile = async () => {
         console.log('Class Save');
+        console.log('saveChildProfile');
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        selectSubject.map((data, index) =>
+            formdata.append(`subject_id[${index}]`, data)
+        )
+        formdata.append(`board_id[0]`, valueBoard)
+        formdata.append('class_from', valueClasses);
+        formdata.append('class_to', valueToClasses);
+        formdata.append('open_for', '2');
+        formdata.append('english_spoken', 'Yes');
+        formdata.append('lang_eng', 'Yes');
+        formdata.append('lang_hind', 'Yes');
+        formdata.append('fees_id', FeesValue);
+        formdata.append('address', 'no_address');
+        formdata.append('locality', Locality);
+        formdata.append('pincode', '110099');
+        formdata.append('state', value);
+        formdata.append('city', valueCity);
+        formdata.append('latitude', '32.84579293');
+        formdata.append('longitude', '64.82083292');
+        formdata.append('agree_terms', 'Yes');
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('saveChildProfile', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'tutor-create-post', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log('saveChildProfile', result)
+                if (result.status) {
+                    setLoading(false);
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                    saveAndAlert();
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    const saveAndAlert = () => {
+        Alert.alert(
+            'Post Uploaded Successfully!',
+            'You post uploaded Successfully',
+            [
+                { text: 'ok', onPress: () => navigate.navigate('MyTuitorPostScreen') },
+            ]
+        );
     }
 
     return (
@@ -281,7 +355,7 @@ const TutorNewPostScreen = () => {
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}
                             onChange={item => {
-                                setValue(item.label);
+                                setValue(item.id);
                                 getCityData(item.id);
                                 setIsFocus(false);
                             }}
@@ -299,12 +373,13 @@ const TutorNewPostScreen = () => {
                             onFocus={() => setIsFocusCity(true)}
                             onBlur={() => setIsFocusCity(false)}
                             onChange={item => {
-                                setValueCity(item.label);
+                                setValueCity(item.id);
                                 setIsFocusCity(false);
                             }}
                         />
                     </View>
-                    <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10, }]}>
+                    <TextInput onChangeText={(e) => setLocality(e)} placeholder='Locality' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
+                    {/* <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10, }]}>
                         <View style={[{ marginTop: 15, marginLeft: -10 }]}>
                             <MultiSelect
                                 style={styles.dropdown}
@@ -324,23 +399,28 @@ const TutorNewPostScreen = () => {
                                 selectedStyle={styles.selectedStyle}
                             />
                         </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
-                        <Dropdown
-                            style={[styles.dropdown1, isSubjectFocus && { borderColor: 'blue' }]}
-                            selectedTextStyle={styles.selectedTextStyle1}
-                            data={SubjectsData}
-                            maxHeight={300}
-                            labelField={"subject_name"}
-                            valueField={"id"}
-                            placeholder={!isSubjectFocus ? 'Select Subjects' : selectSubject}
-                            onFocus={() => setIssubjectFocus(true)}
-                            onBlur={() => setIssubjectFocus(false)}
-                            onChange={item => {
-                                setSubjectsValue(item.label);
-                                setIssubjectFocus(false);
-                            }}
-                        />
+                    </View> */}
+                    <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10 }]}>
+                        <View style={[{ marginTop: 15, marginLeft: -10 }]}>
+                            <MultiSelect
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                data={SubjectsData}
+                                maxHeight={300}
+                                labelField="subject_name"
+                                valueField="id"
+                                placeholder={!isSubjectFocus ? 'Select Subjects' : valueSubject}
+                                onFocus={() => setIssubjectFocus(true)}
+                                onBlur={() => setIssubjectFocus(false)}
+                                value={selectSubject}
+                                onChange={item => {
+                                    console.log(item);
+                                    setSubjectsValue(item);
+                                }}
+                                selectedStyle={styles.selectedStyle}
+                            />
+                        </View>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                         <Dropdown
@@ -354,8 +434,8 @@ const TutorNewPostScreen = () => {
                             onFocus={() => setIsFeesFocus(true)}
                             onBlur={() => setIsFeesFocus(false)}
                             onChange={item => {
-                                // setFeesValue(item.label);
-                                // setIsFeesFocus(false);
+                                setFeesValue(item.id);
+                                setIsFeesFocus(false);
                             }}
                         />
                     </View>
@@ -371,7 +451,7 @@ const TutorNewPostScreen = () => {
                             onFocus={() => setIsFocusBoard(true)}
                             onBlur={() => setIsFocusBoard(false)}
                             onChange={item => {
-                                setValueBoard(item.label);
+                                setValueBoard(item.id);
                                 setIsFocusBoard(false);
                             }}
                         />
@@ -388,7 +468,7 @@ const TutorNewPostScreen = () => {
                             onFocus={() => setIsFocusClasses(true)}
                             onBlur={() => setIsFocusClasses(false)}
                             onChange={item => {
-                                setValueClasses(item.label);
+                                setValueClasses(item.id);
                                 setIsFocusClasses(false);
                             }}
                         />
@@ -405,7 +485,7 @@ const TutorNewPostScreen = () => {
                             onFocus={() => setIsFocusToClasses(true)}
                             onBlur={() => setIsFocusToClasses(false)}
                             onChange={item => {
-                                setValueToClasses(item.label);
+                                setValueToClasses(item.id);
                                 setIsFocusToClasses(false);
                             }}
                         />

@@ -52,7 +52,7 @@ const userEditProfile = () => {
     const [valueCity, setValueCity] = React.useState(null);
     const [isFocusCity, setIsFocusCity] = React.useState(false);
     // gender
-    const [valueGender, setValueGender] = React.useState(null);
+    const [valueGender, setValueGender] = React.useState('');
     const [isFocusGender, setIsFocusGender] = React.useState(false);
     const gender = [{ label: 'Female', value: '1' }, { label: 'Male', value: '2' }];
 
@@ -79,18 +79,21 @@ const userEditProfile = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('Profile', config);
         axios.request(config)
             .then((response) => {
+                console.log('loadProfile', JSON.stringify(response?.data?.user?.city));
                 setLoading(false)
                 setData(response.data);
-                setName(response.data?.user?.name); 
+                setName(response.data?.user?.name);
+                getCityData(Number(response?.data?.user?.state));
+                setValue(Number(response?.data?.user?.state));
+                setValueGender(response?.data?.user?.gender);
                 setEmail(response.data?.user?.email);
                 setAddress(response.data?.user?.localty);
                 setMobile(response.data?.user?.mobile);
                 setStreet(response.data?.user?.street);
                 setPincode(response.data?.user?.pincode);
-                console.log('loadProfilex', JSON.stringify(response.data?.user?.mobile));
+                setValueCity(Number(response?.data?.user?.city));
             })
             .catch((error) => {
                 setLoading(false)
@@ -214,15 +217,17 @@ const userEditProfile = () => {
         formdata.append('mobile', mobile);
         formdata.append('city', valueCity);
         formdata.append('state', value);
-        formdata.append('street', street);
+        formdata.append('street', address);
         formdata.append('l_name', name);
         formdata.append('latitude', '65.25236409');
         formdata.append('localty', address);
         formdata.append('longitude', '23.065083094');
         formdata.append('password', '123456');
         formdata.append('pincode', pincode);
-        // formdata.append("profile_image", { uri: uploadProfile, name: 'file_aadhar_photo.png', filename: 'file_aadhar_photo.png', type: 'image/png' });
         formdata.append('gender', valueGender);
+        formdata.append('city', valueCity);
+        formdata.append('state', value);
+        // formdata.append("profile_image", { uri: uploadProfile, name: 'file_aadhar_photo.png', filename: 'file_aadhar_photo.png', type: 'image/png' });
         console.log('formdata', formdata)
         var requestOptions = {
             method: 'POST',
@@ -232,11 +237,11 @@ const userEditProfile = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('uploadProfile', JSON.stringify(requestOptions))
+        // console.log('uploadProfile', JSON.stringify(requestOptions))
         fetch(globle.API_BASE_URL + 'updateProfile', requestOptions)
             .then(response => response.json())
             .then(result => {
-                console.log('uploadProfileX', result)
+                // console.log('uploadProfileX', result)
                 if (result.status) {
                     setLoading(false)
                     Toast.show({
@@ -299,30 +304,28 @@ const userEditProfile = () => {
                                 style={[styles.dropdown1, isFocusGender && { borderColor: 'blue' }]}
                                 selectedTextStyle={styles.selectedTextStyle1}
                                 data={gender}
+                                value={valueGender}
                                 maxHeight={300}
                                 labelField="label"
-                                valueField="id"
+                                valueField="value"
                                 placeholder={!isFocusGender ? 'Select Gender' : valueGender}
                                 onFocus={() => setIsFocusGender(true)}
                                 onBlur={() => setIsFocusGender(false)}
                                 onChange={item => {
-                                    console.log('setValueGender', item.label)
-                                    setValueGender(item.label);
+                                    setValueGender(item.value);
                                     setIsFocusGender(false);
                                 }}
                             />
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.localty} placeholder='Enter Address' onChangeText={(e) => setAddress(e)} />
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.street} placeholder='Enter Street' onChangeText={(e) => setStreet(e)} />
-                        </View>
+                        {/* <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.street} placeholder='Enter City' onChangeText={(e) => setStreet(e)} />
+                        </View> */}
                         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                             <Dropdown
                                 style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
                                 selectedTextStyle={styles.selectedTextStyle1}
                                 data={State}
+                                value={value}
                                 maxHeight={300}
                                 labelField="name"
                                 valueField="id"
@@ -330,7 +333,7 @@ const userEditProfile = () => {
                                 onFocus={() => setIsFocus(true)}
                                 onBlur={() => setIsFocus(false)}
                                 onChange={item => {
-                                    setValue(item.label);
+                                    setValue(item.id);
                                     getCityData(item.id);
                                     setIsFocus(false);
                                 }}
@@ -348,10 +351,13 @@ const userEditProfile = () => {
                                 onFocus={() => setIsFocusCity(true)}
                                 onBlur={() => setIsFocusCity(false)}
                                 onChange={item => {
-                                    setValueCity(item.label);
+                                    setValueCity(item.id);
                                     setIsFocusCity(false);
                                 }}
                             />
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.localty} placeholder='Enter Locality' onChangeText={(e) => setAddress(e)} />
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                             <TextInput style={{ marginLeft: 15 }} maxLength={6} keyboardType='number-pad' defaultValue={data?.user?.pincode} placeholder='Enter Pincode' onChangeText={(e) => setPincode(e)} />

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.createdinam.professionbeat.app-mergeDebugResources-46:/values-zh-rHK/values-zh-rHK.xml",
+            "outputFile": "com.createdinam.professionbeat.app-mergeDebugResources-54:/values-zh-rHK/values-zh-rHK.xml",
             "map": [
                 {
                     "source": "/Users/apple/.gradle/caches/transforms-3/dbeb72a4bccfecf0875df07f00e5d44c/transformed/material-1.9.0/res/values-zh-rHK/values-zh-rHK.xml",
@@ -71,6 +71,23 @@
                         "startOffsets": "5291,5514,5606,5707",
                         "endColumns": "82,91,100,92",
                         "endOffsets": "5369,5601,5702,5795"
+                    }
+                },
+                {
+                    "source": "/Users/apple/.gradle/caches/transforms-3/51523299b862454926548e78f123f226/transformed/jetified-play-services-wallet-18.1.3/res/values-zh-rHK/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "206",
+                        "endColumns": "67",
+                        "endOffsets": "273"
+                    },
+                    "to": {
+                        "startLines": "119",
+                        "startColumns": "4",
+                        "startOffsets": "9507",
+                        "endColumns": "71",
+                        "endOffsets": "9574"
                     }
                 },
                 {

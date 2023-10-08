@@ -9,7 +9,7 @@ import React, { useRef } from 'react';
 import {
     View,
     Text,
-    Pressable,
+    Dimensions,
     ScrollView,
     TouchableOpacity,
     ActivityIndicator
@@ -52,6 +52,7 @@ const OTPSubmitScreen = () => {
 
     React.useEffect(() => {
         console.log('addEventListener', JSON.stringify(routes?.params?.mobileNumber));
+        console.log('addEventListener', JSON.stringify(routes?.params?.userType));
         return () => {
             console.log('addEventListener', JSON.stringify(routes));
         };
@@ -158,7 +159,11 @@ const OTPSubmitScreen = () => {
                         serLoader(false);
                     } else {
                         // message
-                        // showSuccessErrorToast(response?.data?.message);
+                        Toast.show({
+                            type: 'error',
+                            text1: 'Something went wrong',
+                            text2: response?.data?.message
+                        });
                         serLoader(false);
                     }
                 }
@@ -176,12 +181,13 @@ const OTPSubmitScreen = () => {
         var authOptions = {
             method: 'post',
             url: globle.API_BASE_URL + 'requesting_for_otp',
-            data: JSON.stringify({ "mobile": email, 'user_type': 'Parent', refferal_id: '' }),
+            data: JSON.stringify({ "mobile": email, 'user_type': userType, refferal_id: '' }),
             headers: {
                 'Content-Type': 'application/json'
             },
             json: true
         };
+        console.log('repeatUsingMobileIn', authOptions)
         axios(authOptions)
             .then((response) => {
                 if (response.status) {
@@ -201,9 +207,9 @@ const OTPSubmitScreen = () => {
 
     return (
         <View style={{ padding: 20, flex: 1 }}>
-            <ScrollView style={{ elevation: 5, flex: 1, padding: 20, backgroundColor: '#FFEEBB', borderRadius: 10, marginBottom: 90, top: 30 }}>
+            <ScrollView style={{ elevation: 5, flex: 1, height: Dimensions.get('screen').height - 100, padding: 20, backgroundColor: '#ffffff', borderRadius: 10, marginBottom: 50, top: 30 }}>
                 <View style={{ padding: 20, flex: 1, alignItems: 'center' }}>
-                    <Image style={{ height: 200, width: 200, resizeMode: 'cover', marginBottom: 20, borderRadius: 150 }} source={require('../../assets/logo.jpg')} />
+                    <Image style={{ height: 200, width: 200, resizeMode: 'cover', marginBottom: 20, borderRadius: 150 }} source={require('../../assets/notification_logo.png')} />
                 </View>
                 <View>
                     <OTPInput
@@ -221,10 +227,10 @@ const OTPSubmitScreen = () => {
                         <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/icons_eye.png')} />
                     </Pressable>
                 </View> */}
-                <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+                {/* <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                     <Image style={{ tintColor: 'green', width: 20, height: 20, marginRight: 5 }} source={{ uri: 'https://icons.veryicon.com/png/o/miscellaneous/8atour/check-box-4.png' }} />
                     <Text style={{ fontSize: 8 }} >by clicking the button you agree with the <Text style={{ fontWeight: 'bold' }}>Terms & Conditions and Privacy Policy</Text></Text>
-                </View>
+                </View> */}
                 <TouchableOpacity style={{
                     width: '100%',
                     marginTop: 20,

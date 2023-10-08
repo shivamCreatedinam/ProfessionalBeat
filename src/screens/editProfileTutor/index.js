@@ -24,6 +24,7 @@ import TutorHeader from '../../components/TutorHeader';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImagePicker from 'react-native-image-crop-picker';
 import { Dropdown } from 'react-native-element-dropdown';
+import RadioGroup from 'react-native-radio-buttons-group';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useFocusEffect, useNavigation } from "@react-navigation/native";
 
@@ -38,7 +39,7 @@ const EditTutorProfileScreen = () => {
     const [Email, setEmail] = React.useState('');
     const [mobile, setMobile] = React.useState('');
     const [address, setAddress] = React.useState('');
-    const [street, setStreet] = React.useState('');
+    const [street, setStreet] = React.useState('No-Address');
     const [pincode, setPincode] = React.useState('');
     const [age, setAge] = React.useState('');
     const [loading, setLoading] = React.useState(false);
@@ -52,10 +53,21 @@ const EditTutorProfileScreen = () => {
     const [valueCity, setValueCity] = React.useState(null);
     const [isFocusCity, setIsFocusCity] = React.useState(false);
     // gender
-    const [valueGender, setValueGender] = React.useState(null);
+    const [Gender, setGender] = React.useState(1);
     const [isFocusGender, setIsFocusGender] = React.useState(false);
     const gender = [{ label: 'Female', value: '1' }, { label: 'Male', value: '2' }];
+    const [selectedId, setSelectedId] = React.useState(1);
 
+    const setSelectedxId = (xx) => {
+        console.log('setSelectedxId', selectedId)
+        if (Number(xx) === 1) {
+            console.log('Male')
+            setSelectedId(xx)
+        } else if (Number(xx) === 2) {
+            console.log('Female')
+            setSelectedId(xx)
+        }
+    }
 
     useFocusEffect(
         React.useCallback(() => {
@@ -66,6 +78,19 @@ const EditTutorProfileScreen = () => {
             };
         }, [])
     );
+
+    const radioButtons = React.useMemo(() => ([
+        {
+            id: '1', // acts as primary key, should be unique and non-empty string
+            label: 'Male',
+            value: 'Male'
+        },
+        {
+            id: '2',
+            label: 'Female',
+            value: 'Female'
+        }
+    ]), []);
 
     const loadProfile = async () => {
         setLoading(true)
@@ -90,7 +115,9 @@ const EditTutorProfileScreen = () => {
                 setMobile(response.data?.user?.mobile);
                 setStreet(response.data?.user?.street);
                 setPincode(response.data?.user?.pincode);
-                console.log('loadProfilex', JSON.stringify(response.data?.user?.mobile));
+                setSelectedId(response.data?.user?.gender)
+                setuploadProfile(globle.IMAGE_BASE_URL + response.data?.user?.profile_image)
+                console.log('loadProfilex', JSON.stringify(response.data?.user));
             })
             .catch((error) => {
                 setLoading(false)
@@ -216,13 +243,13 @@ const EditTutorProfileScreen = () => {
         formdata.append('state', value);
         formdata.append('street', street);
         formdata.append('l_name', name);
+        formdata.append('gender', selectedId);
         formdata.append('latitude', '65.25236409');
         formdata.append('localty', address);
         formdata.append('longitude', '23.065083094');
         formdata.append('password', '123456');
         formdata.append('pincode', pincode);
-        // formdata.append("profile_image", { uri: uploadProfile, name: 'file_aadhar_photo.png', filename: 'file_aadhar_photo.png', type: 'image/png' });
-        formdata.append('gender', valueGender);
+        formdata.append('profile_image', uploadProfile);
         console.log('uploadProfile', valueX)
         var requestOptions = {
             method: 'POST',
@@ -295,28 +322,12 @@ const EditTutorProfileScreen = () => {
                             <TextInput editable={false} style={{ marginLeft: 15 }} defaultValue={data?.user?.mobile} placeholder='Enter Mobile' />
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <Dropdown
-                                style={[styles.dropdown1, isFocusGender && { borderColor: 'blue' }]}
-                                selectedTextStyle={styles.selectedTextStyle1}
-                                data={gender}
-                                maxHeight={300}
-                                labelField="label"
-                                valueField="id"
-                                placeholder={!isFocusGender ? 'Select Gender' : valueGender}
-                                onFocus={() => setIsFocusGender(true)}
-                                onBlur={() => setIsFocusGender(false)}
-                                onChange={item => {
-                                    console.log('setValueGender', item.label)
-                                    setValueGender(item.label);
-                                    setIsFocusGender(false);
-                                }}
+                            <RadioGroup
+                                containerStyle={{ flexDirection: 'row', alignItems: 'center' }}
+                                radioButtons={radioButtons}
+                                onPress={(ox) => setSelectedxId(ox)}
+                                selectedId={selectedId}
                             />
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.localty} placeholder='Enter Address' onChangeText={(e) => setAddress(e)} />
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.street} placeholder='Enter Street' onChangeText={(e) => setStreet(e)} />
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                             <Dropdown
@@ -330,7 +341,7 @@ const EditTutorProfileScreen = () => {
                                 onFocus={() => setIsFocus(true)}
                                 onBlur={() => setIsFocus(false)}
                                 onChange={item => {
-                                    setValue(item.label);
+                                    setValue(item.id);
                                     getCityData(item.id);
                                     setIsFocus(false);
                                 }}
@@ -348,10 +359,13 @@ const EditTutorProfileScreen = () => {
                                 onFocus={() => setIsFocusCity(true)}
                                 onBlur={() => setIsFocusCity(false)}
                                 onChange={item => {
-                                    setValueCity(item.label);
+                                    setValueCity(item.id);
                                     setIsFocusCity(false);
                                 }}
                             />
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.localty} placeholder='Locality' onChangeText={(e) => setAddress(e)} />
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                             <TextInput style={{ marginLeft: 15 }} maxLength={6} keyboardType='number-pad' defaultValue={data?.user?.pincode} placeholder='Enter Pincode' onChangeText={(e) => setPincode(e)} />

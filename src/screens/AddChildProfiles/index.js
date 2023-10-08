@@ -253,7 +253,7 @@ const AddChildProfileScreen = () => {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={{ fontWeight: 'bold' }}>Subjects :</Text>
                     {items?.item?.subjects.map((data) =>
-                        <Text style={{ padding: 5, }}>{data?.subject_name},</Text>
+                        <Text numberOfLines={2} style={{ padding: 5, }}>{data?.subject_name},</Text>
                     )}
                 </View>
             </View>
@@ -276,7 +276,7 @@ const AddChildProfileScreen = () => {
                 </View>
                 <View>
                     <FlatList
-                        style={{ marginTop: 10 }}
+                        style={{ marginTop: 10, marginBottom: 100 }}
                         data={ChildList}
                         keyExtractor={(ids) => ids}
                         renderItem={(items) => renderItems(items)}
@@ -288,8 +288,7 @@ const AddChildProfileScreen = () => {
                 dialogAnimation={new SlideAnimation({
                     slideFrom: 'bottom',
                 })}
-                dialogStyle={{ width: Dimensions.get('screen').width - 80, height: Dimensions.get('screen').width + 70, borderColor: '#000', borderWidth: 1 }}
-            >
+                dialogStyle={{ width: Dimensions.get('screen').width - 80, height: Dimensions.get('screen').width + 70, borderColor: '#000', borderWidth: 1 }} >
                 <DialogContent>
                     <View>
                         <View style={{ marginTop: 15, alignSelf: 'center', width: '100%' }}>
@@ -335,11 +334,11 @@ const AddChildProfileScreen = () => {
                                         style={styles.dropdown}
                                         placeholderStyle={styles.placeholderStyle}
                                         selectedTextStyle={styles.selectedTextStyle}
-                                        data={Qualification}
+                                        data={SubjectsData}
                                         maxHeight={300}
-                                        labelField="qualifications"
+                                        labelField="subject_name"
                                         valueField="id"
-                                        placeholder={!isFocusGender ? 'Select Qualifications' : valueGender}
+                                        placeholder={!isFocusGender ? 'Select Subjects' : valueGender}
                                         onFocus={() => setIsFocusGender(true)}
                                         onBlur={() => setIsFocusGender(false)}
                                         value={selected}
@@ -351,10 +350,16 @@ const AddChildProfileScreen = () => {
                                 </View>
                             </View>
                         </View>
-                        <TouchableOpacity style={{ padding: 8, backgroundColor: 'rgb(68,114,199)', borderRadius: 8, width: '40%', alignSelf: 'center', marginTop: 20 }}
-                            onPress={() => saveChildProfile()}>
-                            <Text style={{ color: '#fff', justifyContent: 'center', alignSelf: 'center', fontSize: 12 }}>​​Apply Now</Text>
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
+                            <TouchableOpacity style={{ padding: 8, backgroundColor: '#FFA500', borderRadius: 8, width: '40%', alignSelf: 'center', marginTop: 20, marginRight: 10 }}
+                                onPress={() => setVisiblePopup(!visiblePopup)}>
+                                <Text style={{ color: '#fff', justifyContent: 'center', alignSelf: 'center', fontSize: 12 }}>​Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ padding: 8, backgroundColor: 'rgb(68,114,199)', borderRadius: 8, width: '40%', alignSelf: 'center', marginTop: 20 }}
+                                onPress={() => saveChildProfile()}>
+                                <Text style={{ color: '#fff', justifyContent: 'center', alignSelf: 'center', fontSize: 12 }}>​Create New</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </DialogContent>
             </Dialog>

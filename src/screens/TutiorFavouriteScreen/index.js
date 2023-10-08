@@ -13,9 +13,16 @@ import {
     TouchableOpacity,
     Text,
     FlatList,
-    SafeAreaView
+    SafeAreaView,
+    Dimensions
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import globle from '../../../common/env';
+import Toast from 'react-native-toast-message';
+import MarqueeText from 'react-native-marquee';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import Spinner from 'react-native-loading-spinner-overlay';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import TutorHeader from '../../components/TutorHeader';
 import styles from './styles';
 
@@ -23,6 +30,8 @@ const TutorFavourtePostScreen = () => {
 
     const navigate = useNavigation();
     const [visible, setVisible] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [FavourteData, setFavourteData] = React.useState([]);
     const [historyData, setHistoryData] = React.useState([
         { id: 1, name: 'Prashant Verma' },
         { id: 2, name: 'Prashant Verma' },
@@ -32,63 +41,242 @@ const TutorFavourtePostScreen = () => {
         { id: 6, name: 'Prashant Verma' },
     ]);
 
-    React.useEffect(() => {
-        // AppState.addEventListener('change', _handleAppStateChange);
-        return () => {
-            // console.log('addEventListener');
-        };
-    }, [false]);
+    useFocusEffect(
+        React.useCallback(() => {
+            getNotificationUser();
+            return () => {
+                // Useful for cleanup functions
+            };
+        }, [])
+    );
 
+    const getNotificationUser = async () => {
+        setLoading(true)
+        setFavourteData([]);
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'my_favourite_list',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('getTutorPostForUser', config);
+        axios.request(config)
+            .then((response) => {
+                if (response?.data?.status) {
+                    setLoading(false);
+                    setFavourteData(response?.data?.data);
+                    console.log('getTutorPostForUser', JSON.stringify(response.data));
+                } else {
+                    setFavourteData([]);
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Opps!',
+                        text2: response?.data?.message,
+                    });
+                    setLoading(false);
+                }
+            })
+            .catch((error) => {
+                setLoading(false);
+                console.log(error);
+            });
+    }
+
+    async function onDisplayIncomingCall(post_id) {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('post_id', post_id);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('updateFcmToken', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'parent_request_for_call', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if (result.status) {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    async function onAddToFavourite(post_id) {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('post_id', post_id);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('updateFcmToken', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'add_to_favourite', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log('onAddToFavourite', JSON.stringify(result))
+                if (result.status) {
+                    getNotificationUser();
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    async function onRemoveToFavourite(post_id) {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('post_id', post_id);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('updateFcmToken', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'remove_to_favourite', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log('onRemoveToFavourite', JSON.stringify(result))
+                if (result.status) {
+                    getNotificationUser();
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
 
     const renderHistoryView = (items) => {
         return (
             <View style={{ backgroundColor: '#fff', elevation: 5, marginBottom: 10, borderRadius: 10, padding: 20, margin: 5 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <Text style={{ fontWeight: 'bold', flex: 1, marginRight: 6 }} numberOfLines={2}>Hone Tuition For My Doughter</Text>
-                    <TouchableOpacity onPress={() => setVisible(!visible)} style={{ width: 30, height: 30, borderRadius: 150, backgroundColor: 'rgb(68,114,199)', alignSelf: 'center', elevation: 5, alignItems: 'center', }}>
-                        <Image style={{ width: 12, height: 12, resizeMode: 'contain', marginTop: 8, tintColor: '#fff', alignItems: 'center' }} source={require('../../assets/star.png')} />
-                    </TouchableOpacity>
+                    <Text style={{ fontWeight: 'bold', flex: 1, marginRight: 6 }} numberOfLines={2}>{items?.item?.child?.length > 1 ? 'Gruop tuition at parent’s home' : 'Individual tuition at parent’s home'}</Text>
+                    {items.item?.favourite === 'Yes' ? <TouchableOpacity style={{ width: 30, height: 30, marginRight: 5, marginTop: -40 }}
+                        onPress={() => onRemoveToFavourite(items.item?.id)} >
+                        <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, alignItems: 'center', tintColor: 'rgb(68,114,199)' }} source={require('../../assets/star.png')} />
+                    </TouchableOpacity> : <TouchableOpacity style={{ width: 30, height: 30, marginRight: 5, marginTop: -40 }}
+                        onPress={() => onRemoveToFavourite(items.item?.id)} >
+                        <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, alignItems: 'center' }} source={require('../../assets/star.png')} />
+                    </TouchableOpacity>}
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 5, borderBottomColor: 'grey', borderBottomWidth: 0.5, }}>
                     <View style={{ flex: 1 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/profile_icon.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>Rahul Shukla</Text>
+                            <Text numberOfLines={1} style={{ fontWeight: 'bold' }}>{items?.item?.child[0]?.child_name} {items?.item?.child?.length > 1 ? `+${Number(items?.item?.child?.length) - 1}` : null}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>7th</Text>
+                            {items.item?.child.map((items) => <Text style={{ fontWeight: 'bold', textTransform: 'capitalize' }}>{items?.class_name !== null ? items?.class_name : 'N/A'}, </Text>)}
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/books.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>CBSC</Text>
+                            {items.item?.child.map((items) => <Text style={{ fontWeight: 'bold' }}>{items?.board_name !== null ? items?.board_name : 'N/A'}, </Text>)}
                         </View>
                     </View>
                     <View style={{ flex: 1 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                            <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/medium.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>English</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/search_books.png')} />
-                            <Text style={{ fontWeight: 'bold' }} numberOfLines={2}>Science, Math, English</Text>
+                            <MarqueeText
+                                style={{ fontSize: 24, marginRight: 0 }}
+                                speed={1}
+                                marqueeOnStart={true}
+                                loop={true}
+                                delay={1000} >
+                                {items.item?.child[0]?.subjects?.map((items) => <Text style={{ fontWeight: 'bold', textTransform: 'capitalize', fontSize: 13 }}>{items?.subject_name !== null ? items?.subject_name : 'N/A'}, </Text>)}
+                            </MarqueeText>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/placeholder.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>Izzatnagar</Text>
+                            <Text style={{ fontWeight: 'bold' }}>{items?.item?.locality}</Text>
                         </View>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
                         <Image style={{ width: 15, height: 15, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/distance.png')} />
-                        <Text style={{ fontWeight: 'bold' }}>2{items.index}.5 km away</Text>
+                        <Text style={{ fontWeight: 'bold' }}>{items?.item?.kms} km away</Text>
                     </View>
-                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
-                        <TouchableOpacity onPress={() => setVisible(!visible)} style={{ flex: 1, padding: 5, backgroundColor: 'green', borderRadius: 20, elevation: 5 }}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: '#fff', textTransform: 'uppercase' }}>Call</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity onPress={() => onDisplayIncomingCall(items.item?.id)} style={{ flex: 1, padding: 10, backgroundColor: 'rgb(68,114,199)', elevation: 5, borderRadius: 60 }}>
+                        <Text style={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Call</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -96,15 +284,23 @@ const TutorFavourtePostScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={{ color: 'black', fontSize: 12 }}
+            />
             <TutorHeader />
             <View style={{ flex: 1 }}>
-                <FlatList
-                    style={{}}
-                    data={historyData}
-                    keyExtractor={(e) => e.id}
-                    renderItem={(items) => renderHistoryView(items)}
-                    showsVerticalScrollIndicator={false}
-                />
+                {FavourteData?.length > 0 ?
+                    <FlatList
+                        style={{}}
+                        data={FavourteData}
+                        keyExtractor={(e) => e.id}
+                        renderItem={(items) => renderHistoryView(items)}
+                        showsVerticalScrollIndicator={false}
+                    /> : <View style={{ padding: 20, alignItems: 'center', marginTop: Dimensions.get('screen').width / 2 - 50 }}>
+                        <Image style={{ width: 250, height: 250, resizeMode: 'contain' }} source={require('../../assets/no_record_found.png')} />
+                    </View>}
             </View>
         </SafeAreaView>
     );

@@ -10,11 +10,12 @@ import {
   StyleSheet,
   View,
   StatusBar,
-  Text,
-  TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Alert
 } from 'react-native';
 import Toast from 'react-native-toast-message';
+import PushController from './PushController'; 
+import NotificationCenter from './NotificationCenter';
 import StackNavigation from './navigation';
 import enableGPS from './gps.js';
 
@@ -24,11 +25,12 @@ const App = () => {
     enableGPS();
   }, []);
 
-
   return (
-    <View style={{ height: Dimensions.get('screen').height, width: Dimensions.get('screen').width }}>
+    <View style={{ height: Dimensions.get('screen').height - 20, width: Dimensions.get('screen').width, marginTop: 20, backgroundColor: '#F1F6F9' }}>
       <StatusBar backgroundColor='black' barStyle='light-content' translucent />
       <StackNavigation />
+      <NotificationCenter />
+      <PushController />
       <Toast />
     </View>
   );

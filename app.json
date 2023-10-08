@@ -2,12 +2,14 @@
   "name": "ProfessionBeat",
   "displayName": "ProfessionBeat",
   "expo": {
+    "userInterfaceStyle": "automatic",
     "plugins": [
       [
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-        }
+        },
+        "@notifee/react-native"
       ]
     ]
   }

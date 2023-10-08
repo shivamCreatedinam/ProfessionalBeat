@@ -4,7 +4,7 @@ import Colors from "../../../common/Colour";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 40,
+        marginTop: 15,
         paddingLeft: 10,
         paddingRight: 10,
     },

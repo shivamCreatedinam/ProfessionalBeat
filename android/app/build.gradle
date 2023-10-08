@@ -3,6 +3,7 @@ apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -101,7 +102,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "Parihara: 1.0.1"
+        versionName "Tuitour Bot: 1.1.0"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -162,6 +163,9 @@ dependencies {
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.squareup.okhttp3', module:'okhttp'
     }
+    implementation project(':react-native-razorpay')
+    implementation project(':react-native-inappbrowser-reborn')
+    implementation project(path: ":@react-native-firebase_app")
     implementation 'com.facebook.fresco:animated-gif:2.6.0'
     implementation 'com.facebook.fresco:animated-webp:2.0.0'
     implementation 'com.facebook.fresco:webpsupport:2.0.0'
@@ -169,7 +173,7 @@ dependencies {
     implementation project(':react-native-share')
     implementation project(':react-native-maps')
     implementation project(':react-native-sensors')
-
+    implementation project(':react-native-callkeep')
     implementation project(':react-native-background-timer')
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")

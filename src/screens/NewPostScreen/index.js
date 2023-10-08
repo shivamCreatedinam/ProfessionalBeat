@@ -39,13 +39,14 @@ const NewPostScreen = () => {
     const [name, setName] = React.useState('');
     const [FullAddress, setFullAddress] = React.useState('');
     const [Locality, setLocality] = React.useState('');
-    const [ZipCode, setZipCode] = React.useState('');
+    const [ZipCode, setZipCode] = React.useState('110099');
     const [visiblePopup, setVisiblePopup] = React.useState(false);
     // subjects 
     const [ChildList, setChildList] = React.useState([]);
     // subjects 
     const [SubjectsData, setSubjectsData] = React.useState([]);
-    const [selectSubject, setSubjectsValue] = React.useState(null);
+    const [selectSubject, setSubjectsValue] = React.useState([]);
+    const [valueSubject, setSubjectValue] = React.useState(null);
     const [isSubjectFocus, setIssubjectFocus] = React.useState(false);
     // qualification
     const [Qualification, setQualification] = React.useState([]);
@@ -132,7 +133,7 @@ const NewPostScreen = () => {
             .then((response) => {
                 setLoading(false);
                 setChildList(response.data?.data);
-                console.log('loadSessionStorage', response.data?.data);
+                console.log('loadSessionStorage', response.data);
             })
             .catch((error) => {
                 setLoading(false);
@@ -191,7 +192,7 @@ const NewPostScreen = () => {
     }
 
     const loadCcity = async () => {
-        setLoading(true)
+        setLoading(true);
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
         let config = {
@@ -205,12 +206,12 @@ const NewPostScreen = () => {
         console.log('GetSubscription', config);
         axios.request(config)
             .then((response) => {
-                setLoading(false)
+                setLoading(false);
                 setState(response.data?.data);
                 console.log('GetSubscription', JSON.stringify(response.data));
             })
             .catch((error) => {
-                setLoading(false)
+                setLoading(false);
                 console.log(error);
             });
     }
@@ -350,18 +351,20 @@ const NewPostScreen = () => {
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
-        selected.map((data, index) =>
+        selectSubject.map((data, index) =>
             formdata.append(`subject_id[${index}]`, data)
         )
+        selected.map((data, index) =>
+            formdata.append(`child_id[${index}]`, data)
+        )
         formdata.append('open_for', 2);
-        formdata.append('address', FullAddress);
+        formdata.append('address', 'not_required');
         formdata.append('locality', Locality);
         formdata.append('pincode', ZipCode);
         formdata.append('state', value);
         formdata.append('city', valueCity);
         formdata.append('latitude', '23.5348934');
         formdata.append('longitude', '23.9850292');
-        formdata.append('child_id[0]', valueClasses);
         console.log('uploadProfile', valueX);
         var requestOptions = {
             method: 'POST',
@@ -412,7 +415,60 @@ const NewPostScreen = () => {
         setValueCity();
         setValueClasses();
         setFullAddress();
+        setSelected([]);
+        PostDone();
     }
+
+    const PostDone = () => {
+        Alert.alert(
+            'Post Uploaded Successfully!',
+            'You post uploaded Successfully',
+            [
+                { text: 'ok', onPress: () => navigate.navigate('MyPostScreen') },
+            ]
+        );
+    }
+
+    const RadioGroupCustom = ({ options, selectedValue, onSelect }) => {
+        return (
+            <View>
+                {options.map((option) => (
+                    <TouchableOpacity
+                        key={option.value}
+                        onPress={() => onSelect(option.value)}
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            borderColor: '#000',
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            margin: 2,
+                            padding: 7,
+                            backgroundColor: option.value === selectedValue ? 'red' : "#fff"
+                        }}
+                    >
+                        <Icon
+                            name={'circle-o'}
+                            size={15} // Adjust the size as needed
+                            color={'black'} // Change the color
+                        />
+                        <Text style={{ marginLeft: 8 }}>{option.label}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+        );
+    };
+
+    const radioButtons = [
+        {
+            label: 'Individual tuition',
+            value: 'Individual tuition',
+        },
+        {
+            label: 'Group tuition',
+            value: 'Group tuition',
+        },
+    ];
 
     return (
         <View style={styles.container}>
@@ -424,8 +480,7 @@ const NewPostScreen = () => {
                     textStyle={{ color: 'black', fontSize: 12 }}
                 />
                 <View style={{ flex: 1, backgroundColor: '#F1F6F9', borderRadius: 10, marginBottom: 10, elevation: 5, padding: 20 }} >
-                    <TextInput onChangeText={(e) => setFullAddress(e)} placeholder='Full Address' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
-                    <TextInput onChangeText={(e) => setLocality(e)} placeholder='Locality' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
+                    {/* <TextInput onChangeText={(e) => setFullAddress(e)} placeholder='Full Address' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} /> */}
                     <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                         <Dropdown
                             style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
@@ -461,8 +516,9 @@ const NewPostScreen = () => {
                             }}
                         />
                     </View>
-                    <TextInput maxLength={6} onChangeText={(e) => setZipCode(e)} placeholder='Zip Code' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
-                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                    <TextInput onChangeText={(e) => setLocality(e)} placeholder='Locality' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
+                    {/* <TextInput maxLength={6} onChangeText={(e) => setZipCode(e)} placeholder='Zip Code' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} /> */}
+                    {/* <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                         <Dropdown
                             style={[styles.dropdown1, isFocusClasses && { borderColor: 'blue' }]}
                             selectedTextStyle={styles.selectedTextStyle1}
@@ -478,23 +534,48 @@ const NewPostScreen = () => {
                                 setIsFocusClasses(false);
                             }}
                         />
+                    </View> */}
+                    <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10, marginBottom: 10, }]}>
+                        <View style={[{ marginTop: 15, marginLeft: -10, zIndex: 9999, }]}>
+                            <MultiSelect
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                data={ChildList}
+                                maxHeight={300}
+                                labelField="child_name"
+                                valueField="id"
+                                placeholder={!isFocusGender ? 'Select Children Profile' : valueGender}
+                                onFocus={() => setIsFocusGender(true)}
+                                onBlur={() => setIsFocusGender(false)}
+                                value={selected}
+                                onChange={item => {
+                                    setSelected(item);
+                                }}
+                                selectedStyle={styles.selectedStyle}
+                            />
+                        </View>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
-                        <Dropdown
-                            style={[styles.dropdown1, isFocusClasses && { borderColor: 'blue' }]}
-                            selectedTextStyle={styles.selectedTextStyle1}
-                            data={ChildList}
-                            maxHeight={300}
-                            labelField={"child_name"}
-                            valueField={"id"}
-                            placeholder={!isFocusClasses ? 'Select Child Profile' : valueClasses}
-                            onFocus={() => setIsFocusClasses(true)}
-                            onBlur={() => setIsFocusClasses(false)}
-                            onChange={item => {
-                                setValueToClasses(item.id);
-                                setIsFocusClasses(false);
-                            }}
-                        />
+                    <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10, marginBottom: 10, }]}>
+                        <View style={[{ marginTop: 15, marginLeft: -10, zIndex: 9999, }]}>
+                            <MultiSelect
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                data={SubjectsData}
+                                maxHeight={300}
+                                labelField="subject_name"
+                                valueField="id"
+                                placeholder={!isSubjectFocus ? 'Select Subjects' : valueSubject}
+                                onFocus={() => setIssubjectFocus(true)}
+                                onBlur={() => setIssubjectFocus(false)}
+                                value={selectSubject}
+                                onChange={item => {
+                                    setSubjectsValue(item);
+                                }}
+                                selectedStyle={styles.selectedStyle}
+                            />
+                        </View>
                     </View>
                     <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 10, paddingRight: 10 }]}>
                         <TouchableOpacity onPress={() => setVisiblePopup(true)} style={{ padding: 15, alignItems: 'center', backgroundColor: 'rgb(68,114,199)', borderRadius: 50, marginTop: 15, }}>
@@ -511,11 +592,11 @@ const NewPostScreen = () => {
                         dialogAnimation={new SlideAnimation({
                             slideFrom: 'bottom',
                         })}
-                        dialogStyle={{ width: Dimensions.get('screen').width - 80, height: Dimensions.get('screen').width + 70, borderColor: '#000', borderWidth: 1 }}
+                        dialogStyle={{ width: Dimensions.get('screen').width - 80, height: Dimensions.get('screen').width + 120, borderColor: '#000', borderWidth: 1 }}
                     >
                         <DialogContent>
                             <View>
-                                <View style={{ marginTop: 15, alignSelf: 'center', width: '100%' }}>
+                                <View style={{ marginTop: 45, alignSelf: 'center', width: '100%' }}>
                                     <Text style={{ fontSize: 16, textAlign: 'center', paddingTop: 20, fontWeight: 'bold' }}>Add New Child Profile</Text>
                                     <TextInput onChangeText={(e) => setName(e)} placeholder='Child Name' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
                                     <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
@@ -552,32 +633,38 @@ const NewPostScreen = () => {
                                             }}
                                         />
                                     </View>
-                                    <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10, marginBottom: 10, }]}>
-                                        <View style={[{ marginTop: 15, marginLeft: -10, zIndex: 9999, }]}>
-                                            <MultiSelect
-                                                style={styles.dropdown}
-                                                placeholderStyle={styles.placeholderStyle}
-                                                selectedTextStyle={styles.selectedTextStyle}
-                                                data={Qualification}
-                                                maxHeight={300}
-                                                labelField="qualifications"
-                                                valueField="id"
-                                                placeholder={!isFocusGender ? 'Select Qualifications' : valueGender}
-                                                onFocus={() => setIsFocusGender(true)}
-                                                onBlur={() => setIsFocusGender(false)}
-                                                value={selected}
-                                                onChange={item => {
-                                                    setSelected(item);
-                                                }}
-                                                selectedStyle={styles.selectedStyle}
-                                            />
-                                        </View>
+                                </View>
+                                <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10, marginBottom: 10, }]}>
+                                    <View style={[{ marginTop: 15, marginLeft: -10, zIndex: 9999, }]}>
+                                        <MultiSelect
+                                            style={styles.dropdown}
+                                            placeholderStyle={styles.placeholderStyle}
+                                            selectedTextStyle={styles.selectedTextStyle}
+                                            data={SubjectsData}
+                                            maxHeight={300}
+                                            labelField="subject_name"
+                                            valueField="id"
+                                            placeholder={!isFocusGender ? 'Select Subjects' : valueGender}
+                                            onFocus={() => setIsFocusGender(true)}
+                                            onBlur={() => setIsFocusGender(false)}
+                                            value={selected}
+                                            onChange={item => {
+                                                setSelected(item);
+                                            }}
+                                            selectedStyle={styles.selectedStyle}
+                                        />
                                     </View>
                                 </View>
-                                <TouchableOpacity style={{ padding: 8, backgroundColor: 'rgb(68,114,199)', borderRadius: 8, width: '40%', alignSelf: 'center', marginTop: 20 }}
-                                    onPress={() => saveChildProfile()}>
-                                    <Text style={{ color: '#fff', justifyContent: 'center', alignSelf: 'center', fontSize: 12 }}>​​Apply Now</Text>
-                                </TouchableOpacity>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
+                                    <TouchableOpacity style={{ padding: 8, backgroundColor: '#FFA500', borderRadius: 8, width: '40%', alignSelf: 'center', marginTop: 20, marginRight: 5 }}
+                                        onPress={() => setVisiblePopup(!visiblePopup)}>
+                                        <Text style={{ color: '#fff', justifyContent: 'center', alignSelf: 'center', fontSize: 12 }}>​Cancel</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ padding: 8, backgroundColor: 'rgb(68,114,199)', borderRadius: 8, width: '40%', alignSelf: 'center', marginTop: 20 }}
+                                        onPress={() => saveChildProfile()}>
+                                        <Text style={{ color: '#fff', justifyContent: 'center', alignSelf: 'center', fontSize: 12 }}>​​Apply Now</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </DialogContent>
                     </Dialog>
@@ -587,8 +674,33 @@ const NewPostScreen = () => {
     );
 };
 
-export default NewPostScreen;
+const style = StyleSheet.create({
+    dropdown: {
+        height: 30,
+        borderColor: 'gray',
+        borderWidth: 0,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+        width: 100
+    },
+    dropdown1: {
+        height: 30,
+        width: '20%',
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderColor: 'gray',
+        borderRadius: 5,
+        paddingHorizontal: 8,
+    },
+    icon: {
+        marginRight: 5,
+    },
+    placeholderStyle: {
+        fontSize: 10,
+    },
+    selectedTextStyle: {
+        fontSize: 14,
+    },
+});
 
-{/* <View style={{ padding: 20, alignItems: 'center', marginTop: Dimensions.get('screen').width / 2 - 50 }}>
-    <Image style={{ width: 250, height: 250, resizeMode: 'contain' }} source={require('../../assets/no_record_found.png')} />
-</View> */}
+export default NewPostScreen;

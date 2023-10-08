@@ -4,9 +4,10 @@ import Colors from "../../../common/Colour";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 40,
+        marginTop: 15,
         paddingLeft: 10,
         paddingRight: 10,
+        backgroundColor: '#F1F6F9'
     },
     mapContainer: {
         height: "50%"
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
         elevation: 7,
     }, dropdown1: {
         height: 45,
-        flexGrow:1,
+        flexGrow: 1,
         paddingLeft: 25,
         paddingRight: 25,
         borderColor: 'gray',
@@ -48,8 +49,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     dropdown: {
-        height: 45, 
-        flexGrow:1,
+        height: 45,
+        flexGrow: 1,
         backgroundColor: '#fff',
         borderBottomColor: 'gray',
         borderBottomWidth: 0.5,

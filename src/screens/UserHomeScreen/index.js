@@ -15,34 +15,58 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
+    PermissionsAndroid,
+    ActivityIndicator
 } from 'react-native';
 import axios from 'axios';
+import uuid from 'react-native-uuid';
 import globle from '../../../common/env';
+import moment from 'moment';
+import RNCallKeep from 'react-native-callkeep';
+import MarqueeText from 'react-native-marquee';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import CommonHeader from '../../components/CommonHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import BottomSheet from "react-native-gesture-bottom-sheet";
 import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
-// import { PermissionModal, PermissionItem } from "react-native-permissions-modal";
+import notifee, { AndroidImportance, AndroidBadgeIconType, AndroidVisibility, AndroidColor, AndroidCategory } from '@notifee/react-native';
+import messaging from '@react-native-firebase/messaging';
 import Geolocation from 'react-native-geolocation-service';
 import Toast from 'react-native-toast-message';
 import Share from 'react-native-share';
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import RadioGroup from 'react-native-radio-buttons-group';
+import styles from './styles';
+
 const UserHomeScreen = () => {
 
     const permModal = useRef();
     const navigate = useNavigation();
+    const bottomSheet = React.useRef();
     const [data, setData] = React.useState([]);
-    const [visible, setVisible] = React.useState(false);
+    const [selectedId, setSelectedId] = useState();
+    const [currentCallId, setCurrentCallId] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
+    const [visible, setVisible] = React.useState(false);
     const [visiblePopup, setVisiblePopup] = React.useState(false);
     const [scheduleCall, setScheduleCall] = React.useState(false);
     const [TimeSlotPopul, setTimeSlotPopup] = React.useState(false);
     const [tutionEndPopup, setTutEndPopup] = React.useState(false);
     const [feedbackPopup, setFeedbackPopup] = React.useState(false);
+    const [dataTuitor, setTuitorData] = React.useState([]);
     const [historyData, setHistoryData] = React.useState([{ id: 1, name: 'Prashant Verma' }, { id: 2, name: 'Prashant Verma' }, { id: 3, name: 'Prashant Verma' }, { id: 4, name: 'Prashant Verma' }, { id: 5, name: 'Prashant Verma' }, { id: 6, name: 'Prashant Verma' }]);
     const [location, setLocation] = useState({ latitude: 60.1098678, longitude: 24.7385084, });
+    // state
+    const [State, setState] = React.useState([]);
+    const [value, setValue] = React.useState(null);
+    const [isFocus, setIsFocus] = React.useState(false);
+    // city
+    const [City, setCity] = React.useState([]);
+    const [valueCity, setValueCity] = React.useState(null);
+    const [isFocusCity, setIsFocusCity] = React.useState(false);
+
 
     const handleLocationPermission = async () => {
         let permissionCheck = '';
@@ -74,21 +98,312 @@ const UserHomeScreen = () => {
     useFocusEffect(
         React.useCallback(() => {
             getTutorPostForUser();
+            loadCcity();
+            saveToken();
             return () => {
                 // Useful for cleanup functions
             };
         }, [])
     );
 
-    const getTutorPostForUser = async () => {
-        console.log('getTutorPostForUser');
+    const getTimesAgo = (created_at) => {
+        const dateTimeAgo = moment(new Date(created_at)).fromNow();
+        return dateTimeAgo;
+    }
+
+    const loadCcity = async () => {
         setLoading(true)
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: globle.API_BASE_URL + 'get-post',
+            url: globle.API_BASE_URL + 'states',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('GetSubscription', config);
+        axios.request(config)
+            .then((response) => {
+                setLoading(false)
+                setState(response.data?.data);
+                console.log('GetSubscription', JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error);
+            });
+    }
+
+    const getCityData = async (state) => {
+        setLoading(true);
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'cities/' + state,
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('Profile', config);
+        axios.request(config)
+            .then((response) => {
+                setLoading(false);
+                setCity(response.data?.data);
+            })
+            .catch((error) => {
+                setLoading(false);
+                console.log(error);
+            });
+    }
+
+    async function onDisplayNotification() {
+        // Request permissions (required for iOS)
+        if (Platform.OS === 'ios') {
+            await notifee.requestPermission()
+        }
+
+        // Create a channel (required for Android)
+        const channelId = await notifee.createChannel({
+            id: getCurrentCallId(),
+            name: 'Default Channel',
+            sound: 'default',
+            importance: AndroidImportance.HIGH,
+            badge: true,
+            vibration: true,
+            vibrationPattern: [300, 700],
+            lights: true,
+            lightColor: AndroidColor.RED,
+        });
+
+        // Display a notification
+        // Display a notification
+        await notifee.displayNotification({
+            title: 'Notification Title',
+            body: 'Main body content of the notification',
+            android: {
+                channelId,
+                smallIcon: 'defaults', // optional, defaults to 'ic_launcher'.
+                color: '#9c27b0',
+                category: AndroidCategory.CALL,
+                badgeIconType: AndroidBadgeIconType.SMALL,
+                importance: AndroidImportance.HIGH,
+                visibility: AndroidVisibility.SECRET,
+                vibrationPattern: [300, 700],
+                ongoing: true,
+                lights: [AndroidColor.RED, 300, 600],
+                // pressAction is needed if you want the notification to open the app when pressed
+                pressAction: {
+                    id: 'default12',
+                },
+            },
+        });
+    }
+
+    async function onDisplayIncomingCallX() {
+        try {
+            RNCallKeep.displayIncomingCall(getCurrentCallId(), 'c8c7c7c7c7cchh3', localizedCallerName = 'Lisa Pinto', handleType = '847387d7d6gd', hasVideo = false, options = null);
+        } catch (err) {
+            console.error('initializeCallKeep error:', err.message);
+        }
+    }
+
+    async function onAddToFavourite(post_id) {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('post_id', post_id);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('updateFcmToken', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'add_to_favourite', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log('onAddToFavourite', JSON.stringify(result))
+                if (result.status) {
+                    getTutorPostForUser();
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    async function onRemoveToFavourite(post_id) {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('post_id', post_id);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('updateFcmToken', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'remove_to_favourite', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log('onRemoveToFavourite', JSON.stringify(result))
+                if (result.status) {
+                    getTutorPostForUser();
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    async function onDisplayIncomingCall(post_id) {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('post_id', post_id);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('onRequestIncomingCall', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'parent_request_for_call', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if (result.status) {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    const saveToken = async () => {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        const fcmToken = await messaging().getToken();
+        AsyncStorage.setItem('@tokenKey', fcmToken);
+        console.log('saveToken', fcmToken);
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('fcm_token', fcmToken);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('updateFcmToken', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'updateFcmToken', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if (result.status) {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    const getTutorPostForUser = async () => {
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'get_parent_post',
             headers: {
                 'Authorization': 'Bearer ' + data
             }
@@ -96,12 +411,22 @@ const UserHomeScreen = () => {
         console.log('getTutorPostForUser', config);
         axios.request(config)
             .then((response) => {
-                setLoading(false)
-                setData(response.data?.data);
-                console.log('getTutorPostForUser', JSON.stringify(response.data));
+                if (response?.data?.status) {
+                    setLoading(false);
+                    setTuitorData(response?.data?.data);
+                    console.log('getTutorPostForUser', JSON.stringify(response.data));
+                } else {
+                    setTuitorData([]);
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Opps!',
+                        text2: response?.data?.message,
+                    });
+                    setLoading(false);
+                }
             })
             .catch((error) => {
-                setLoading(false)
+                setLoading(false);
                 console.log(error);
             });
     }
@@ -173,17 +498,64 @@ const UserHomeScreen = () => {
             });
     }
 
+    const setCallNotification = () => {
+        const options = {
+            ios: {
+                appName: 'ReactNativeWazoDemo',
+                imageName: 'sim_icon',
+                supportsVideo: false,
+                maximumCallGroups: '1',
+                maximumCallsPerCallGroup: '1'
+            },
+            android: {
+                alertTitle: 'Permissions Required',
+                alertDescription:
+                    'This application needs to access your phone calling accounts to make calls',
+                cancelButton: 'Cancel',
+                okButton: 'ok',
+                imageName: 'sim_icon',
+                additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
+            }
+        };
+
+        try {
+            RNCallKeep.setup(options);
+            RNCallKeep.setAvailable(true); // Only used for Android, see doc above.
+            RNCallKeep.startCall(getCurrentCallId(), '57d6g7dhh3hd8d', 'Atul');
+        } catch (err) {
+            console.error('initializeCallKeep error:', err.message);
+        }
+    }
+
+    const getCurrentCallId = () => {
+        let caller_id = null;
+        if (!currentCallId) {
+            caller_id = uuid.v4();
+            setCurrentCallId(caller_id);
+        }
+
+        return caller_id;
+    };
+
     const renderHistoryView = (item) => {
-        console.log("item", item)
         return (
-            <View style={{ backgroundColor: '#fff', marginBottom: 10, borderRadius: 10, padding: 15, margin: 5, borderColor: '#000', borderWidth: 0.8, borderRadius: 20 }}>
+            <View style={{ backgroundColor: '#fff', marginBottom: 10, borderRadius: 10, padding: 15, margin: 5, borderRadius: 10, elevation: 5 }}>
+                <Spinner
+                    visible={loading}
+                    textContent={'Loading...'}
+                    textStyle={{ color: 'black', fontSize: 12 }}
+                />
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
                         <TouchableOpacity onPress={() => setTimeSlotPopup(!TimeSlotPopul)}>
-                            <Image style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 140 }} source={require('../../assets/profile_picture.jpeg')} />
+                            {item.item?.profile_image !== null ? <Image style={{ width: 45, height: 45, resizeMode: 'contain', borderRadius: 140 }} source={{ uri: globle.IMAGE_BASE_URL + item.item?.profile_image }} /> :
+                                <Image style={{ width: 45, height: 45, resizeMode: 'contain', borderRadius: 140 }} source={require('../../assets/profile_picture.jpeg')} />}
                         </TouchableOpacity>
                         <View style={{ flexDirection: 'row', marginLeft: 10, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
-                            <Text style={{ justifyContent: 'center', fontSize: 15 }} numberOfLines={1}>Rajeev Gupta</Text>
+                            <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ justifyContent: 'center', fontSize: 15, fontWeight: 'bold' }} numberOfLines={1}>{item.item?.name}</Text>
+                                <Text style={{ justifyContent: 'center', fontSize: 12, color: 'grey' }} numberOfLines={1}>{getTimesAgo(item?.item?.created_date)}</Text>
+                            </View>
                             {/* <Text style={{ fontWeight: 'bold', flex: 1, fontSize: 12, color: '#b4b4b4' }} numberOfLines={1}>B-Tech, 4+ Years Exp</Text> */}
                             <TouchableOpacity style={{ marginRight: 5, flexDirection: 'row', marginLeft: 8 }} onPress={() => setScheduleCall(!scheduleCall)}>
                                 <Image style={{ width: 15, height: 15, resizeMode: 'contain', alignItems: 'center' }} source={require('../../assets/green_check.png')} />
@@ -191,13 +563,13 @@ const UserHomeScreen = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
-
-                    <TouchableOpacity style={{ width: 30, height: 30, marginRight: 5, marginTop: -40 }}
-                        onPress={() => setVisiblePopup(!visiblePopup)}
-                    >
+                    {item.item?.favourite === 'Yes' ? <TouchableOpacity style={{ width: 30, height: 30, marginRight: 5, marginTop: -40 }}
+                        onPress={() => onRemoveToFavourite(item.item?.id)} >
+                        <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, alignItems: 'center', tintColor: 'rgb(68,114,199)' }} source={require('../../assets/star.png')} />
+                    </TouchableOpacity> : <TouchableOpacity style={{ width: 30, height: 30, marginRight: 5, marginTop: -40 }}
+                        onPress={() => onAddToFavourite(item.item?.id)} >
                         <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, alignItems: 'center' }} source={require('../../assets/star.png')} />
-
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                     <TouchableOpacity onPress={() => startTrip()} style={{ width: 30, height: 30, borderRadius: 150, marginTop: -40, marginLeft: 10 }}>
                         <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, tintColor: '#000', alignItems: 'center' }} source={require('../../assets/share.png')} />
                     </TouchableOpacity>
@@ -213,17 +585,24 @@ const UserHomeScreen = () => {
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} /> */}
                                 <Text style={{ fontSize: 12 }}>Board: </Text>
-                                <Text style={{ fontSize: 12 }}>CBSE, UP</Text>
+                                {item.item?.boards.map((items) => <Text style={{ fontSize: 12 }}>{items?.board_name !== null ? items?.board_name : 'N/A'}, </Text>)}
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <Text style={{ fontSize: 12 }}>Class: </Text>
-                                <Text style={{ fontSize: 12 }}>5th to 10th </Text>
+                                <Text style={{ fontSize: 12 }}>{item.item?.from_class_name !== null ? item.item?.from_class_name : 'N/A'} to {item.item?.to_class_name !== null ? item.item?.to_class_name : 'N/A'}</Text>
                             </View>
                         </View>
                         <View style={{ flex: 1 }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <Text style={{ fontSize: 12 }}>Subject: </Text>
-                                <Text style={{ fontSize: 12 }}>Science, Math</Text>
+                                <MarqueeText
+                                    style={{ fontSize: 24, marginRight: 25 }}
+                                    speed={1}
+                                    marqueeOnStart={true}
+                                    loop={true}
+                                    delay={1000} >
+                                    {item.item?.subject.map((items) => <Text style={{ fontSize: 12 }}>{items?.subject_name !== null ? items?.subject_name : 'N/A'}, </Text>)}
+                                </MarqueeText>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <Text style={{ fontSize: 12 }}>Experience: </Text>
@@ -231,7 +610,7 @@ const UserHomeScreen = () => {
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <Text style={{ fontSize: 12 }}>City: </Text>
-                                <Text style={{ fontSize: 12 }}>Agra</Text>
+                                <Text style={{ fontSize: 12 }}>{item.item?.state_name}, {item.item?.city_name}</Text>
                             </View>
                         </View>
                     </View>
@@ -240,27 +619,24 @@ const UserHomeScreen = () => {
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/profile_icon.png')} /> */}
                                 <Text style={{ fontSize: 12 }}>English spoken: </Text>
-                                <Text style={{ fontSize: 12 }}>Yes</Text>
+                                <Text style={{ fontSize: 12 }}>{item.item?.english_spoken !== null ? item.item?.english_spoken : 'No'}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/profile_icon.png')} /> */}
-                                <Text style={{ fontSize: 12 }}> </Text>
+                                <Text style={{ fontSize: 12 }}></Text>
                                 <Text style={{ fontSize: 12 }}></Text>
                             </View>
-
                         </View>
                         <View style={{ flex: 1 }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} /> */}
                                 <Text style={{ fontSize: 12 }}>Locality: </Text>
-                                <Text style={{ fontSize: 12 }}>Izzatnagar</Text>
-
+                                <Text style={{ fontSize: 12 }}>{item.item?.locality}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} /> */}
                                 <Text style={{ fontSize: 12 }}>Fee: </Text>
-                                <Text style={{ fontSize: 12 }}>Rs 2500/mo</Text>
-
+                                <Text style={{ fontSize: 12 }}>Rs {item.item?.fees !== null ? item.item?.fees : 0}/mo</Text>
                             </View>
                         </View>
                     </View>
@@ -268,11 +644,11 @@ const UserHomeScreen = () => {
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
                         {/* <Image style={{ width: 15, height: 15, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/distance.png')} /> */}
-                        <Text style={{ fontSize: 12, paddingLeft: 8 }}>2.5 km away</Text>
+                        <Text style={{ fontSize: 12, paddingLeft: 8 }}>{item.item?.kms} km away</Text>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
-                        <TouchableOpacity onPress={() => setVisible(!visible)} style={{ flex: 1, padding: 5, backgroundColor: 'rgb(254,92,54)', borderRadius: 8, elevation: 5 }}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: '#fff', textTransform: 'uppercase' }}>Schedule call </Text>
+                        <TouchableOpacity onPress={() => onDisplayIncomingCall(item.item?.id)} style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 12, backgroundColor: 'green', borderRadius: 5, elevation: 5 }}>
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: '#fff', textTransform: 'uppercase' }}>Request call</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -305,34 +681,73 @@ const UserHomeScreen = () => {
 
     ]), []);
 
-    const [selectedId, setSelectedId] = useState();
+    const updatePostLocation = async () => {
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('city', Number(valueCity));
+        formdata.append('state', Number(value));
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('uploadProfile', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'updateProfile', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log('uploadProfileX', result)
+                if (result.status) {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                    bottomSheet.current.close();
+                    getTutorPostForUser();
+                } else {
+                    setLoading(false)
+                    bottomSheet.current.hide();
+                    console.log('formdata', JSON.stringify(result))
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            });
+    }
 
     return (
         <View style={{ flex: 1 }}>
             <View
                 contentContainerStyle={{ padding: 5, zIndex: 9999 }}
-                style={{ flex: 1, marginTop: 20, padding: 20, backgroundColor: '#F1F6F9' }}>
+                style={{ flex: 1, marginTop: 20, padding: 10, backgroundColor: '#F1F6F9' }}>
                 <CommonHeader />
-                {/* <TouchableOpacity onPress={() => startTrip()} style={{ width: '100%', height: 50 }}>
-                    <Text style={{ height: 50, borderRadius: 50, borderWidth: 1, borderColor: '#F1F6F9', paddingLeft: 20, backgroundColor: 'rgb(68,114,199)', elevation: 3, paddingTop: 15, fontWeight: 'bold', color: '#fff' }}>Search</Text>
-                    <View style={{ position: 'absolute', right: 10, top: 15 }}>
-                        <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 5, tintColor: '#fff' }} source={require('../../assets/search_icon.png')} />
-                    </View>
-                </TouchableOpacity> */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', margin: 15 }}>
-                    <Text style={{ flex: 1, fontSize: 14 }}>City</Text>
-                    {/* <TouchableOpacity style={{}} onPress={() => navigate.navigate('TripHistoryScreen')}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 11, color: 'rgb(68,114,199)' }}>View All</Text>
-                    </TouchableOpacity> */}
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ flex: 1 }} />
+                    <TouchableOpacity onPress={() => bottomSheet.current.show()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/filter.png')} />
+                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>City</Text>
+                    </TouchableOpacity>
                 </View>
                 <View>
-                    <FlatList
-                        style={{ height: Dimensions.get('screen').height / 1.55 }}
-                        data={historyData}
-                        keyExtractor={(e) => e.id}
-                        renderItem={(items) => renderHistoryView(items)}
-                        showsVerticalScrollIndicator={false}
-                    />
+                    {dataTuitor?.length === 0 ? <View style={{ flex: 1, alignItems: 'center', marginTop: Dimensions.get('screen').width / 3 }}>
+                        <Image style={{ width: 250, height: 250, resizeMode: 'cover' }} source={require('../../assets/no_record_found.png')} />
+                        <Text style={{ fontWeight: 'bold', fontSize: 12, color: '#000' }}>No Request Found</Text>
+                    </View> :
+                        <FlatList
+                            style={{ height: Dimensions.get('screen').height / 1.2 - 30, marginTop: 5 }}
+                            data={dataTuitor}
+                            keyExtractor={(e) => e.id}
+                            renderItem={(items) => renderHistoryView(items)}
+                            showsVerticalScrollIndicator={false}
+                        />}
                 </View>
             </View>
             <Dialog
@@ -340,26 +755,11 @@ const UserHomeScreen = () => {
                 dialogAnimation={new SlideAnimation({
                     slideFrom: 'bottom',
                 })}
-                dialogStyle={{ width: Dimensions.get('screen').width - 80, height: Dimensions.get('screen').width - 250, borderColor: '#000', borderWidth: 1 }}
-            // dialogTitle={<DialogTitle title="n" />}
-            // footer={
-            //     <DialogFooter>
-            //         {/* <DialogButton
-            //             text="CANCEL"
-            //             onPress={() => setVisible(!visible)}
-            //         /> */}
-            //         <DialogButton
-            //             text="OK"
-            //             onPress={() => setVisible(!visible)}
-            //             style={{backgroundColor:'blue'}}
-            //         />
-            //     </DialogFooter>
-            // }
-            >
+                dialogStyle={{ width: Dimensions.get('screen').width - 80, height: Dimensions.get('screen').width - 250, borderColor: '#000', borderWidth: 1 }}>
                 <DialogContent>
                     <View>
                         <View style={{ marginTop: 15, alignSelf: 'center', width: '93%' }}>
-                            <Text style={{ fontSize: 16, textAlign: 'center' }}>Complete your profile and apply for tuition before schedule a call</Text>
+                            <Text style={{ fontSize: 16, textAlign: 'center' }}>Complete your profile and apply for tuition before request a call</Text>
                         </View>
                         <TouchableOpacity style={{ padding: 8, backgroundColor: 'rgb(68,114,199)', borderRadius: 10, width: '28%', alignSelf: 'center', marginTop: 35 }}
                             onPress={() => setVisible(!visible)}>
@@ -380,7 +780,6 @@ const UserHomeScreen = () => {
                     </View>
                 </DialogContent>
             </Dialog>
-
             <Dialog
                 visible={visiblePopup}
                 dialogAnimation={new SlideAnimation({
@@ -400,7 +799,6 @@ const UserHomeScreen = () => {
                     </View>
                 </DialogContent>
             </Dialog>
-
             <Dialog
                 visible={scheduleCall}
                 dialogAnimation={new SlideAnimation({
@@ -411,7 +809,7 @@ const UserHomeScreen = () => {
                 <DialogContent>
                     <View>
                         <View style={{ marginTop: 0, alignSelf: 'center', width: '100%' }}>
-                            <Text style={{ fontSize: 16, textAlign: 'center', paddingTop: 20 }}>Select the post to schedule the call</Text>
+                            <Text style={{ fontSize: 16, textAlign: 'center', paddingTop: 20 }}>Select the post to request the call</Text>
                         </View>
                         <View style={{ flexDirection: 'row', width: '90%', justifyContent: 'space-around', marginTop: 8, borderColor: '#000', borderWidth: 1, borderRadius: 10, alignSelf: 'center' }}>
                             <View style={{ flexDirection: 'column' }}>
@@ -458,7 +856,9 @@ const UserHomeScreen = () => {
                             <View style={{ flexDirection: 'row', marginLeft: 10, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
                                 <Text style={{ justifyContent: 'center', fontSize: 15 }} numberOfLines={1}>Rajeev Gupta</Text>
                                 {/* <Text style={{ fontWeight: 'bold', flex: 1, fontSize: 12, color: '#b4b4b4' }} numberOfLines={1}>B-Tech, 4+ Years Exp</Text> */}
+
                             </View>
+
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Image style={{ width: 20, height: 20, resizeMode: 'contain', borderRadius: 140, marginLeft: 8, marginTop: 5 }} source={require('../../assets/cal.png')} />
@@ -469,14 +869,13 @@ const UserHomeScreen = () => {
                             <Text style={{ paddingLeft: 10, paddingTop: 4, fontSize: 12 }}>05:30PM to 07:00PM</Text>
                         </View>
                         <TouchableOpacity style={{ alignSelf: 'center', marginTop: 15, padding: 4, borderRadius: 8, borderWidth: 1, borderColor: '#fff', backgroundColor: 'rgb(254,92,54)', width: '40%' }}
-                            onPress={() => setTutEndPopup(!tutionEndPopup)}
+
                         >
                             <Text style={{ color: '#fff', alignSelf: 'center' }}>Confirm</Text>
                         </TouchableOpacity>
                     </View>
                 </DialogContent>
             </Dialog>
-
             <Dialog
                 visible={tutionEndPopup}
                 dialogAnimation={new SlideAnimation({
@@ -557,6 +956,49 @@ const UserHomeScreen = () => {
                     </View>
                 </DialogContent>
             </Dialog>
+            <BottomSheet hasDraggableIcon ref={bottomSheet} height={600} >
+                <View style={{ flex: 1, padding: 20 }}>
+                    <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>File By Location</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                        <Dropdown
+                            style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
+                            selectedTextStyle={styles.selectedTextStyle1}
+                            data={State}
+                            maxHeight={300}
+                            labelField="name"
+                            valueField="id"
+                            placeholder={!isFocus ? 'Select State' : value}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                                setValue(item.id);
+                                getCityData(item.id);
+                                setIsFocus(false);
+                            }}
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                        <Dropdown
+                            style={[styles.dropdown1, isFocusCity && { borderColor: 'blue' }]}
+                            selectedTextStyle={styles.selectedTextStyle1}
+                            data={City}
+                            maxHeight={300}
+                            labelField={"name"}
+                            valueField={"id"}
+                            placeholder={!isFocusCity ? 'Select City' : valueCity}
+                            onFocus={() => setIsFocusCity(true)}
+                            onBlur={() => setIsFocusCity(false)}
+                            onChange={item => {
+                                setValueCity(item.id);
+                                setIsFocusCity(false);
+                            }}
+                        />
+                    </View>
+                    <TouchableOpacity onPress={() => updatePostLocation()} style={{ padding: 20, backgroundColor: '#000000', borderRadius: 20, marginTop: 20 }}>
+                        {loading === true ? <ActivityIndicator color={'#fff'} size={'large'} /> : <Text style={{ fontWeight: 'bold', textAlign: 'center', textTransform: 'uppercase', color: '#ffffff' }}>Update Location</Text>}
+                    </TouchableOpacity>
+                </View>
+            </BottomSheet>
         </View>
     );
 };

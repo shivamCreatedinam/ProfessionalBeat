@@ -15,35 +15,36 @@ import {
     Text,
     Image,
     Dimensions,
-    ImageBackground,
+    PermissionsAndroid,
+    ActivityIndicator
 } from 'react-native';
 import axios from 'axios';
+import moment from 'moment';
+import uuid from 'react-native-uuid';
+import Toast from 'react-native-toast-message';
+import RNCallKeep from 'react-native-callkeep';
+import MarqueeText from 'react-native-marquee';
+import BottomSheet from "react-native-gesture-bottom-sheet";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
 import TutorHeader from '../../components/TutorHeader';
+import messaging from '@react-native-firebase/messaging';
 import globle from '../../../common/env';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const propertyData = [{
-    id: '1',
-    image: 'https://www.sacredyatra.com/wp-content/uploads/2016/03/Yamunotri-Location.jpg',
-    price: 'Individual tuition at parent’s home',
-    address: '123 Main St',
-    squareMeters: '150',
-    beds: '3 Days ago',
-    baths: '54 min',
-    parking: '122 Km'
-}];
-
 const HomeScreen = () => {
 
     const navigate = useNavigation();
-    const [data, setData] = React.useState([]);
+    const bottomSheet = React.useRef();
+    const [dataHome, setData] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
     const [visible, setVisible] = React.useState(true);
     const [alert, setAlert] = React.useState(false);
+    const [isFetching, setIsFetching] = React.useState(false);
+    const [currentCallId, setCurrentCallId] = React.useState(null);
     let [driverData, setDriverData] = React.useState(false);
     const [dutyStatus, setDutyStatus] = React.useState('Off');
     const [driver_activated, setDriverActivated] = React.useState(false);
@@ -53,38 +54,274 @@ const HomeScreen = () => {
     const [location, setLocation] = React.useState({ latitude: 60.1098678, longitude: 24.7385084, });
     const [Pickupstate, setPickupState] = React.useState({ pickupCords: {} });
     const [searchText, setSearchText] = React.useState('');
+    // state
+    const [State, setState] = React.useState([]);
+    const [value, setValue] = React.useState(null);
+    const [isFocus, setIsFocus] = React.useState(false);
+    // city
+    const [City, setCity] = React.useState([]);
+    const [valueCity, setValueCity] = React.useState(null);
+    const [isFocusCity, setIsFocusCity] = React.useState(false);
     const handleSearch = (text) => {
         setSearchText(text);
     }
 
+    const getCurrentCallId = () => {
+        let caller_id = null;
+        if (!currentCallId) {
+            caller_id = uuid.v4();
+            setCurrentCallId(caller_id);
+        }
 
-    React.useEffect(() => {
-        // AppState.addEventListener('change', _handleAppStateChange);
-        // dutyOnOff();
-        // getProfileActiveStatus();
-        return () => {
-            // console.log('addEventListener'); 
-        };
-    }, []);
+        return caller_id;
+    };
+
 
     useFocusEffect(
         React.useCallback(() => {
             getTutorPostForUser();
+            loadCcity();
+            saveToken();
             return () => {
                 // Useful for cleanup functions
             };
         }, [])
     );
 
-    const getTutorPostForUser = async () => {
-        console.log('getTutorPostForUser');
+    const saveToken = async () => {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        const fcmToken = await messaging().getToken();
+        AsyncStorage.setItem('@tokenKey', fcmToken);
+        console.log('saveToken', fcmToken);
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('fcm_token', fcmToken);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('updateFcmToken', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'updateFcmToken', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if (result.status) {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    const loadCcity = async () => {
         setLoading(true)
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: globle.API_BASE_URL + 'get-post',
+            url: globle.API_BASE_URL + 'states',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('GetSubscription', config);
+        axios.request(config)
+            .then((response) => {
+                setLoading(false)
+                setState(response.data?.data);
+                console.log('GetSubscription', JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error);
+            });
+    }
+
+    const getCityData = async (state) => {
+        setLoading(true);
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'cities/' + state,
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('Profile', config);
+        axios.request(config)
+            .then((response) => {
+                setLoading(false);
+                setCity(response.data?.data);
+            })
+            .catch((error) => {
+                setLoading(false);
+                console.log(error);
+            });
+    }
+
+    const updatePostLocation = async () => {
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('city', valueCity);
+        formdata.append('state', value);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        // console.log('uploadProfile', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'updateProfile', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                // console.log('uploadProfileX', result)
+                if (result.status) {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                    bottomSheet.current.hide();
+                    getTutorPostForUser();
+                } else {
+                    setLoading(false)
+                    bottomSheet.current.hide();
+                    console.log('formdata', JSON.stringify(result))
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    const setCallNotification = async (info) => {
+        console.log('setCallNotification', JSON.stringify(info))
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        const fcmToken = await messaging().getToken();
+        AsyncStorage.setItem('@tokenKey', fcmToken);
+        console.log('saveToken', fcmToken);
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('parent_id', info?.user_id);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('CallTuitorNotification', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'tutor-call-back', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if (result.status) {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    const setDirectCallNotification = () => {
+        const options = {
+            ios: {
+                appName: 'ReactNativeWazoDemo',
+                imageName: 'sim_icon',
+                supportsVideo: false,
+                maximumCallGroups: '1',
+                maximumCallsPerCallGroup: '1',
+            },
+            android: {
+                alertTitle: 'Permissions Required',
+                alertDescription:
+                    'This application needs to access your phone calling accounts to make calls',
+                cancelButton: 'Cancel',
+                okButton: 'ok',
+                imageName: 'sim_icon',
+                additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
+            }
+        };
+
+        try {
+            RNCallKeep.setup(options);
+            RNCallKeep.setAvailable(true); // Only used for Android, see doc above.
+            RNCallKeep.startCall(getCurrentCallId(), '57d6g7dhh3hd8d', 'Shivam');
+        } catch (err) {
+            console.error('initializeCallKeep error:', err.message);
+        }
+    }
+
+    const getTutorPostForUser = async () => {
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'get_tutor_post',
             headers: {
                 'Authorization': 'Bearer ' + data
             }
@@ -168,169 +405,274 @@ const HomeScreen = () => {
 
     }
 
+    const getTimesAgo = (created_at) => {
+        const dateTimeAgo = moment(new Date(created_at)).fromNow();
+        return dateTimeAgo;
+    }
+
+    async function onAddToFavourite(post_id) {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('post_id', post_id);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('updateFcmToken', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'add_to_favourite', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log('onAddToFavourite', JSON.stringify(result))
+                if (result.status) {
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                    getTutorPostForUser();
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
+
+    async function onRemoveToFavourite(post_id) {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        setLoading(true)
+        let data = JSON.parse(valueX)?.token;
+        var formdata = new FormData();
+        formdata.append('post_id', post_id);
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('updateFcmToken', JSON.stringify(requestOptions))
+        fetch(globle.API_BASE_URL + 'remove_to_favourite', requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log('onRemoveToFavourite', JSON.stringify(result))
+                if (result.status) {
+                    getTutorPostForUser();
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Congratulations!',
+                        text2: result?.message,
+                    });
+                } else {
+                    setLoading(false)
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Something went wrong!',
+                        text2: result?.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('error--->', error);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Something went wrong!',
+                    text2: error,
+                });
+                setLoading(false)
+            });
+    }
 
     const renderItem = ({ item }) => (
         <View style={styles.card}>
-            {/* <Image source={{ uri: item.image }} style={styles.image} /> */}
             <View style={styles.cardFooter}>
-                <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/history.png')} />
-                <Text style={styles.beds}>{item.beds}</Text>
-                <TouchableOpacity>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', padding: 10, marginRight: 15 }} source={require('../../assets/star.png')} />
-                </TouchableOpacity>
+                <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/clock.png')} />
+                <Text style={[styles.beds, {}]}>{getTimesAgo(item?.created_at)}</Text>
+                {item?.favourite === 'Yes' ? <TouchableOpacity style={{ width: 30, height: 30, marginRight: 5, marginTop: -10 }}
+                    onPress={() => onRemoveToFavourite(item?.id)} >
+                    <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, alignItems: 'center', tintColor: 'rgb(68,114,199)' }} source={require('../../assets/star.png')} />
+                </TouchableOpacity> : <TouchableOpacity style={{ width: 30, height: 30, marginRight: 5, marginTop: -10 }}
+                    onPress={() => onAddToFavourite(item?.id)} >
+                    <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, alignItems: 'center' }} source={require('../../assets/star.png')} />
+                </TouchableOpacity>}
                 <TouchableOpacity>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000' }} source={require('../../assets/share.png')} />
                 </TouchableOpacity>
             </View>
             <View style={styles.cardBody}>
+                <Text style={{ marginTop: -10 }}>{item?.child?.length > 1 ? 'Gruop tuition at parent’s home' : 'Individual tuition at parent’s home'}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 5, borderBottomColor: 'grey', borderBottomWidth: 0.5, }}>
                     <View style={{ flex: 1 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/profile_icon.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>CBSE, UP</Text>
+                            <Text numberOfLines={1} style={{ fontWeight: 'bold' }}>{item?.child[0]?.child_name} {item?.child?.length > 1 ? `+${Number(item?.child?.length) - 1}` : null}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>NC to 8th </Text>
+                            <Text style={{ fontWeight: 'bold' }}>{item?.child[0]?.class_name}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/books.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>CBSC</Text>
+                            <Text style={{ fontWeight: 'bold' }}>{item?.child[0]?.board_name}</Text>
                         </View>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                        {/* <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/medium.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>5+ years</Text>
-                        </View>
+                            <Text style={{ fontWeight: 'bold' }}>x</Text>
+                        </View> */}
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/search_books.png')} />
-                            <Text style={{ fontWeight: 'bold' }} numberOfLines={2}>Science, Math, English</Text>
+                            <MarqueeText
+                                style={{ fontSize: 24, marginRight: 0 }}
+                                speed={1}
+                                marqueeOnStart={true}
+                                loop={true}
+                                delay={1000} >
+                                {item?.child[0]?.subject.map((items) => <Text style={{ fontWeight: 'bold', fontSize: 12 }}>{items?.subject_name}, </Text>)}
+                            </MarqueeText>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                             <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/placeholder.png')} />
-                            <Text style={{ fontWeight: 'bold' }}>Nagpur, Motinagar</Text>
+                            <Text style={{ fontWeight: 'bold' }}>{item?.locality}</Text>
                         </View>
                     </View>
                 </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 20, paddingRight: 20, paddingBottom: 20 }}>
                 <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000' }} source={require('../../assets/routes.png')} />
-                <Text style={{ flex: 1, marginLeft: 10 }}>2.5 km away</Text>
-                <TouchableOpacity onPress={() => setAlert(true)} style={{ flex: 1, padding: 10, backgroundColor: '#22A699', elevation: 5, borderRadius: 60 }}>
+                <Text style={{ flex: 1, marginLeft: 10 }}>{item?.user_id} km away </Text>
+                <TouchableOpacity onPress={() => setCallNotification(item)} style={{ flex: 1, padding: 10, backgroundColor: '#22A699', elevation: 5, borderRadius: 60 }}>
                     <Text style={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Call</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 
-    const dutyOnOff = async (status) => {
-        const valueX = await AsyncStorage.getItem('@autoDriverGroup');
-        let data = JSON.parse(valueX);
-        let url_driverProfile = globle.API_BASE_URL + 'duty-on-off';
-        setLoading(true);
-        var authOptions = {
-            method: 'POST',
-            url: url_driverProfile,
-            data: JSON.stringify({ "status": status === true ? 'On' : 'Off', 'driver_id': data?.id }),
-            headers: { 'Content-Type': 'application/json' },
-            json: true,
-        };
-        axios(authOptions)
-            .then((response) => {
-                if (response.data.message === 'Duty On Successfully.') {
-                    setLoading(false);
-                    setDutyStatus('On')
-                    setVisible(status);
-                    statusOnOFF(response.data.message)
-                } else {
-                    setDutyStatus('Off')
-                    statusOnOFF(response.data.message)
-                    setDriverActivated(response.data?.driver_activated);
-                    setErrorMessage(response.data?.message);
-                    setVisible(!status);
-                    setLoading(false);
-                }
-            })
-            .catch((error) => {
-                setLoading(false);
-                console.log(error);
-            });
+    const onRefresh = () => {
+        getTutorPostForUser();
     }
 
-    const filteredData = propertyData.filter((item) => {
-        return item.address.toLowerCase().includes(searchText.toLowerCase());
-    });
-
     return (
-        <View style={{ flex: 1, marginTop: 25, backgroundColor: '#000000' }}>
+        <View style={{ flex: 1, marginTop: 5, backgroundColor: '#F1F6F9', padding: 10 }}>
             <Spinner
                 visible={loading}
                 textContent={'Loading...'}
                 textStyle={{ color: 'black', fontSize: 12 }}
             />
-            <View style={{ padding: 0, backgroundColor: '#000000', height: Dimensions.get('screen').height }}>
-                <View
-                    style={{ flex: 1, padding: 10, backgroundColor: '#F1F6F9' }}
-                    contentContainerStyle={{ padding: 5, zIndex: 9999 }}>
-                    <TutorHeader />
-                    {/* <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
-                        <View>
-                            <TextInput
-                                style={styles.searchInput}
-                                placeholder="Search Request..."
-                                onChangeText={handleSearch}
-                                placeholderTextColor={'#000'}
-                                value={searchText}
-                            />
-                            <TouchableOpacity style={{ position: 'absolute', right: 25, top: 12 }}>
-                                <Image style={{ width: 16, height: 16, resizeMode: 'contain' }} source={require('../../assets/search_icon.png')} />
-                            </TouchableOpacity>
-                        </View>
-                    </View> */}
-                    {propertyData.length > 0 ?
-                        <FlatList
-                            contentContainerStyle={styles.propertyListContainer}
-                            data={data}
-                            renderItem={renderItem}
-                            keyExtractor={(item) => item.id}
-                        />
-                        :
-                        <View style={{ flex: 1, alignItems: 'center', marginTop: Dimensions.get('screen').width / 3 }}>
-                            <Image style={{ width: 300, height: 300, resizeMode: 'cover' }} source={require('../../assets/no_record.png')} />
-                            <Text style={{ fontWeight: 'bold', fontSize: 12, color: '#000' }}>No Request Found</Text>
-                        </View>}
-                </View>
-                <Dialog
-                    visible={alert}
-                    dialogAnimation={new SlideAnimation({
-                        slideFrom: 'bottom',
-                    })}
-                    dialogStyle={{ width: Dimensions.get('screen').width - 60 }}
-                    dialogTitle={<DialogTitle title="Calling" />}
-                    footer={
-                        <DialogFooter>
-                            <DialogButton
-                                text="CANCEL"
-                                onPress={() => setAlert(false)}
-                            />
-                            <DialogButton
-                                text="OK"
-                                onPress={() => setAlert(false)}
-                            />
-                        </DialogFooter>
-                    }
-                >
-                    <DialogContent>
-                        <View>
-                            <View>
-                                <Text style={{ fontWeight: 'bold', textAlign: 'center', marginTop: 20, fontSize: 18 }}>Do you want to call Pratik Shahu?</Text>
-                                <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 12 }}>Calling time: <Text style={{ fontWeight: 'bold', }}>9AM to 9pm only</Text></Text>
-                            </View>
-                        </View>
-                    </DialogContent>
-                </Dialog>
+            <TutorHeader />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flex: 1 }} />
+                <TouchableOpacity onPress={() => bottomSheet.current.show()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/filter.png')} />
+                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>City</Text>
+                </TouchableOpacity>
             </View>
+            <View style={{ padding: 0, backgroundColor: '#F1F6F9', }}>
+                <FlatList
+                    style={{ height: Dimensions.get('screen').height - 200 }}
+                    data={dataHome}
+                    renderItem={renderItem}
+                    onRefresh={() => onRefresh()}
+                    refreshing={isFetching}
+                    keyExtractor={(item) => item.id}
+                />
+                {/* <View style={{ flex: 1, alignItems: 'center', marginTop: Dimensions.get('screen').width / 3 }}>
+                        <Image style={{ width: 300, height: 300, resizeMode: 'cover' }} source={require('../../assets/no_record.png')} />
+                        <Text style={{ fontWeight: 'bold', fontSize: 12, color: '#000' }}>No Request Found</Text>
+                    </View> */}
+            </View>
+            <Dialog
+                visible={alert}
+                dialogAnimation={new SlideAnimation({
+                    slideFrom: 'bottom',
+                })}
+                dialogStyle={{ width: Dimensions.get('screen').width - 60 }}
+                dialogTitle={<DialogTitle title="Calling" />}
+                footer={
+                    <DialogFooter>
+                        <DialogButton
+                            text="CANCEL"
+                            onPress={() => setAlert(false)}
+                        />
+                        <DialogButton
+                            text="OK"
+                            onPress={() => setAlert(false)}
+                        />
+                    </DialogFooter>
+                }
+            >
+                <DialogContent>
+                    <View>
+                        <View>
+                            <Text style={{ fontWeight: 'bold', textAlign: 'center', marginTop: 20, fontSize: 18 }}>Do you want to call Pratik Shahu?</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 12 }}>Calling time: <Text style={{ fontWeight: 'bold', }}>9AM to 9pm only</Text></Text>
+                        </View>
+                    </View>
+                </DialogContent>
+            </Dialog>
+            <BottomSheet hasDraggableIcon ref={bottomSheet} height={600} >
+                <View style={{ flex: 1, padding: 20 }}>
+                    <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>File By Location</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                        <Dropdown
+                            style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
+                            selectedTextStyle={styles.selectedTextStyle1}
+                            data={State}
+                            maxHeight={300}
+                            labelField="name"
+                            valueField="id"
+                            placeholder={!isFocus ? 'Select State' : value}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                                setValue(item.id);
+                                getCityData(item.id);
+                                setIsFocus(false);
+                            }}
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                        <Dropdown
+                            style={[styles.dropdown1, isFocusCity && { borderColor: 'blue' }]}
+                            selectedTextStyle={styles.selectedTextStyle1}
+                            data={City}
+                            maxHeight={300}
+                            labelField={"name"}
+                            valueField={"id"}
+                            placeholder={!isFocusCity ? 'Select City' : valueCity}
+                            onFocus={() => setIsFocusCity(true)}
+                            onBlur={() => setIsFocusCity(false)}
+                            onChange={item => {
+                                setValueCity(item.id);
+                                setIsFocusCity(false);
+                            }}
+                        />
+                    </View>
+                    <TouchableOpacity onPress={() => updatePostLocation()} style={{ padding: 20, backgroundColor: '#000000', borderRadius: 20, marginTop: 20 }}>
+                        {loading === true ? <ActivityIndicator color={'#fff'} size={'large'} /> : <Text style={{ fontWeight: 'bold', textAlign: 'center', textTransform: 'uppercase', color: '#ffffff' }}>Update Location</Text>}
+                    </TouchableOpacity>
+                </View>
+            </BottomSheet>
         </View>
     );
 }
@@ -358,8 +700,7 @@ const styles = StyleSheet.create({
         elevation: 5
     },
     propertyListContainer: {
-        paddingHorizontal: 20,
-        height: Dimensions.get('screen').height
+        paddingHorizontal: 5,
     },
     card: {
         backgroundColor: '#fff',
@@ -420,7 +761,37 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#ffa500',
         fontWeight: 'bold'
-    }
+    }, dropdown1: {
+        height: 45,
+        flexGrow: 1,
+        paddingLeft: 25,
+        paddingRight: 25,
+        borderColor: 'gray',
+        borderRadius: 8,
+        paddingHorizontal: 8,
+    },
+    selectedTextStyle1: {
+        fontSize: 16,
+    },
+    dropdown: {
+        height: 45,
+        flexGrow: 1,
+        backgroundColor: '#fff',
+        borderBottomColor: 'gray',
+        borderBottomWidth: 0.5,
+        borderRadius: 40,
+        paddingLeft: 15,
+        paddingRight: 15,
+    },
+    placeholderStyle: {
+        fontSize: 16,
+    },
+    selectedTextStyle: {
+        fontSize: 14,
+    },
+    selectedStyle: {
+        borderRadius: 12,
+    },
 });
 
 export default HomeScreen;

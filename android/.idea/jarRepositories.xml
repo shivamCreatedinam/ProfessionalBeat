@@ -56,5 +56,15 @@
       <option name="name" value="maven4" />
       <option name="url" value="file:$PROJECT_DIR$/../node_modules/react-native-screens/node_modules/react-native/android" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven4" />
+      <option name="name" value="maven4" />
+      <option name="url" value="file:$PROJECT_DIR$/../node_modules/@notifee/react-native/android/libs/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven5" />
+      <option name="name" value="maven5" />
+      <option name="url" value="file:$PROJECT_DIR$/../node_modules/react-native-vector-icons/node_modules/react-native/android" />
+    </remote-repository>
   </component>
 </project>

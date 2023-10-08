@@ -27,7 +27,7 @@ const LONGITUDE_DELTA = 0.009;
 const GOOGLE_MAP_KEY = 'AIzaSyDIpZFQnU2tms1EdAqK-H9K4PfNN17zLdc';
 
 export default class MapComponent extends React.Component {
-    
+
     constructor(props: any) {
         super(props);
         this.state = {
