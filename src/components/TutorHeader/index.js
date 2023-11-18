@@ -89,10 +89,10 @@ const TutorHeader = () => {
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginBottom: 15 }}>
-                <View style={{ flexGrow: 1, }} >
+                <TouchableOpacity onPress={() => navigate.navigate('HomeBottomNavigation')} style={{ flexGrow: 1, }} >
                     <Image style={{ height: 35, width: '100%', resizeMode: 'contain', }} source={require('../../assets/flat_icon_app_removebg.png')} />
-                </View>
-                <View style={{flex:1}} />
+                </TouchableOpacity>
+                <View style={{ flex: 1 }} />
                 <TouchableOpacity onPress={() => openBellNotificationProfile()} style={{ width: 40, height: 40, borderRadius: 150, backgroundColor: 'rgb(68,114,199)', alignItems: 'center', elevation: 5, marginRight: 10 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginTop: 10 }} source={require('../../assets/bell_notification.png')} />
                 </TouchableOpacity>

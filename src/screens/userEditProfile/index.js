@@ -15,12 +15,13 @@ import {
     Dimensions,
     TextInput,
     ScrollView,
-    StyleSheet
+    StyleSheet,
+    KeyboardAvoidingView
 } from 'react-native';
 import axios from 'axios';
 import globle from '../../../common/env';
 import Toast from 'react-native-toast-message';
-import TutorHeader from '../../components/TutorHeader';
+import CommonHeader from '../../components/CommonHeader';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImagePicker from 'react-native-image-crop-picker';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -31,12 +32,12 @@ const userEditProfile = () => {
 
     const navigate = useNavigation();
     const routes = useRoute();
-    const [data, setData] = React.useState({});
+    const [data, setData] = React.useState(null);
     const [name, setName] = React.useState('');
     const [City, setCity] = React.useState([]);
     const [State, setState] = React.useState([]);
     const [Email, setEmail] = React.useState('');
-    const [mobile, setMobile] = React.useState('');
+    const [mobile, setMobile] = React.useState(null);
     const [address, setAddress] = React.useState('');
     const [street, setStreet] = React.useState('');
     const [pincode, setPincode] = React.useState('');
@@ -52,7 +53,7 @@ const userEditProfile = () => {
     const [valueCity, setValueCity] = React.useState(null);
     const [isFocusCity, setIsFocusCity] = React.useState(false);
     // gender
-    const [valueGender, setValueGender] = React.useState('');
+    const [valueGender, setValueGender] = React.useState(null);
     const [isFocusGender, setIsFocusGender] = React.useState(false);
     const gender = [{ label: 'Female', value: '1' }, { label: 'Male', value: '2' }];
 
@@ -61,6 +62,7 @@ const userEditProfile = () => {
         React.useCallback(() => {
             loadProfile();
             getStateData();
+            console.log('', JSON.stringify(routes?.params?.screenType))
             return () => {
                 // Useful for cleanup functions
             };
@@ -81,19 +83,32 @@ const userEditProfile = () => {
         };
         axios.request(config)
             .then((response) => {
-                console.log('loadProfile', JSON.stringify(response?.data?.user?.city));
-                setLoading(false)
-                setData(response.data);
-                setName(response.data?.user?.name);
-                getCityData(Number(response?.data?.user?.state));
-                setValue(Number(response?.data?.user?.state));
-                setValueGender(response?.data?.user?.gender);
-                setEmail(response.data?.user?.email);
-                setAddress(response.data?.user?.localty);
-                setMobile(response.data?.user?.mobile);
-                setStreet(response.data?.user?.street);
-                setPincode(response.data?.user?.pincode);
-                setValueCity(Number(response?.data?.user?.city));
+                if (response.status) {
+                    console.log('loadProfile', JSON.stringify(response.data?.user));
+                    if (response.data?.user?.name !== null) {
+                        setLoading(false);
+                        setData(response?.data);
+                        setEmail(response.data?.user?.email);
+                        setMobile(response.data?.user?.mobile);
+                        setValueGender(response?.data?.user?.gender);
+                        setTimeout(() =>
+                            setValueCity(response?.data?.user?.city)
+                            , 2000);
+                    } else {
+                        setMobile(response.data?.user?.mobile);
+                        console.log('loadProfile', response.data?.user?.mobile);
+                    }
+                } else {
+                    setLoading(false);
+                }
+                // setName(response.data?.user?.name);
+                // getCityData(Number(response?.data?.user?.state));
+                // setValue(Number(response?.data?.user?.state));
+                // setValueGender(response?.data?.user?.gender);
+                // setAddress(response.data?.user?.localty);
+                // setStreet(response.data?.user?.street);
+                // setPincode(response.data?.user?.pincode);
+                // setValueCity(Number(response?.data?.user?.city));
             })
             .catch((error) => {
                 setLoading(false)
@@ -101,17 +116,17 @@ const userEditProfile = () => {
             });
     }
 
-    const uplodProfilePhotoCard = () => {
-        ImagePicker.openCamera({
-            width: 400,
-            height: 400,
-            cropping: true
-        }).then(image => {
-            console.log(image.path);
-            setuploadProfile(image.path);
-            updateUserProfile();
-        });
-    }
+    // const uplodProfilePhotoCard = () => {
+    //     ImagePicker.openCamera({
+    //         width: 400,
+    //         height: 400,
+    //         cropping: true
+    //     }).then(image => {
+    //         console.log(image.path);
+    //         setuploadProfile(image.path);
+    //         updateUserProfile();
+    //     });
+    // }
 
     const updateUserProfile = async () => {
         setLoading(true)
@@ -139,8 +154,9 @@ const userEditProfile = () => {
                         text1: 'Congratulations!',
                         text2: result?.message,
                     });
+                    navigate.goBack();
                 } else {
-                    setLoading(false)
+                    setLoading(false);
                     Toast.show({
                         type: 'success',
                         text1: 'Something went wrong!',
@@ -207,6 +223,46 @@ const userEditProfile = () => {
             });
     }
 
+    const checkValidation = () => {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+        var isValidZip = /([1-9]{1}[0-9]{5}|[1-9]{1}[0-9]{3}\\s[0-9]{3})/
+        if (reg.test(Email) === false) {
+            showErrorMessage("Email is Not Correct");
+            return false;
+        }
+        else {
+            if (pincode.trim().length < 4) {
+                showErrorMessage("Pincode is Not Correct" + pincode);
+                return false;
+            } else {
+                if (name.trim().length < 4) {
+                    showErrorMessage("Name must be minimum 4 characters");
+                    return false;
+                } else {
+                    if (name.trim().length < 4) {
+                        showErrorMessage("Name must be minimum 4 characters");
+                        return false;
+                    } else {
+                        if (address.trim().length < 4) {
+                            showErrorMessage("Please Enter Valid localty");
+                            return false;
+                        } else {
+                            updateUserDemoProfile();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    const showErrorMessage = (msg) => {
+        Toast.show({
+            type: 'error',
+            text1: 'Your ' + msg,
+            text2: msg,
+        });
+    }
+
     const updateUserDemoProfile = async () => {
         setLoading(true)
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
@@ -247,9 +303,13 @@ const userEditProfile = () => {
                     Toast.show({
                         type: 'success',
                         text1: 'Congratulations!',
-                        text2: result?.message,
+                        text2: 'Profile Save Successfully',
                     });
-                    loadProfile();
+                    if (routes?.params?.screenType === 'NewUser') {
+                        navigate.navigate('UserBottomNavigation');
+                    } else {
+                        navigate.navigate('UserHomeScreen');
+                    }
                 } else {
                     setLoading(false)
                     Toast.show({
@@ -272,103 +332,109 @@ const userEditProfile = () => {
 
 
     return (
-        <View style={{ flex: 1, marginTop: 25, backgroundColor: '#000000' }}>
+        <View style={{ flex: 1, paddingTop: 25, backgroundColor: '#000000' }}>
             <Spinner
                 visible={loading}
                 textContent={'Loading...'}
                 textStyle={{ color: 'black', fontSize: 12 }}
             />
-            <View style={{ padding: 10, backgroundColor: '#F1F6F9', height: Dimensions.get('screen').height }}>
-                <TutorHeader />
-                <ScrollView
-                    style={{ flex: 1, padding: 0, backgroundColor: '#F1F6F9' }}
-                    contentContainerStyle={{ padding: 5, zIndex: 9999, paddingBottom: 80 }}>
-                    <View style={{ padding: 10 }}>
-                        <TouchableOpacity
-                            onPress={() => uplodProfilePhotoCard()}
-                            style={{ paddingTop: 20, alignItems: 'center' }}>
-                            {uploadProfile !== null ? <Image style={{ height: 120, width: 120, resizeMode: 'contain', alignSelf: 'center', alignItems: 'center', marginBottom: 20, borderRadius: 150, borderColor: 'rgb(68,114,199)', borderWidth: 1 }} source={{ uri: uploadProfile }} /> :
-                                <Image style={{ height: 120, width: 120, resizeMode: 'contain', alignSelf: 'center', alignItems: 'center', marginBottom: 20, borderRadius: 150, borderColor: 'rgb(68,114,199)', borderWidth: 2 }} source={{ uri: globle.IMAGE_BASE_URL + data?.user?.profile_image }} />}
-                        </TouchableOpacity>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.name} placeholder='Enter Full Name' onChangeText={(e) => setName(e)} />
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.email} placeholder='Enter Email' onChangeText={(e) => setEmail(e)} />
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <TextInput editable={false} style={{ marginLeft: 15 }} defaultValue={data?.user?.mobile} placeholder='Enter Mobile' />
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <Dropdown
-                                style={[styles.dropdown1, isFocusGender && { borderColor: 'blue' }]}
-                                selectedTextStyle={styles.selectedTextStyle1}
-                                data={gender}
-                                value={valueGender}
-                                maxHeight={300}
-                                labelField="label"
-                                valueField="value"
-                                placeholder={!isFocusGender ? 'Select Gender' : valueGender}
-                                onFocus={() => setIsFocusGender(true)}
-                                onBlur={() => setIsFocusGender(false)}
-                                onChange={item => {
-                                    setValueGender(item.value);
-                                    setIsFocusGender(false);
-                                }}
-                            />
-                        </View>
-                        {/* <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+            <View style={{ padding: 5, backgroundColor: '#F1F6F9', height: Dimensions.get('screen').height }}>
+                <CommonHeader />
+                <KeyboardAvoidingView
+                    style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', padding: 5 }}
+                    behavior='height'
+                    enabled
+                    keyboardVerticalOffset={10}>
+                    <ScrollView
+                        style={{ flex: 1, padding: 0, backgroundColor: '#F1F6F9' }}
+                        contentContainerStyle={{ padding: 5, zIndex: 9999, paddingBottom: 80 }}>
+                        <View style={{ padding: 10 }}>
+                            <TouchableOpacity
+                                style={{ paddingTop: 20, alignItems: 'center' }}>
+                                <Image style={{ height: 140, width: 140, resizeMode: 'contain', alignSelf: 'center', alignItems: 'center', marginBottom: 20, borderRadius: 150, borderWidth: 2 }} source={require('../../assets/notification_logo.png')} />
+                            </TouchableOpacity>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.name} placeholder='Enter Full Name' onChangeText={(e) => setName(e)} />
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.email} placeholder='Enter Email' onChangeText={(e) => setEmail(e)} />
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                                <TextInput editable={false} style={{ marginLeft: 15 }} value={mobile} placeholder='Enter Mobile' />
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                                <Dropdown
+                                    style={[styles.dropdown1, isFocusGender && { borderColor: 'blue' }]}
+                                    selectedTextStyle={styles.selectedTextStyle1}
+                                    data={gender}
+                                    value={valueGender}
+                                    maxHeight={300}
+                                    labelField="label"
+                                    valueField="value"
+                                    placeholder={!isFocusGender ? 'Select Gender' : valueGender}
+                                    onFocus={() => setIsFocusGender(true)}
+                                    onBlur={() => setIsFocusGender(false)}
+                                    onChange={item => {
+                                        setValueGender(item.value);
+                                        setIsFocusGender(false);
+                                    }}
+                                />
+                            </View>
+                            {/* <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                             <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.street} placeholder='Enter City' onChangeText={(e) => setStreet(e)} />
                         </View> */}
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
-                            <Dropdown
-                                style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
-                                selectedTextStyle={styles.selectedTextStyle1}
-                                data={State}
-                                value={value}
-                                maxHeight={300}
-                                labelField="name"
-                                valueField="id"
-                                placeholder={!isFocus ? 'Select State' : value}
-                                onFocus={() => setIsFocus(true)}
-                                onBlur={() => setIsFocus(false)}
-                                onChange={item => {
-                                    setValue(item.id);
-                                    getCityData(item.id);
-                                    setIsFocus(false);
-                                }}
-                            />
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                                <Dropdown
+                                    style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
+                                    selectedTextStyle={styles.selectedTextStyle1}
+                                    data={State}
+                                    value={value}
+                                    maxHeight={300}
+                                    labelField={"name"}
+                                    valueField={"id"}
+                                    placeholder={!isFocus ? 'Select State' : value}
+                                    onFocus={() => setIsFocus(true)}
+                                    onBlur={() => setIsFocus(false)}
+                                    onChange={item => {
+                                        setValue(item.id);
+                                        getCityData(item.id);
+                                        setIsFocus(false);
+                                    }}
+                                />
+                            </View>
+                            <View
+                                style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                                <Dropdown
+                                    style={[styles.dropdown1, isFocusCity && { borderColor: 'blue' }]}
+                                    selectedTextStyle={styles.selectedTextStyle1}
+                                    data={City}
+                                    value={Number(data?.user?.state)}
+                                    maxHeight={300}
+                                    labelField={"name"}
+                                    valueField={"id"}
+                                    placeholder={!isFocusCity ? 'Select City' : valueCity}
+                                    onFocus={() => setIsFocusCity(true)}
+                                    onBlur={() => setIsFocusCity(false)}
+                                    onChange={item => {
+                                        setValueCity(item.id);
+                                        setIsFocusCity(false);
+                                    }}
+                                />
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.localty} placeholder='Enter Locality' onChangeText={(e) => setAddress(e)} />
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                                <TextInput style={{ marginLeft: 15, flex: 1 }} maxLength={6} keyboardType='number-pad' defaultValue={data?.user?.pincode} placeholder='Enter Pincode' onChangeText={(e) => setPincode(e)} />
+                            </View>
+                            <View style={{ marginTop: 15 }}>
+                                <TouchableOpacity onPress={() => checkValidation()} style={{ padding: 20, alignItems: 'center', backgroundColor: '#000', borderRadius: 50, }}>
+                                    <Text style={{ color: '#ffffff', textTransform: 'uppercase' }}>Update Profile</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
-                            <Dropdown
-                                style={[styles.dropdown1, isFocusCity && { borderColor: 'blue' }]}
-                                selectedTextStyle={styles.selectedTextStyle1}
-                                data={City}
-                                maxHeight={300}
-                                labelField={"name"}
-                                valueField={"id"}
-                                placeholder={!isFocusCity ? 'Select City' : valueCity}
-                                onFocus={() => setIsFocusCity(true)}
-                                onBlur={() => setIsFocusCity(false)}
-                                onChange={item => {
-                                    setValueCity(item.id);
-                                    setIsFocusCity(false);
-                                }}
-                            />
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.localty} placeholder='Enter Locality' onChangeText={(e) => setAddress(e)} />
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                            <TextInput style={{ marginLeft: 15 }} maxLength={6} keyboardType='number-pad' defaultValue={data?.user?.pincode} placeholder='Enter Pincode' onChangeText={(e) => setPincode(e)} />
-                        </View>
-                        <View style={{ marginTop: 15 }}>
-                            <TouchableOpacity onPress={() => updateUserDemoProfile()} style={{ padding: 20, alignItems: 'center', backgroundColor: '#000', borderRadius: 50, }}>
-                                <Text style={{ color: '#ffffff', textTransform: 'uppercase' }}>Update Profile</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </ScrollView>
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </View>
         </View>
     );

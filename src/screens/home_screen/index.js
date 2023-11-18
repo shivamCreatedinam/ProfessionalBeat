@@ -9,7 +9,6 @@ import React from 'react';
 import {
     TouchableOpacity,
     StyleSheet,
-    TextInput,
     View,
     FlatList,
     Text,
@@ -20,18 +19,26 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import moment from 'moment';
+import Confetti from 'react-confetti'
+import Modal from "react-native-modal";
 import uuid from 'react-native-uuid';
 import Toast from 'react-native-toast-message';
 import RNCallKeep from 'react-native-callkeep';
 import MarqueeText from 'react-native-marquee';
 import BottomSheet from "react-native-gesture-bottom-sheet";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
+import { Dropdown } from 'react-native-element-dropdown';
 import TutorHeader from '../../components/TutorHeader';
 import messaging from '@react-native-firebase/messaging';
 import globle from '../../../common/env';
 import Spinner from 'react-native-loading-spinner-overlay';
-import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
+import Dialog, {
+    SlideAnimation,
+    DialogTitle,
+    DialogContent,
+    DialogFooter,
+    DialogButton,
+} from 'react-native-popup-dialog';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -40,6 +47,7 @@ const HomeScreen = () => {
     const navigate = useNavigation();
     const bottomSheet = React.useRef();
     const [dataHome, setData] = React.useState([]);
+    const [ProfileData, setProfileData] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [visible, setVisible] = React.useState(true);
     const [alert, setAlert] = React.useState(false);
@@ -54,6 +62,7 @@ const HomeScreen = () => {
     const [location, setLocation] = React.useState({ latitude: 60.1098678, longitude: 24.7385084, });
     const [Pickupstate, setPickupState] = React.useState({ pickupCords: {} });
     const [searchText, setSearchText] = React.useState('');
+    const [CompleteProfileStatus, setCompleteProfileStatus] = React.useState(false);
     // state
     const [State, setState] = React.useState([]);
     const [value, setValue] = React.useState(null);
@@ -76,23 +85,57 @@ const HomeScreen = () => {
         return caller_id;
     };
 
-
     useFocusEffect(
         React.useCallback(() => {
             getTutorPostForUser();
             loadCcity();
             saveToken();
+            callsetup();
+            loadProfile();
             return () => {
                 // Useful for cleanup functions
             };
         }, [])
     );
 
+    const loadProfile = async () => {
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'getProfile',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        axios.request(config)
+            .then((response) => {
+                if (response.status) {
+                    console.log('loadProfile', JSON.stringify(response.data?.status));
+                    console.log('loadProfile', JSON.stringify(response?.data?.user?.is_update));
+                    if (response.data?.status === true) {
+                        setLoading(false);
+                        setProfileData(response?.data);
+                        setCompleteProfileStatus(response?.data?.user?.is_update === 0 ? true : false);
+                    } else {
+                        // 
+                    }
+                } else {
+                    setLoading(false);
+                }
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error);
+            });
+    }
+
     const saveToken = async () => {
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         const fcmToken = await messaging().getToken();
         AsyncStorage.setItem('@tokenKey', fcmToken);
-        console.log('saveToken', fcmToken);
         setLoading(true)
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
@@ -105,21 +148,15 @@ const HomeScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('updateFcmToken', JSON.stringify(requestOptions))
         fetch(globle.API_BASE_URL + 'updateFcmToken', requestOptions)
             .then(response => response.json())
             .then(result => {
                 if (result.status) {
-                    setLoading(false)
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Congratulations!',
-                        text2: result?.message,
-                    });
+                    setLoading(false);
                 } else {
                     setLoading(false)
                     Toast.show({
-                        type: 'success',
+                        type: 'error',
                         text1: 'Something went wrong!',
                         text2: result?.message,
                     });
@@ -128,7 +165,7 @@ const HomeScreen = () => {
             .catch((error) => {
                 console.log('error--->', error);
                 Toast.show({
-                    type: 'success',
+                    type: 'error',
                     text1: 'Something went wrong!',
                     text2: error,
                 });
@@ -148,12 +185,10 @@ const HomeScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('GetSubscription', config);
         axios.request(config)
             .then((response) => {
                 setLoading(false)
                 setState(response.data?.data);
-                console.log('GetSubscription', JSON.stringify(response.data));
             })
             .catch((error) => {
                 setLoading(false)
@@ -190,8 +225,8 @@ const HomeScreen = () => {
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
-        formdata.append('city', valueCity);
-        formdata.append('state', value);
+        formdata.append('city', Number(valueCity));
+        formdata.append('state', Number(value));
         var requestOptions = {
             method: 'POST',
             body: formdata,
@@ -200,7 +235,6 @@ const HomeScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        // console.log('uploadProfile', JSON.stringify(requestOptions))
         fetch(globle.API_BASE_URL + 'updateProfile', requestOptions)
             .then(response => response.json())
             .then(result => {
@@ -212,7 +246,8 @@ const HomeScreen = () => {
                         text1: 'Congratulations!',
                         text2: result?.message,
                     });
-                    bottomSheet.current.hide();
+                    bottomSheet.current.close();
+                    loadProfile();
                     getTutorPostForUser();
                 } else {
                     setLoading(false)
@@ -236,16 +271,38 @@ const HomeScreen = () => {
             });
     }
 
-    const setCallNotification = async (info) => {
-        console.log('setCallNotification', JSON.stringify(info))
+    const getCallingToken = async (info) => {
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: 'https://tuitionbot.com/agora_live_token/KBC/sample/RtcTokenBuilderSample.php',
+            headers: {
+                'Authorization': 'Bearer '
+            }
+        };
+        console.log('getCallingToken', config);
+        axios.request(config)
+            .then((response) => {
+                console.log('getCallingToken', JSON.stringify(response.data?.status));
+                if (Number(response?.data?.status) === 1) {
+                    setCallNotification(info, response?.data?.token2)
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const setCallNotification = async (info, token) => {
+        // console.log('setCallNotification', JSON.stringify(info))
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         const fcmToken = await messaging().getToken();
         AsyncStorage.setItem('@tokenKey', fcmToken);
-        console.log('saveToken', fcmToken);
         setLoading(true)
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
-        formdata.append('parent_id', info?.user_id);
+        formdata.append('call_token', token);
+        formdata.append('post_id', info?.id);
         var requestOptions = {
             method: 'POST',
             body: formdata,
@@ -254,12 +311,13 @@ const HomeScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('CallTuitorNotification', JSON.stringify(requestOptions))
-        fetch(globle.API_BASE_URL + 'tutor-call-back', requestOptions)
+        // console.log('CallTuitorNotification----->', JSON.stringify(info))
+        fetch(globle.API_BASE_URL + 'tutor_request_call_for_post', requestOptions)
             .then(response => response.json())
             .then(result => {
                 if (result.status) {
                     setLoading(false)
+                    setDirectCallNotification(token, info);
                     Toast.show({
                         type: 'success',
                         text1: 'Congratulations!',
@@ -285,7 +343,7 @@ const HomeScreen = () => {
             });
     }
 
-    const setDirectCallNotification = () => {
+    const callsetup = () => {
         const options = {
             ios: {
                 appName: 'ReactNativeWazoDemo',
@@ -308,7 +366,36 @@ const HomeScreen = () => {
         try {
             RNCallKeep.setup(options);
             RNCallKeep.setAvailable(true); // Only used for Android, see doc above.
-            RNCallKeep.startCall(getCurrentCallId(), '57d6g7dhh3hd8d', 'Shivam');
+            // RNCallKeep.startCall(getCurrentCallId(), '57d6g7dhh3hd8d', 'Shivam');
+        } catch (err) {
+            console.error('initializeCallKeep error:', err.message);
+        }
+    }
+
+    const setDirectCallNotification = (token, info) => {
+        const options = {
+            ios: {
+                appName: 'ReactNativeWazoDemo',
+                imageName: 'sim_icon',
+                supportsVideo: false,
+                maximumCallGroups: '1',
+                maximumCallsPerCallGroup: '1',
+            },
+            android: {
+                alertTitle: 'Permissions Required',
+                alertDescription:
+                    'This application needs to access your phone calling accounts to make calls',
+                cancelButton: 'Cancel',
+                okButton: 'ok',
+                imageName: 'sim_icon',
+                additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
+            }
+        };
+
+        try {
+            RNCallKeep.setup(options);
+            RNCallKeep.setAvailable(true); // Only used for Android, see doc above.
+            RNCallKeep.startCall(getCurrentCallId(), token, info?.child[0]?.child_name);
         } catch (err) {
             console.error('initializeCallKeep error:', err.message);
         }
@@ -326,12 +413,10 @@ const HomeScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getTutorPostForUser', config);
         axios.request(config)
             .then((response) => {
                 setLoading(false)
                 setData(response.data?.data);
-                console.log('getTutorPostForUser', JSON.stringify(response.data));
             })
             .catch((error) => {
                 setLoading(false)
@@ -561,7 +646,7 @@ const HomeScreen = () => {
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 20, paddingRight: 20, paddingBottom: 20 }}>
                 <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000' }} source={require('../../assets/routes.png')} />
                 <Text style={{ flex: 1, marginLeft: 10 }}>{item?.user_id} km away </Text>
-                <TouchableOpacity onPress={() => setCallNotification(item)} style={{ flex: 1, padding: 10, backgroundColor: '#22A699', elevation: 5, borderRadius: 60 }}>
+                <TouchableOpacity onPress={() => getCallingToken(item)} style={{ flex: 1, padding: 10, backgroundColor: '#22A699', elevation: 5, borderRadius: 60 }}>
                     <Text style={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Call</Text>
                 </TouchableOpacity>
             </View>
@@ -570,6 +655,16 @@ const HomeScreen = () => {
 
     const onRefresh = () => {
         getTutorPostForUser();
+    }
+
+    const openCompleteProfile = () => {
+        setCompleteProfileStatus(false);
+        setCompleteProfileStatus(false);
+        setCompleteProfileStatus(false);
+        setCompleteProfileStatus(false);
+        setCompleteProfileStatus(false);
+        setCompleteProfileStatus(false);
+        navigate.navigate('EditTutorProfileScreen');
     }
 
     return (
@@ -581,6 +676,11 @@ const HomeScreen = () => {
             />
             <TutorHeader />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 10 }} source={require('../../assets/navigation_icon.png')} />
+                    <Text style={{ fontWeight: 'bold', }}>{ProfileData?.user?.state_name}, </Text>
+                    <Text style={{ fontWeight: 'bold', }}>{ProfileData?.user?.city_name}</Text>
+                </View>
                 <View style={{ flex: 1 }} />
                 <TouchableOpacity onPress={() => bottomSheet.current.show()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/filter.png')} />
@@ -673,6 +773,18 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
             </BottomSheet>
+            <Modal isVisible={CompleteProfileStatus}>
+                <View style={{ backgroundColor: '#fff', height: 300, padding: 10, borderRadius: 5 }}>
+                    <View style={{ flex: 1 }}>
+                        <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 14, letterSpacing: 1, marginTop: 5 }}>Welcome To TuitionBot</Text>
+                        <Text style={{ textAlign: 'center', fontWeight: '500', fontSize: 12, letterSpacing: 2, marginTop: 10 }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,</Text>
+                        {/* <Image style={{}} source={require('../../assets/')} /> */}
+                    </View>
+                    <TouchableOpacity style={{ padding: 15, backgroundColor: '#000000', borderRadius: 5, elevation: 5 }} onPress={() => openCompleteProfile()}>
+                        <Text style={{ color: '#fff', fontWeight: 'bold', textAlign: 'center', textTransform: 'uppercase' }}>Complete Profile</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
         </View>
     );
 }

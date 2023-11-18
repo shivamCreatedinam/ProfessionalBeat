@@ -142,7 +142,7 @@ const CallHistoryScreen = () => {
             <View style={{ backgroundColor: '#fff', elevation: 5, marginBottom: 10, borderRadius: 10, padding: 10, margin: 5 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <View style={{ paddingRight: 10, alignItems: 'center', }}>
-                        <Image style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 150 }} source={{ uri: globle.IMAGE_BASE_URL + items?.item?.user_details?.profile_image }} />
+                        <Image style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 150 }} source={require('../../assets/notification_logo.png')} />
                     </View>
                     <View style={{ flex: 1 }}>
                         <Text style={{ fontWeight: 'bold', marginRight: 6 }} numberOfLines={1}>{items?.item?.user_details?.name}</Text>
@@ -162,7 +162,7 @@ const CallHistoryScreen = () => {
     return (
         <View style={styles.container}>
             <CommonHeader />
-            {visible ?
+            {historyData.length !== 0 ?
                 <View style={{ flex: 1, marginBottom: 10 }}>
                     <FlatList
                         style={{}}

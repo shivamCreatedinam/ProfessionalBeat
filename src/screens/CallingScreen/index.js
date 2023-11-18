@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { PermissionsAndroid, Platform } from 'react-native';
+// import RtcEngine, { ClientRole, ChannelProfile } from 'react-native-agora';
+// import { useInitializeAgora, useRequestAudioHook } from '../../configure/hooks';
 import { ClientRoleType, createAgoraRtcEngine, IRtcEngine, ChannelProfileType, } from 'react-native-agora';
 
 const appId = '2496c3f2c06d46f2a3b500bab9c45952';
@@ -22,6 +24,11 @@ const CallingScreen = () => {
             ]);
         }
     };
+
+    React.useEffect(() => {
+        // RtcEngine.create(appId);
+        console.log('Have_Data_Profile: ', JSON.stringify(routes.params));
+    }, []);
 
     function showMessage(msg) {
         setMessage(msg);

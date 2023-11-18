@@ -21,7 +21,7 @@ import globle from '../../../common/env';
 import { useNavigation, useFocusEffect, useRoute } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MarqueeText from 'react-native-marquee';
-import CommonHeader from '../../components/CommonHeader';
+import TutorHeader from '../../components/TutorHeader';
 import Toast from 'react-native-toast-message';
 import styles from './styles';
 import moment from 'moment';
@@ -43,7 +43,7 @@ const MyTuitorPostScreen = () => {
     );
 
     const getTutorPostForUser = async () => {
-        console.log('getTutorPostForUser');
+        // console.log('getTutorPostForUser');
         setLoading(true)
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
@@ -60,7 +60,7 @@ const MyTuitorPostScreen = () => {
                 if (response?.data?.status) {
                     setLoading(false)
                     setData(response.data?.data);
-                    console.log('getTutorPostForUser', JSON.stringify(response.data));
+                    // console.log('getTutorPostForUser', JSON.stringify(response.data));
                 } else {
                     setData([]);
                     setLoading(false);
@@ -212,7 +212,7 @@ const MyTuitorPostScreen = () => {
 
     return (
         <View style={styles.container}>
-            <CommonHeader />
+            <TutorHeader />
             <View>
                 {data?.length > 0 ?
                     <FlatList

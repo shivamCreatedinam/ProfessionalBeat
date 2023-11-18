@@ -19,7 +19,7 @@ import {
 import axios from 'axios';
 import globle from '../../../common/env';
 import MarqueeText from 'react-native-marquee';
-import { useNavigation, useFocusEffect, useRoute } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CommonHeader from '../../components/CommonHeader';
 import Toast from 'react-native-toast-message';
@@ -31,7 +31,6 @@ const MyPostScreen = () => {
     const navigate = useNavigation();
     const [data, setData] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
-    const [historyData, setHistoryData] = React.useState([{ id: 1, name: 'Prashant Verma' }, { id: 2, name: 'Prashant Verma' }]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -49,7 +48,7 @@ const MyPostScreen = () => {
     }
 
     const getTutorPostForUser = async () => {
-        console.log('getTutorPostForUser');
+        // console.log('getTutorPostForUser');
         setLoading(true);
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
@@ -66,7 +65,7 @@ const MyPostScreen = () => {
                 if (response?.data?.status) {
                     setLoading(false)
                     setData(response.data?.data);
-                    console.log('getTutorPostForUser', JSON.stringify(response.data));
+                    // console.log('getTutorPostForUser', JSON.stringify(response.data));
                 } else {
                     setData([]);
                     setLoading(false);
@@ -185,8 +184,8 @@ const MyPostScreen = () => {
                                 {item.item?.child.map((items) => <Text style={{ fontSize: 12, color: '#000', paddingLeft: 5, }}>{items?.board_name},</Text>)}
                             </View>
                             {/* <View style={{ flexDirection: 'row', alignItems: 'center', }}> */}
-                                {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} /> */}
-                                {/* <Text style={{ fontSize: 12 }}></Text>
+                            {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} /> */}
+                            {/* <Text style={{ fontSize: 12 }}></Text>
                                 <Text style={{ fontSize: 12 }}></Text> */}
                             {/* </View> */}
                         </View>
@@ -230,9 +229,8 @@ const MyPostScreen = () => {
     return (
         <View style={styles.container}>
             <CommonHeader />
-
             <View>
-                {historyData?.length > 0 ?
+                {data?.length > 0 ?
                     <FlatList
                         style={{ height: Dimensions.get('screen').height / 1.3 }}
                         data={data}
@@ -243,8 +241,6 @@ const MyPostScreen = () => {
                         <Image style={{ width: 250, height: 250, resizeMode: 'contain' }} source={require('../../assets/no_record_found.png')} />
                     </View>
                 }
-
-
             </View>
         </View>
     );

@@ -26,15 +26,18 @@ const UpcomingTripsScreen = () => {
 
 
     React.useEffect(() => {
-        const dataRef = database().ref('/users/');
-        dataRef.on('value', snapshot => {
-            const newData = [];
-            snapshot.forEach(childSnapshot => {
-                newData.push(childSnapshot.val());
+        try {
+            const dataRef = database().ref('/users/');
+            dataRef.on('value', snapshot => {
+                const newData = [];
+                snapshot.forEach(childSnapshot => {
+                    newData.push(childSnapshot.val());
+                });
+                setData(newData);
             });
-            setData(newData);
-        });
-
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
         return () => {
             dataRef.off(); // Clean up the listener when the component unmounts
         };

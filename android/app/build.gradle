@@ -101,8 +101,8 @@ android {
         applicationId "com.createdinam.professionbeat"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "Tuitour Bot: 1.1.0"
+        versionCode 7
+        versionName "Tuitour Bot: 1.1.7"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -175,7 +175,7 @@ dependencies {
     implementation project(':react-native-sensors')
     implementation project(':react-native-callkeep')
     implementation project(':react-native-background-timer')
-    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

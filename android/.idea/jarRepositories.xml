@@ -66,5 +66,15 @@
       <option name="name" value="maven5" />
       <option name="url" value="file:$PROJECT_DIR$/../node_modules/react-native-vector-icons/node_modules/react-native/android" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven7" />
+      <option name="name" value="maven7" />
+      <option name="url" value="https://developer.huawei.com/repo/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven8" />
+      <option name="name" value="maven8" />
+      <option name="url" value="https://maven.columbus.heytapmobi.com/repository/releases/" />
+    </remote-repository>
   </component>
 </project>

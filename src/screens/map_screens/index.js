@@ -27,7 +27,7 @@ import { Rating, AirbnbRating } from 'react-native-ratings';
 import MapViewDirections from 'react-native-maps-directions';
 import Geolocation from '@react-native-community/geolocation';
 import { ProgressView } from "@react-native-community/progress-view";
-// import database from '@react-native-firebase/database';
+import database from '@react-native-firebase/database';
 import MapView, {
     Marker,
     AnimatedRegion
@@ -185,12 +185,16 @@ const MapsScreens = () => {
             }
         }
 
-        database()
-            .ref(RevertCxtUser)
-            .set(userDetails)
-            .then(() => {
-                console.log('saveLoation', true);
-            });
+        try {
+            database()
+                .ref(RevertCxtUser)
+                .set(userDetails)
+                .then(() => {
+                    console.log('saveLoation', true);
+                });
+        } catch (error) {
+            console.log('goBackEndTrip', error);
+        }
     }
 
     function goBackEndTrip() {

@@ -51,27 +51,29 @@ const NotificationScreen = () => {
         return (
             <View style={{ backgroundColor: '#fff', marginBottom: 10, borderRadius: 10, margin: 5, borderRadius: 10, elevation: 5 }}>
                 <View style={{ flexDirection: 'column' }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 3, width: '100%', justifyContent: 'space-between' }}>
-                        <View style={{ marginTop: 8, width: '100%' }}>
-                            <Text numberOfLines={2} style={{ fontSize: 14, fontWeight: '500', paddingLeft: 15, }}>{item?.trans_desc_me}</Text>
+                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, marginRight: 15 }}>
+                            <Image style={{ width: 18, height: 18, resizeMode: 'contain', borderRadius: 140, marginLeft: 8, marginTop: 5 }} source={require('../../assets/clock.png')} />
+                            <Text style={{ paddingLeft: 10, paddingTop: 4, fontSize: 12, flex: 1 }}>{getTimesAgo(item?.created_date)}</Text>
+                            <Image style={{ width: 20, height: 20, resizeMode: 'contain', borderRadius: 140 }} source={require('../../assets/bell_icon.png')} />
                         </View>
-                        <View style={{ width: '35%' }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, marginRight: 15 }}>
-                                <Image style={{ width: 18, height: 18, resizeMode: 'contain', borderRadius: 140, marginLeft: 8, marginTop: 5 }} source={require('../../assets/clock.png')} />
-                                <Text style={{ paddingLeft: 10, paddingTop: 4, fontSize: 12 }}>{getTimesAgo(item?.created_date)}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 3, width: '100%', justifyContent: 'space-between', marginBottom: 15 }}>
+                        <View style={{ marginTop: 8, width: '100%' }}>
+                            <Text numberOfLines={2} style={{ fontSize: 14, fontWeight: '500', paddingLeft: 15, }}>{item?.types}</Text>
+                            <Text numberOfLines={2} style={{ fontSize: 14, fontWeight: '500', paddingLeft: 15, }}>{item?.trans_desc}</Text>
+                        </View>
+                    </View>
+                    {/* <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ marginLeft: 10, marginTop: 5 }}>
+                                <Image style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 140 }} source={{ uri: globle.IMAGE_BASE_URL + item?.user_details?.profile_image }} />
                             </View>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <View style={{ marginLeft: 10, marginTop: 5 }}>
-                                <Image style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 140 }} source={{uri:globle.IMAGE_BASE_URL+item?.user_details?.profile_image}} />
-                            </View> 
-                        </View> 
-                    </View>
                     <TouchableOpacity style={{ backgroundColor: 'rgb(68,114,199)', padding: 5, borderRadius: 5, width: '30%', marginLeft: 30, marginTop: 10, alignSelf: 'flex-end', marginRight: 10, marginBottom: 15 }}>
                         <Text style={{ textAlign: 'center', color: '#fff' }}>View Post</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
 
             </View>
@@ -87,18 +89,18 @@ const NotificationScreen = () => {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: globle.API_BASE_URL + 'get_notification',
+            url: globle.API_BASE_URL + 'get_globally_all_notification',
             headers: {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getTutorPostForUser', config);
+        // console.log('getTutorPostForUser', config);
         axios.request(config)
             .then((response) => {
                 if (response?.data?.status) {
                     setLoading(false);
                     setNotificationData(response?.data?.data);
-                    console.log('getTutorPostForUser', JSON.stringify(response.data));
+                    // console.log('getTutorPostForUser', JSON.stringify(response.data));
                 } else {
                     setNotificationData([]);
                     Toast.show({

@@ -32,7 +32,7 @@ const TutorNewPostScreen = () => {
 
     const navigate = useNavigation();
     const [loading, setLoading] = React.useState(false);
-    const [Locality, setLocality] = React.useState('');
+    const [Locality, setLocality] = React.useState(null);
     // subjects 
     const [SubjectsData, setSubjectsData] = React.useState([]);
     const [valueSubject, setSubjectValue] = React.useState(null);
@@ -49,7 +49,7 @@ const TutorNewPostScreen = () => {
     const [isFocus, setIsFocus] = React.useState(false);
     // fees
     const [fees, setFees] = React.useState([{ "fees": '500', "id": 1, "status": 1 }, { "fees": '1000', "id": 2, "status": 1 }]);
-    const [FeesValue, setFeesValue] = React.useState('');
+    const [FeesValue, setFeesValue] = React.useState(null);
     const [isFeesFocus, setIsFeesFocus] = React.useState(false);
     // city
     const [City, setCity] = React.useState([]);
@@ -256,6 +256,50 @@ const TutorNewPostScreen = () => {
             });
     }
 
+    const validationBeforeSubmit = () => {
+        if (value === null) {
+            showErrorMessage("Please Select State");
+        } else {
+            if (valueCity === null) {
+                showErrorMessage("Please Select City");
+            } else {
+                if (Locality === null) {
+                    showErrorMessage("Please Enter Locality");
+                } else {
+                    if (selectSubject.length === 0) {
+                        showErrorMessage("Please Select Subject's");
+                    } else {
+                        if (FeesValue === null) {
+                            showErrorMessage("Please Enter Tuition Fees");
+                        } else {
+                            if (valueBoard === null) {
+                                showErrorMessage("Please Select Board");
+                            } else {
+                                if (valueClasses === null) {
+                                    showErrorMessage("Please Select Class From");
+                                } else {
+                                    if (valueToClasses === null) {
+                                        showErrorMessage("Please Select Class To");
+                                    } else {
+                                        updateUserDemoProfile();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    const showErrorMessage = (msg) => {
+        Toast.show({
+            type: 'error',
+            text1: 'Your ' + msg,
+            text2: msg,
+        });
+    }
+
 
     const updateUserDemoProfile = async () => {
         console.log('Class Save');
@@ -328,7 +372,7 @@ const TutorNewPostScreen = () => {
             'Post Uploaded Successfully!',
             'You post uploaded Successfully',
             [
-                { text: 'ok', onPress: () => navigate.navigate('MyTuitorPostScreen') },
+                { text: 'ok', onPress: () => navigate.replace('MyTuitorPostScreen') },
             ]
         );
     }
@@ -491,10 +535,13 @@ const TutorNewPostScreen = () => {
                         />
                     </View>
                     <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 10, paddingRight: 10 }]}>
-                        <TouchableOpacity onPress={() => updateUserDemoProfile()} style={{ padding: 15, alignItems: 'center', backgroundColor: '#000', borderRadius: 10, marginTop: 15, }}>
+                        <TouchableOpacity onPress={() => validationBeforeSubmit()} style={{ padding: 15, alignItems: 'center', backgroundColor: '#000', borderRadius: 10, marginTop: 15, }}>
                             <Text style={{ color: '#ffffff', textTransform: 'uppercase' }}>Create New Post</Text>
                         </TouchableOpacity>
                     </View>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 6, marginTop: 20 }}>
+                    <Text style={{ fontSize: 12, letterSpacing: 1 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Note: </Text>Your post visible after varification by admin, and it's visible for you selected location or city whcih you selected.</Text>
                 </View>
             </ScrollView>
         </View>

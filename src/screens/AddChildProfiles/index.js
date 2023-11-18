@@ -290,7 +290,8 @@ const AddChildProfileScreen = () => {
                 })}
                 dialogStyle={{ width: Dimensions.get('screen').width - 80, height: Dimensions.get('screen').width + 70, borderColor: '#000', borderWidth: 1 }} >
                 <DialogContent>
-                    <View>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}>
                         <View style={{ marginTop: 15, alignSelf: 'center', width: '100%' }}>
                             <Text style={{ fontSize: 16, textAlign: 'center', paddingTop: 20, fontWeight: 'bold' }}>Add New Child Profile</Text>
                             <TextInput onChangeText={(e) => setName(e)} placeholder='Child Name' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
@@ -360,7 +361,7 @@ const AddChildProfileScreen = () => {
                                 <Text style={{ color: '#fff', justifyContent: 'center', alignSelf: 'center', fontSize: 12 }}>​Create New</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </ScrollView>
                 </DialogContent>
             </Dialog>
         </View>

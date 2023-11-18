@@ -63,13 +63,13 @@ const TutorFavourtePostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getTutorPostForUser', config);
+        // console.log('getTutorPostForUser', config);
         axios.request(config)
             .then((response) => {
                 if (response?.data?.status) {
                     setLoading(false);
                     setFavourteData(response?.data?.data);
-                    console.log('getTutorPostForUser', JSON.stringify(response.data));
+                    // console.log('getTutorPostForUser', JSON.stringify(response.data));
                 } else {
                     setFavourteData([]);
                     Toast.show({

@@ -35,6 +35,8 @@ import io.invertase.firebase.database.ReactNativeFirebaseDatabasePackage;
 import io.invertase.firebase.firestore.ReactNativeFirebaseFirestorePackage;
 // @react-native-firebase/messaging
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
+// agora-react-native-rtm
+import io.agora.agora_rtm.AgoraRTMPackage;
 // appcenter
 import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
 // appcenter-analytics
@@ -57,6 +59,8 @@ import org.linusu.RNGetRandomValuesPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 // react-native-inappbrowser-reborn
 import com.proyecto26.inappbrowser.RNInAppBrowserPackage;
+// react-native-invoke-app
+import com.codegulp.invokeapp.ReactNativeInvokeAppPackage;
 // react-native-loader-kit
 import com.reactnativeloaderkit.LoaderKitPackage;
 // react-native-maps
@@ -83,6 +87,12 @@ import cl.json.RNSharePackage;
 import com.horcrux.svg.SvgPackage;
 // react-native-vector-icons
 import com.oblador.vectoricons.VectorIconsPackage;
+// zego-express-engine-reactnative
+import im.zego.reactnative.RCTZegoExpressEnginePackage;
+// zego-zim-react-native
+import im.zego.RNZimReactnativeSdkPackage;
+// zego-zpns-react-native
+import im.zego.zpns_reactnative_sdk.RCTZegoZPNsPackage;
 
 public class PackageList {
   private Application application;
@@ -140,6 +150,7 @@ public class PackageList {
       new ReactNativeFirebaseDatabasePackage(),
       new ReactNativeFirebaseFirestorePackage(),
       new ReactNativeFirebaseMessagingPackage(),
+      new AgoraRTMPackage(),
       new AppCenterReactNativePackage(getApplication()),
       new AppCenterReactNativeAnalyticsPackage(getApplication(), getResources().getString(com.createdinam.professionbeat.R.string.appCenterAnalytics_whenToEnableAnalytics)),
       new AppCenterReactNativeCrashesPackage(getApplication(), getResources().getString(com.createdinam.professionbeat.R.string.appCenterCrashes_whenToSendCrashes)),
@@ -151,6 +162,7 @@ public class PackageList {
       new RNGetRandomValuesPackage(),
       new PickerPackage(),
       new RNInAppBrowserPackage(),
+      new ReactNativeInvokeAppPackage(),
       new LoaderKitPackage(),
       new MapsPackage(),
       new PagerViewPackage(),
@@ -163,7 +175,10 @@ public class PackageList {
       new RNSensorsPackage(),
       new RNSharePackage(),
       new SvgPackage(),
-      new VectorIconsPackage()
+      new VectorIconsPackage(),
+      new RCTZegoExpressEnginePackage(),
+      new RNZimReactnativeSdkPackage(),
+      new RCTZegoZPNsPackage()
     ));
   }
 }

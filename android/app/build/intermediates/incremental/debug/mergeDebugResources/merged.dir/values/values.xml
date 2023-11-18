@@ -2099,7 +2099,7 @@
     <string name="androidx_startup" translatable="false">androidx.startup</string>
     <string moduleConfig="true" name="appCenterAnalytics_whenToEnableAnalytics" translatable="false">ALWAYS_SEND</string>
     <string moduleConfig="true" name="appCenterCrashes_whenToSendCrashes" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
-    <string name="app_name">Profession Beat</string>
+    <string name="app_name">Tuitionbot</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
     <string name="bottom_sheet_behavior" translatable="false">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
     <string description="A description of an accessibility action to collapse the bottom sheet [CHAR LIMIT=NONE]" name="bottomsheet_action_collapse">Collapse the bottom sheet</string>

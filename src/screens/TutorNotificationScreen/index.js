@@ -13,7 +13,7 @@ import {
     TouchableOpacity,
     Image,
     Text,
-    FlatList
+    FlatList 
 } from 'react-native';
 import axios from 'axios';
 import moment from 'moment';
@@ -66,7 +66,7 @@ const TutorNotificationScreen = () => {
         fetch(globle.API_BASE_URL + 'tutor-call-back', requestOptions)
             .then(response => response.json())
             .then(result => {
-                console.log('setCallNotification---------->', JSON.stringify(result) + JSON.stringify(requestOptions));
+                // console.log('setCallNotification---------->', JSON.stringify(result) + JSON.stringify(requestOptions));
                 if (result.status) {
                     setLoading(false);
                     Toast.show({
@@ -95,6 +95,9 @@ const TutorNotificationScreen = () => {
     }
 
     const renderHistoryView = ({ item }) => {
+
+        console.log(JSON.stringify(item))
+
         return (
             <View style={{ backgroundColor: '#fff', marginBottom: 10, borderRadius: 10, margin: 5, borderRadius: 10, elevation: 5 }}>
                 <View style={{ flexDirection: 'column' }}>
@@ -106,7 +109,7 @@ const TutorNotificationScreen = () => {
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 3, width: '100%', justifyContent: 'space-between' }}>
                         <View style={{ marginTop: 5, flex: 1 }}>
-                            <Text numberOfLines={2} style={{ fontSize: 14, fontWeight: '500', paddingLeft: 15, }}>{item?.trans_desc_me}</Text>
+                            <Text numberOfLines={2} style={{ fontSize: 14, fontWeight: '500', paddingLeft: 15, }}>{item?.trans_desc}</Text>
                         </View>
                         <TouchableOpacity onPress={() => setCallNotification(item)} style={{ borderRadius: 5, marginLeft: 30, marginTop: 10, alignSelf: 'flex-end', marginRight: 20, marginBottom: 15 }}>
                             <Image style={{ width: 25, height: 25, resizeMode: 'contain', borderRadius: 140, marginLeft: 8, marginTop: 5, tintColor: 'rgb(68,114,199)' }} source={require('../../assets/call_icon.png')} />
@@ -126,12 +129,12 @@ const TutorNotificationScreen = () => {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: globle.API_BASE_URL + 'get_notification',
+            url: globle.API_BASE_URL + 'get_globally_all_notification',
             headers: {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getTutorPostForUser', config);
+        // console.log('getTutorPostForUser', config);
         axios.request(config)
             .then((response) => {
                 if (response?.data?.status) {

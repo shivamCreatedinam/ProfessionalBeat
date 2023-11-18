@@ -4,7 +4,7 @@ import analytics from '@react-native-firebase/analytics';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import database from '@react-native-firebase/database';
 // screens
 import MapScreens from '../src/screens/map_screens';
 import HomeScreen from '../src/screens/home_screen';
@@ -48,6 +48,11 @@ import HelpOrSupportScreen from '../src/screens/HelpOrSupport';
 import SettingScreen from '../src/screens/SettingScreen';
 import DocumentUploadScreen from '../src/screens/DocumentUploadScreen';
 import MyTuitorPostScreen from '../src/screens/MyParentTutiorPost';
+import TransactionHistoryScreen from '../src/screens/TransactionHistory';
+import CallingAudioApps from '../src/screens/AudioCallSetup';
+import VoiceCall from '../src/screens/CallingRecieveApps';
+import ConfirmTuitionScreen from '../src/screens/ConfirmTuitionScreen';
+import ConfirmedTuitionScreen from '../src/screens/ConfirmedTuition'
 // Theme.
 const MyTheme = {
     dark: false,
@@ -672,9 +677,54 @@ function StackNavigation() {
                         headerTintColor: '#fff',
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
+                <Stack.Screen
+                    name="TransactionHistoryScreen"
+                    component={TransactionHistoryScreen}
+                    options={{
+                        title: 'TransactionHistoryScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+                <Stack.Screen
+                    name="CallingAudioApps"
+                    component={CallingAudioApps}
+                    options={{
+                        title: 'CallingAudioApps',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+                <Stack.Screen
+                    name="VoiceCall"
+                    component={VoiceCall}
+                    options={{
+                        title: 'VoiceCall',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+                <Stack.Screen
+                    name="ConfirmTuitionScreen"
+                    component={ConfirmTuitionScreen}
+                    options={{
+                        title: 'ConfirmTuitionScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+                <Stack.Screen
+                    name="ConfirmedTuitionScreen"
+                    component={ConfirmedTuitionScreen}
+                    options={{
+                        title: 'ConfirmedTuitionScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
-export default StackNavigation; // MyTuitorPostScreen
+export default StackNavigation; // ConfirmedTuitionScreen

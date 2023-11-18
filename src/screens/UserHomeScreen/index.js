@@ -45,8 +45,9 @@ const UserHomeScreen = () => {
     const permModal = useRef();
     const navigate = useNavigation();
     const bottomSheet = React.useRef();
-    const [data, setData] = React.useState([]);
+    const [data, setData] = React.useState(null);
     const [selectedId, setSelectedId] = useState();
+    const [isFetching, setIsFetching] = React.useState(false);
     const [currentCallId, setCurrentCallId] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [visible, setVisible] = React.useState(false);
@@ -100,11 +101,70 @@ const UserHomeScreen = () => {
             getTutorPostForUser();
             loadCcity();
             saveToken();
+            setCallNotification();
+            loadProfile();
             return () => {
                 // Useful for cleanup functions
             };
         }, [])
     );
+
+    const loadProfile = async () => {
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'getProfile',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        axios.request(config)
+            .then((response) => {
+                if (response.status) {
+                    console.log('loadProfile', JSON.stringify(response?.data));
+                    if (response.data?.user?.name !== null) {
+                        setLoading(false);
+                        setData(response.data);
+                    } else {
+                        // 
+                    }
+                } else {
+                    setLoading(false);
+                }
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error);
+            });
+    }
+
+    // const onDisplayNotification = async () => {
+    //     // Request permissions (required for iOS)
+    //     // await notifee.requestPermission()
+
+    //     // Create a channel (required for Android)
+    //     const channelId = await notifee.createChannel({
+    //         id: 'default',
+    //         name: 'Default_Channel',
+    //     });
+
+    //     // Display a notification
+    //     await notifee.displayNotification({
+    //         title: 'Notification Title',
+    //         body: 'Main body content of the notification',
+    //         android: {
+    //             channelId,
+    //             smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+    //             // pressAction is needed if you want the notification to open the app when pressed
+    //             pressAction: {
+    //                 id: 'default',
+    //             },
+    //         },
+    //     });
+    // }
 
     const getTimesAgo = (created_at) => {
         const dateTimeAgo = moment(new Date(created_at)).fromNow();
@@ -128,7 +188,7 @@ const UserHomeScreen = () => {
             .then((response) => {
                 setLoading(false)
                 setState(response.data?.data);
-                console.log('GetSubscription', JSON.stringify(response.data));
+                // console.log('GetSubscription', JSON.stringify(response.data));
             })
             .catch((error) => {
                 setLoading(false)
@@ -158,49 +218,6 @@ const UserHomeScreen = () => {
                 setLoading(false);
                 console.log(error);
             });
-    }
-
-    async function onDisplayNotification() {
-        // Request permissions (required for iOS)
-        if (Platform.OS === 'ios') {
-            await notifee.requestPermission()
-        }
-
-        // Create a channel (required for Android)
-        const channelId = await notifee.createChannel({
-            id: getCurrentCallId(),
-            name: 'Default Channel',
-            sound: 'default',
-            importance: AndroidImportance.HIGH,
-            badge: true,
-            vibration: true,
-            vibrationPattern: [300, 700],
-            lights: true,
-            lightColor: AndroidColor.RED,
-        });
-
-        // Display a notification
-        // Display a notification
-        await notifee.displayNotification({
-            title: 'Notification Title',
-            body: 'Main body content of the notification',
-            android: {
-                channelId,
-                smallIcon: 'defaults', // optional, defaults to 'ic_launcher'.
-                color: '#9c27b0',
-                category: AndroidCategory.CALL,
-                badgeIconType: AndroidBadgeIconType.SMALL,
-                importance: AndroidImportance.HIGH,
-                visibility: AndroidVisibility.SECRET,
-                vibrationPattern: [300, 700],
-                ongoing: true,
-                lights: [AndroidColor.RED, 300, 600],
-                // pressAction is needed if you want the notification to open the app when pressed
-                pressAction: {
-                    id: 'default12',
-                },
-            },
-        });
     }
 
     async function onDisplayIncomingCallX() {
@@ -353,7 +370,7 @@ const UserHomeScreen = () => {
         const fcmToken = await messaging().getToken();
         AsyncStorage.setItem('@tokenKey', fcmToken);
         console.log('saveToken', fcmToken);
-        setLoading(true)
+        // setLoading(true)
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
         formdata.append('fcm_token', fcmToken);
@@ -370,14 +387,14 @@ const UserHomeScreen = () => {
             .then(response => response.json())
             .then(result => {
                 if (result.status) {
-                    setLoading(false)
+                    // setLoading(false)
                     Toast.show({
                         type: 'success',
                         text1: 'Congratulations!',
-                        text2: result?.message,
+                        text2: 'Your Status update',
                     });
                 } else {
-                    setLoading(false)
+                    // setLoading(false)
                     Toast.show({
                         type: 'success',
                         text1: 'Something went wrong!',
@@ -408,13 +425,13 @@ const UserHomeScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getTutorPostForUser', config);
+        // console.log('getTutorPostForUser', config);
         axios.request(config)
             .then((response) => {
                 if (response?.data?.status) {
                     setLoading(false);
                     setTuitorData(response?.data?.data);
-                    console.log('getTutorPostForUser', JSON.stringify(response.data));
+                    // console.log('getTutorPostForUser', JSON.stringify(response.data));
                 } else {
                     setTuitorData([]);
                     Toast.show({
@@ -430,31 +447,6 @@ const UserHomeScreen = () => {
                 console.log(error);
             });
     }
-
-    const requestLocationPermission = async () => {
-        try {
-            const granted = await request(
-                Platform.select({ android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION, ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE, }),
-                {
-                    title: 'Parihara',
-                    message: 'Parihara provide you with the best cab booking experience, we need your location. Granting location permission allows us to show you nearby drivers, estimate accurate arrival times, and ensure smooth navigation during your ride. Your safety is our top priority, and knowing your location helps us connect you with the nearest drivers',
-                    // buttonNeutral: 'Ask Me Later',
-                    buttonNegative: 'Cancel',
-                    buttonPositive: 'OK',
-                },
-            );
-            console.log('granted', granted);
-            if (granted === 'granted') {
-                console.log('You can use Geolocation');
-                return true;
-            } else {
-                console.log('You cannot use Geolocation');
-                return false;
-            }
-        } catch (err) {
-            return false;
-        }
-    };
 
     useEffect(() => {
         handleLocationPermission();
@@ -481,7 +473,7 @@ const UserHomeScreen = () => {
         };
     }, [false]);
 
-    const startTrip = () => {
+    const startTrip = (info) => {
         const options = Platform.select({
             default: {
                 title: 'Hey',
@@ -521,7 +513,7 @@ const UserHomeScreen = () => {
         try {
             RNCallKeep.setup(options);
             RNCallKeep.setAvailable(true); // Only used for Android, see doc above.
-            RNCallKeep.startCall(getCurrentCallId(), '57d6g7dhh3hd8d', 'Atul');
+            // RNCallKeep.startCall(getCurrentCallId(), '57d6g7dhh3hd8d', 'Atul');
         } catch (err) {
             console.error('initializeCallKeep error:', err.message);
         }
@@ -540,11 +532,6 @@ const UserHomeScreen = () => {
     const renderHistoryView = (item) => {
         return (
             <View style={{ backgroundColor: '#fff', marginBottom: 10, borderRadius: 10, padding: 15, margin: 5, borderRadius: 10, elevation: 5 }}>
-                <Spinner
-                    visible={loading}
-                    textContent={'Loading...'}
-                    textStyle={{ color: 'black', fontSize: 12 }}
-                />
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
                         <TouchableOpacity onPress={() => setTimeSlotPopup(!TimeSlotPopul)}>
@@ -553,14 +540,18 @@ const UserHomeScreen = () => {
                         </TouchableOpacity>
                         <View style={{ flexDirection: 'row', marginLeft: 10, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
                             <View style={{ flexDirection: 'column' }}>
-                                <Text style={{ justifyContent: 'center', fontSize: 15, fontWeight: 'bold' }} numberOfLines={1}>{item.item?.name}</Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text maxFontSizeMultiplier={12} style={{ justifyContent: 'center', fontSize: 15, fontWeight: 'bold', textTransform: 'capitalize', maxWidth: 160 }} numberOfLines={1}>{item.item?.name}</Text>
+                                    <View>
+                                        <TouchableOpacity style={{ marginRight: 5, flexDirection: 'row', marginLeft: 8 }} onPress={() => setScheduleCall(!scheduleCall)}>
+                                            <Image style={{ width: 15, height: 15, resizeMode: 'contain', alignItems: 'center' }} source={require('../../assets/green_check.png')} />
+                                            <Text style={{ fontSize: 12, color: 'green', fontWeight: '500', marginLeft: 3, marginBottom: 0 }}>Verified</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
                                 <Text style={{ justifyContent: 'center', fontSize: 12, color: 'grey' }} numberOfLines={1}>{getTimesAgo(item?.item?.created_date)}</Text>
                             </View>
                             {/* <Text style={{ fontWeight: 'bold', flex: 1, fontSize: 12, color: '#b4b4b4' }} numberOfLines={1}>B-Tech, 4+ Years Exp</Text> */}
-                            <TouchableOpacity style={{ marginRight: 5, flexDirection: 'row', marginLeft: 8 }} onPress={() => setScheduleCall(!scheduleCall)}>
-                                <Image style={{ width: 15, height: 15, resizeMode: 'contain', alignItems: 'center' }} source={require('../../assets/green_check.png')} />
-                                <Text style={{ fontSize: 12, color: 'green', fontWeight: '500', marginLeft: 8, marginBottom: -10 }}>Verified</Text>
-                            </TouchableOpacity>
                         </View>
                     </View>
                     {item.item?.favourite === 'Yes' ? <TouchableOpacity style={{ width: 30, height: 30, marginRight: 5, marginTop: -40 }}
@@ -570,7 +561,7 @@ const UserHomeScreen = () => {
                         onPress={() => onAddToFavourite(item.item?.id)} >
                         <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, alignItems: 'center' }} source={require('../../assets/star.png')} />
                     </TouchableOpacity>}
-                    <TouchableOpacity onPress={() => startTrip()} style={{ width: 30, height: 30, borderRadius: 150, marginTop: -40, marginLeft: 10 }}>
+                    <TouchableOpacity onPress={() => startTrip(item?.item)} style={{ width: 30, height: 30, borderRadius: 150, marginTop: -40, marginLeft: 10 }}>
                         <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, tintColor: '#000', alignItems: 'center' }} source={require('../../assets/share.png')} />
                     </TouchableOpacity>
                 </View>
@@ -644,7 +635,7 @@ const UserHomeScreen = () => {
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
                         {/* <Image style={{ width: 15, height: 15, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/distance.png')} /> */}
-                        <Text style={{ fontSize: 12, paddingLeft: 8 }}>{item.item?.kms} km away</Text>
+                        <Text style={{ fontSize: 12, paddingLeft: 8 }}>{item.item?.id} km away</Text>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
                         <TouchableOpacity onPress={() => onDisplayIncomingCall(item.item?.id)} style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 12, backgroundColor: 'green', borderRadius: 5, elevation: 5 }}>
@@ -681,6 +672,11 @@ const UserHomeScreen = () => {
 
     ]), []);
 
+
+    const onRefresh = () => {
+        getTutorPostForUser();
+    }
+
     const updatePostLocation = async () => {
         setLoading(true)
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
@@ -709,10 +705,11 @@ const UserHomeScreen = () => {
                         text2: result?.message,
                     });
                     bottomSheet.current.close();
+                    loadProfile();
                     getTutorPostForUser();
                 } else {
                     setLoading(false)
-                    bottomSheet.current.hide();
+                    bottomSheet.current.close();
                     console.log('formdata', JSON.stringify(result))
                     Toast.show({
                         type: 'success',
@@ -723,13 +720,27 @@ const UserHomeScreen = () => {
             });
     }
 
+    const onDisplayNotification = () => {
+        navigate.navigate('VoiceCall');
+    }
+
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, paddingTop: 20, backgroundColor: '#F1F6F9' }}>
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={{ color: 'black', fontSize: 12 }}
+            />
             <View
                 contentContainerStyle={{ padding: 5, zIndex: 9999 }}
-                style={{ flex: 1, marginTop: 20, padding: 10, backgroundColor: '#F1F6F9' }}>
+                style={{ flex: 1, paddingTop: 10, padding: 10, backgroundColor: '#F1F6F9' }}>
                 <CommonHeader />
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 10 }} source={require('../../assets/navigation_icon.png')} />
+                        <Text style={{ fontWeight: 'bold', }}>{data?.user?.state_name}, </Text>
+                        <Text style={{ fontWeight: 'bold', }}>{data?.user?.city_name}</Text>
+                    </View>
                     <View style={{ flex: 1 }} />
                     <TouchableOpacity onPress={() => bottomSheet.current.show()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/filter.png')} />
@@ -746,6 +757,8 @@ const UserHomeScreen = () => {
                             data={dataTuitor}
                             keyExtractor={(e) => e.id}
                             renderItem={(items) => renderHistoryView(items)}
+                            onRefresh={() => onRefresh()}
+                            refreshing={isFetching}
                             showsVerticalScrollIndicator={false}
                         />}
                 </View>

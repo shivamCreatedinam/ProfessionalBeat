@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
         zIndex: 4,
         justifyContent: "center",
         alignItems: "center",
-
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

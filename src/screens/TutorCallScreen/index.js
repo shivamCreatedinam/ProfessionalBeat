@@ -8,21 +8,20 @@
 
 import React from 'react';
 import {
-    StyleSheet,
     View,
     TouchableOpacity,
     Text,
-    TextInput,
-    Alert,
     Dimensions,
     Image,
     FlatList,
-    SafeAreaView
+    PermissionsAndroid,
 } from 'react-native';
 import axios from 'axios';
 import moment from 'moment';
+import uuid from 'react-native-uuid';
 import globle from '../../../common/env';
 import Toast from 'react-native-toast-message';
+import RNCallKeep from 'react-native-callkeep';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -37,6 +36,7 @@ const TutorCallHistoryScreen = () => {
     const [visible, setVisible] = React.useState(true);
     const [isFetching, setIsFetching] = React.useState(false);
     const [historyData, setHistoryData] = React.useState([]);
+    const [currentCallId, setCurrentCallId] = React.useState(null);
 
     const getTimesAgo = (created_at) => {
         const dateTimeAgo = moment(new Date(created_at)).fromNow();
@@ -46,6 +46,7 @@ const TutorCallHistoryScreen = () => {
     useFocusEffect(
         React.useCallback(() => {
             getNotificationUser();
+            generateAgoraCallingToken();
             return () => {
                 // Useful for cleanup functions
             };
@@ -56,7 +57,15 @@ const TutorCallHistoryScreen = () => {
         getNotificationUser();
     }
 
-    // api/get_notification
+    const getCurrentCallId = () => {
+        let caller_id = null;
+        if (!currentCallId) {
+            caller_id = uuid.split('-')[0];
+            setCurrentCallId(caller_id);
+        }
+
+        return caller_id;
+    };
 
     const getNotificationUser = async () => {
         setLoading(true)
@@ -65,16 +74,17 @@ const TutorCallHistoryScreen = () => {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: globle.API_BASE_URL + 'get_notification',
+            url: globle.API_BASE_URL + 'get_tutor_call_logs_notification',
             headers: {
                 'Authorization': 'Bearer ' + data
             }
-        }; 
+        };
         axios.request(config)
             .then((response) => {
                 if (response?.data?.status) {
                     setLoading(false);
-                    setHistoryData(response?.data?.data); 
+                    setHistoryData(response?.data?.data);
+                    console.log('getNotificationUser', JSON.stringify(response?.data?.data));
                 } else {
                     setHistoryData([]);
                     Toast.show({
@@ -91,15 +101,38 @@ const TutorCallHistoryScreen = () => {
             });
     }
 
+    const generateAgoraCallingToken = (info) => {
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: 'https://tuitionbot.com/agora_live_token/KBC/sample/RtcTokenBuilderSample.php',
+            headers: {
+                'Authorization': 'Bearer '
+            }
+        };
+        console.log('getCallingToken', config);
+        axios.request(config)
+            .then((response) => {
+                console.log('getCallingToken', JSON.stringify(response.data?.token2));
+                if (Number(response?.data?.status) === 1) {
+                    setCallNotification(info, response?.data?.token2)
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
-    const setCallNotification = async (info) => {
+    const setCallNotification = async (info, token) => {
+        // console.log('setCallNotification', JSON.stringify(info?.user_details.name));
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         const fcmToken = await messaging().getToken();
         AsyncStorage.setItem('@tokenKey', fcmToken);
         setLoading(true)
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
-        formdata.append('parent_id', info?.reqsted_user_id);
+        formdata.append('tutor_log_request_id', info?.id);
+        formdata.append('call_token', token);
         var requestOptions = {
             method: 'POST',
             body: formdata,
@@ -108,16 +141,13 @@ const TutorCallHistoryScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
+        // console.log('setCallNotification---------->', JSON.stringify(info))
         fetch(globle.API_BASE_URL + 'tutor-call-back', requestOptions)
             .then(response => response.json())
             .then(result => {
-                if (result.status) {
-                    setLoading(false)
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Congratulations!',
-                        text2: result?.message,
-                    });
+                // console.log('setCallNotification---------->', result)
+                if (result.status === true) {
+                    setDirectCallNotification(info?.user_details.name, token);
                 } else {
                     setLoading(false)
                     Toast.show({
@@ -137,14 +167,46 @@ const TutorCallHistoryScreen = () => {
             });
     }
 
+    const setDirectCallNotification = (info, token) => {
+        const info_data = {
+            info: info,
+            token: token
+        }
+        // navigate.navigate('VoiceCall', info_data)
+        const options = {
+            ios: {
+                appName: 'ReactNativeWazoDemo',
+                imageName: 'sim_icon',
+                supportsVideo: false,
+                maximumCallGroups: '1',
+                maximumCallsPerCallGroup: '1',
+            },
+            android: {
+                alertTitle: 'Permissions Required',
+                alertDescription: 'This application needs to access your phone calling accounts to make calls',
+                cancelButton: 'Cancel',
+                okButton: 'ok',
+                imageName: 'sim_icon',
+                additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
+            }
+        };
 
+        try {
+            setLoading(false)
+            RNCallKeep.setup(options);
+            RNCallKeep.setAvailable(true); // Only used for Android, see doc above.
+            RNCallKeep.startCall(getCurrentCallId(), token, info);
+        } catch (err) {
+            console.error('initializeCallKeep error:', err.message);
+        }
+    }
 
     const renderHistoryView = (items) => {
         return (
             <View style={{ backgroundColor: '#fff', elevation: 5, marginBottom: 10, borderRadius: 10, padding: 10, margin: 5 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <View style={{ paddingRight: 10, alignItems: 'center', }}>
-                        <Image style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 150 }} source={{ uri: 'https://xsgames.co/randomusers/assets/avatars/male/74.jpg' }} />
+                        <Image style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 150 }} source={require('../../assets/notification_logo.png')} />
                     </View>
                     <Text style={{ fontWeight: 'bold', flex: 1, marginRight: 6 }} numberOfLines={1}>{items?.item?.user_details?.name}</Text>
                     <View style={{ padding: 10, alignItems: 'center', }}>
@@ -159,7 +221,7 @@ const TutorCallHistoryScreen = () => {
                         <Image style={{ width: 15, height: 15, resizeMode: 'contain' }} source={require('../../assets/time.png')} />
                         <Text style={{ fontWeight: 'bold', fontSize: 10, marginLeft: 5 }}>{getTimesAgo(items?.item?.created_date)}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => setCallNotification(items?.item)} style={{ flex: 1, padding: 10, backgroundColor: 'rgb(68,114,199)', elevation: 5, borderRadius: 50 }}>
+                    <TouchableOpacity onPress={() => generateAgoraCallingToken(items?.item)} style={{ flex: 1, padding: 10, backgroundColor: 'rgb(68,114,199)', elevation: 5, borderRadius: 50 }}>
                         <Text style={{ textAlign: 'center', fontWeight: 'bold', color: '#fff', textTransform: 'uppercase' }}>Call</Text>
                     </TouchableOpacity>
                 </View>
@@ -175,7 +237,7 @@ const TutorCallHistoryScreen = () => {
                 textStyle={{ color: 'black', fontSize: 12 }}
             />
             <TutorHeader />
-            {visible ?
+            {historyData.length !== 0 ?
                 <View style={{ flex: 1, }}>
                     <FlatList
                         style={{}}

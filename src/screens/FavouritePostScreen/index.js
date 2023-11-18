@@ -66,10 +66,10 @@ const FavourtePostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getTutorPostForUser', config);
+        // console.log('getTutorPostForUser', config);
         axios.request(config)
             .then((response) => {
-                console.log('getTutorPostForUser', JSON.stringify(response.data));
+                // console.log('getTutorPostForUser', JSON.stringify(response.data));
                 if (response?.data?.status) {
                     setLoading(false);
                     setFavourteData(response?.data?.data);
@@ -227,7 +227,7 @@ const FavourtePostScreen = () => {
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
                         <Image style={{ width: 15, height: 15, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/distance.png')} />
-                        <Text style={{ fontWeight: 'bold' }}>{items?.item?.kms} km away</Text>
+                        <Text style={{ fontWeight: 'bold' }}>{items?.item?.id} km away</Text>
                     </View>
                     <TouchableOpacity onPress={() => onDisplayIncomingCall(items.item?.id)} style={{ flex: 1, padding: 10, backgroundColor: 'rgb(68,114,199)', elevation: 5, borderRadius: 60 }}>
                         <Text style={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Request Call</Text>

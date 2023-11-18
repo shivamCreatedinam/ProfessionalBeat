@@ -80,9 +80,10 @@ const NewPostScreen = () => {
     useFocusEffect(
         React.useCallback(() => {
             // whatever
-            loadSessionStorage();
+            // loadSessionStorage();
+            getChildList();
             loadCcity();
-            getQualificationData();
+            // getQualificationData();
             getSubjectsData();
             getClasses();
             getBoard();
@@ -125,7 +126,7 @@ const NewPostScreen = () => {
             maxBodyLength: Infinity,
             url: globle.API_BASE_URL + 'get-parent-child',
             headers: {
-                'Authorization': 'Bearer ' + data
+                'Authorization': 'Bearer ' + data,
             }
         };
         console.log('loadSessionStorage', config);
@@ -166,24 +167,30 @@ const NewPostScreen = () => {
             });
     }
 
-    const getFeeList = async () => {
+    const getFeeList = async () => { }
+
+    const getChildList = async () => {
         setLoading(true);
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: globle.API_BASE_URL + 'get-fees',
+            url: globle.API_BASE_URL + 'get-parent-child',
             headers: {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getFeeList', config);
         axios.request(config)
             .then((response) => {
-                setLoading(false);
-                setFees(response.data?.data);
-                console.log('getFeeList', response.data?.data);
+                if (response.status) {
+                    setLoading(false);
+                    console.log(response.data?.data)
+                    setChildList(response.data?.data);
+                } else {
+                    setLoading(false);
+                    setChildList([]);
+                }
             })
             .catch((error) => {
                 setLoading(false);
@@ -320,7 +327,7 @@ const NewPostScreen = () => {
                 if (result.status) {
                     setLoading(false);
                     setVisiblePopup(false);
-                    loadSessionStorage();
+                    getChildList();
                     Toast.show({
                         type: 'success',
                         text1: 'Congratulations!',
@@ -346,6 +353,38 @@ const NewPostScreen = () => {
             });
     }
 
+    const validationCheck = () => {
+        if (value === null) {
+            showErrorMessage("Please Select State");
+        } else {
+            if (valueCity === null) {
+                showErrorMessage("Please Select City");
+            } else {
+                if (!Locality.trim()) {
+                    showErrorMessage("Please Enter Locality Address");
+                } else {
+                    if (selected === null) {
+                        showErrorMessage("Please select Children Profile.");
+                    } else {
+                        if (selectSubject === null) {
+                            showErrorMessage("Please select tuition Subjects");
+                        } else {
+                            updateUserDemoProfile();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    const showErrorMessage = (msg) => {
+        Toast.show({
+            type: 'error',
+            text1: 'Your ' + msg,
+            text2: msg,
+        });
+    }
+
     const updateUserDemoProfile = async () => {
         console.log('saveChildProfile');
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
@@ -357,7 +396,7 @@ const NewPostScreen = () => {
         selected.map((data, index) =>
             formdata.append(`child_id[${index}]`, data)
         )
-        formdata.append('open_for', 2);
+        formdata.append('open_for', true);
         formdata.append('address', 'not_required');
         formdata.append('locality', Locality);
         formdata.append('pincode', ZipCode);
@@ -410,7 +449,7 @@ const NewPostScreen = () => {
 
     const resetValues = () => {
         setFullAddress();
-        setLocality();
+        setLocality('');
         setValue();
         setValueCity();
         setValueClasses();
@@ -577,13 +616,13 @@ const NewPostScreen = () => {
                             />
                         </View>
                     </View>
-                    <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 10, paddingRight: 10 }]}>
+                    {/* <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 10, paddingRight: 10 }]}>
                         <TouchableOpacity onPress={() => setVisiblePopup(true)} style={{ padding: 15, alignItems: 'center', backgroundColor: 'rgb(68,114,199)', borderRadius: 50, marginTop: 15, }}>
                             <Text style={{ fontWeight: 'bold', color: '#ffffff', textTransform: 'uppercase' }}>+ New Child</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                     <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 10, paddingRight: 10 }]}>
-                        <TouchableOpacity onPress={() => updateUserDemoProfile()} style={{ padding: 15, alignItems: 'center', backgroundColor: '#000', borderRadius: 10, marginTop: 15, }}>
+                        <TouchableOpacity onPress={() => validationCheck()} style={{ padding: 15, alignItems: 'center', backgroundColor: '#000', borderRadius: 10, marginTop: 15, }}>
                             <Text style={{ color: '#ffffff', textTransform: 'uppercase' }}>Create New Post</Text>
                         </TouchableOpacity>
                     </View>
@@ -668,6 +707,9 @@ const NewPostScreen = () => {
                             </View>
                         </DialogContent>
                     </Dialog>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 6, marginTop: 20 }}>
+                    <Text style={{ fontSize: 12, letterSpacing: 1 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Note: </Text>Your post visible after varification by admin, and it's visible for you selected location or city whcih you selected.</Text>
                 </View>
             </ScrollView>
         </View>

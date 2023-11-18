@@ -24,7 +24,8 @@ import { showMessage } from "react-native-flash-message";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const API_KEYS = 'AIzaSyDIpZFQnU2tms1EdAqK-H9K4PfNN17zLdc';
-import { InAppBrowser } from 'react-native-inappbrowser-reborn'
+import { InAppBrowser } from 'react-native-inappbrowser-reborn';
+import apps from '../../../package.json';
 import Share from 'react-native-share';
 
 const ProfileScreen = () => {
@@ -197,7 +198,7 @@ const ProfileScreen = () => {
                 err && console.log(err);
             });
     }
-
+    // { uri: globle.IMAGE_BASE_URL + data?.user?.profile_image }
     return (
         <ScrollView style={styles.container}>
             <Spinner
@@ -218,7 +219,7 @@ const ProfileScreen = () => {
                 style={[styles.profileContainer, { borderTopLeftRadius: 20, maxBodyLength: 10, borderTopRightRadius: 20, }]}>
                 <Image
                     style={[styles.profilePhoto, { backgroundColor: '#fff', borderRadius: 150, borderColor: '#0066cc', borderWidth: 1, resizeMode: 'contain' }]}
-                    source={{ uri: globle.IMAGE_BASE_URL + data?.user?.profile_image }}
+                    source={require('../../assets/notification_logo.png')}
                 />
                 <Text style={[styles.nameText, { textTransform: 'capitalize' }]}>{data?.user?.name}</Text>
             </View>
@@ -237,6 +238,12 @@ const ProfileScreen = () => {
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Edit Child Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigate.navigate('ConfirmedTuitionScreen')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Confirmed Tuitoin</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => ShareApp()}
@@ -268,9 +275,12 @@ const ProfileScreen = () => {
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Terms & Conditions</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { width: '100%', borderRadius: 20, marginTop: 15 }]} onPress={() => logoutX()}>
+                <TouchableOpacity style={[styles.button, { width: '100%', borderRadius: 20, marginTop: 15, padding: 15 }]} onPress={() => logoutX()}>
                     <Text style={styles.buttonText}>Log Out</Text>
                 </TouchableOpacity>
+                <View style={{ padding: 20 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 10 }}>App Version {apps.version}</Text>
+                </View>
             </View>
         </ScrollView>
     );

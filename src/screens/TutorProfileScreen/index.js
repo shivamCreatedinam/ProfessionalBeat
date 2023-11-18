@@ -25,61 +25,20 @@ import { showMessage } from "react-native-flash-message";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
+import apps from '../../../package.json';
 import Share from 'react-native-share';
 const API_KEYS = 'AIzaSyDIpZFQnU2tms1EdAqK-H9K4PfNN17zLdc';
 
 const TutorProfileScreen = () => {
 
     const navigate = useNavigation();
-    const [data, setData] = React.useState({});
+    const [data, setData] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
 
-    // React.useEffect(() => {
-    //     const dataRef = database().ref('/users/');
-    //     dataRef.on('value', snapshot => {
-    //         const newData = [];
-    //         snapshot.forEach(childSnapshot => {
-    //             newData.push(childSnapshot.val());
-    //         });
-    //         setData(newData);
-    //     });
-
-    //     return () => {
-    //         dataRef.off(); // Clean up the listener when the component unmounts
-    //     };
-    // }, []);
 
     function trackMaps(data) {
         navigate.navigate('TrackingMapsScreen', data);
     }
-
-    // Function to update profile info
-    // const updateProfileInfo = async (user) => {
-    //     console.log('Profile updated successfully.');
-    //     try {
-    //         await user.updateProfile({
-    //             displayName: 'John Doe',
-    //             photoURL: 'https://example.com/profile-image.jpg',
-    //         });
-    //         console.log('Profile updated successfully.');
-    //     } catch (error) {
-    //         console.error('Error updating profile:', error.message);
-    //     }
-    // };
-
-    // const handleEditPress = async () => {
-    //     // Set up a listener to handle authentication state changes
-    //     auth().onAuthStateChanged((user) => {
-    //         if (user) {
-    //             console.log('unsubscribeAuthListener successfully.');
-    //             // The user is signed in, proceed with profile update
-    //             updateProfileInfo(user);
-    //         } else {
-    //             console.log('Profile unsubscribeAuthListener');
-    //             // The user is signed out, handle the sign-in flow or redirect to the sign-in screen
-    //         }
-    //     });
-    // }
 
     useFocusEffect(
         React.useCallback(() => {
@@ -117,8 +76,8 @@ const TutorProfileScreen = () => {
 
     const logoutX = () => {
         Alert.alert(
-            'End Trip',
-            'Are you sure, want end the trip?',
+            'Logged Out',
+            'Are you sure, want to Logged Out?',
             [
                 { text: 'Cancel', onPress: () => console.log('cancel') },
                 { text: 'OK', onPress: () => loggoutUser() },
@@ -220,10 +179,10 @@ const TutorProfileScreen = () => {
                     style={[styles.profilePhoto, { backgroundColor: '#fff', borderRadius: 150, borderColor: '#0066cc', borderWidth: 1, resizeMode: 'contain' }]}
                     source={{ uri: globle.IMAGE_BASE_URL + data?.user?.profile_image }}
                 />
-                <Text style={styles.nameText}>{data?.user?.name}</Text>
+                <Text style={styles.nameText}>{data?.user?.name === null ? 'N/A' : data?.user?.name}</Text>
             </View>
             <View style={styles.bioContainer}>
-                <Text style={styles.bioText}>{data?.user?.email}</Text>
+                <Text style={styles.bioText}>{data?.user?.email === null ? 'N/A' : data?.user?.email}</Text>
             </View>
             <View style={{ padding: 20, alignItems: 'center' }}>
                 <TouchableOpacity
@@ -231,28 +190,20 @@ const TutorProfileScreen = () => {
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 5 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Edit Profile</Text>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: false !== true ? 'read' : null }} source={require('../../assets/verified.png')} />
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: data?.user?.is_update === 1 ? null : 'red' }} source={require('../../assets/verified.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => navigate.navigate('QualificationScreen')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/books.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Qualification</Text>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: false !== true ? 'read' : null }} source={require('../../assets/verified.png')} />
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: data?.user?.tutor_is_update === 5 ? null : 'red' }} source={require('../../assets/verified.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => navigate.navigate('DocumentUploadScreen')}
-                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/document_icon.png')} />
-                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Documents Uploads</Text>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: false !== true ? 'read' : null }} source={require('../../assets/verified.png')} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => navigate.navigate('DocumentUploadScreen')}
+                    onPress={() => navigate.navigate('TransactionHistoryScreen')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/tuition_icon.png')} />
-                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Tuition Preferences</Text>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: false !== true ? 'read' : null }} source={require('../../assets/verified.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Transaction History</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => navigate.navigate('MyTuitorPostScreen')}
@@ -261,10 +212,16 @@ const TutorProfileScreen = () => {
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>My Post</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => showSuccessToast('Coming soon!')}
+                    onPress={() => navigate.navigate('MyTuitorPostScreen')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/document_icon.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>My Tuitions</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigate.navigate('ConfirmTuitionScreen')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/verified.png')} />
-                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Confirm tuition</Text>
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Confirm Tuitions</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => ShareApp()}
@@ -299,6 +256,9 @@ const TutorProfileScreen = () => {
                 <TouchableOpacity style={[styles.button, { width: '100%', borderRadius: 5, marginTop: 15, elevation: 5 }]} onPress={() => logoutX()}>
                     <Text style={[styles.buttonText, { textTransform: 'uppercase' }]}>Log Out</Text>
                 </TouchableOpacity>
+                <View style={{ padding: 20 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 10 }}>App Version {apps.version}</Text>
+                </View>
             </View>
         </ScrollView>
     );

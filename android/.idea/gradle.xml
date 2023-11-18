@@ -25,6 +25,7 @@
             <option value="$PROJECT_DIR$/../node_modules/@notifee/react-native/android" />
             <option value="$PROJECT_DIR$/../node_modules/@react-native-async-storage/async-storage/android" />
             <option value="$PROJECT_DIR$/../node_modules/@react-native-community/clipboard/android" />
+            <option value="$PROJECT_DIR$/../node_modules/@react-native-community/datetimepicker/android" />
             <option value="$PROJECT_DIR$/../node_modules/@react-native-community/geolocation/android" />
             <option value="$PROJECT_DIR$/../node_modules/@react-native-community/progress-view/android" />
             <option value="$PROJECT_DIR$/../node_modules/@react-native-firebase/analytics/android" />
@@ -33,6 +34,7 @@
             <option value="$PROJECT_DIR$/../node_modules/@react-native-firebase/database/android" />
             <option value="$PROJECT_DIR$/../node_modules/@react-native-firebase/firestore/android" />
             <option value="$PROJECT_DIR$/../node_modules/@react-native-firebase/messaging/android" />
+            <option value="$PROJECT_DIR$/../node_modules/agora-react-native-rtm/android" />
             <option value="$PROJECT_DIR$/../node_modules/appcenter-analytics/android" />
             <option value="$PROJECT_DIR$/../node_modules/appcenter-crashes/android" />
             <option value="$PROJECT_DIR$/../node_modules/appcenter/android" />
@@ -45,6 +47,7 @@
             <option value="$PROJECT_DIR$/../node_modules/react-native-gradle-plugin" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-image-crop-picker/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-inappbrowser-reborn/android" />
+            <option value="$PROJECT_DIR$/../node_modules/react-native-invoke-app/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-loader-kit/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-maps/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-pager-view/android" />
@@ -58,6 +61,9 @@
             <option value="$PROJECT_DIR$/../node_modules/react-native-share/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-svg/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-vector-icons/android" />
+            <option value="$PROJECT_DIR$/../node_modules/zego-express-engine-reactnative/android" />
+            <option value="$PROJECT_DIR$/../node_modules/zego-zim-react-native/android" />
+            <option value="$PROJECT_DIR$/../node_modules/zego-zpns-react-native/android" />
           </set>
         </option>
       </GradleProjectSettings>
