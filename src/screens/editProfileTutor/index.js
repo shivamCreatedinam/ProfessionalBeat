@@ -463,7 +463,8 @@ const EditTutorProfileScreen = () => {
                         text1: 'Congratulations! Profile, Update!',
                         text2: result?.message,
                     });
-                    loadProfile();
+                    navigate.replace('UserHomeScreen');
+                    // loadProfile();
                 } else {
                     setLoading(false);
                     Toast.show({

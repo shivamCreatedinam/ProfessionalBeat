@@ -42,7 +42,6 @@ const MyPostScreen = () => {
         }, [])
     );
 
-
     const loadSessionStorage = async () => {
         Alert.alert('Focused');
     }
@@ -143,7 +142,6 @@ const MyPostScreen = () => {
         });
     }
 
-
     const getTimesAgo = (created_at) => {
         const dateTimeAgo = moment(new Date(created_at)).fromNow();
         return dateTimeAgo;
@@ -237,6 +235,7 @@ const MyPostScreen = () => {
                         keyExtractor={(e) => e.id}
                         renderItem={(items) => renderHistoryView(items)}
                         showsVerticalScrollIndicator={false}
+                        ListFooterComponent={() => <View style={{ marginBottom: 180 }} />}
                     /> : <View style={{ padding: 20, alignItems: 'center', marginTop: Dimensions.get('screen').width / 2 - 50 }}>
                         <Image style={{ width: 250, height: 250, resizeMode: 'contain' }} source={require('../../assets/no_record_found.png')} />
                     </View>

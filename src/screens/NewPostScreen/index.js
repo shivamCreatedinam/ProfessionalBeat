@@ -572,7 +572,7 @@ const NewPostScreen = () => {
                                 setValueClasses(item.id);
                                 setIsFocusClasses(false);
                             }}
-                        />
+                        /> 
                     </View> */}
                     <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10, marginBottom: 10, }]}>
                         <View style={[{ marginTop: 15, marginLeft: -10, zIndex: 9999, }]}>

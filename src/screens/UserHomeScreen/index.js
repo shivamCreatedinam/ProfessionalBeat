@@ -35,9 +35,10 @@ import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, Dialo
 import notifee, { AndroidImportance, AndroidBadgeIconType, AndroidVisibility, AndroidColor, AndroidCategory } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import Geolocation from 'react-native-geolocation-service';
-import Toast from 'react-native-toast-message';
-import Share from 'react-native-share';
 import RadioGroup from 'react-native-radio-buttons-group';
+import Toast from 'react-native-toast-message';
+import apps from '../../../package.json';
+import Share from 'react-native-share';
 import styles from './styles';
 
 const UserHomeScreen = () => {
@@ -98,6 +99,7 @@ const UserHomeScreen = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            requestPermission();
             getTutorPostForUser();
             loadCcity();
             saveToken();
@@ -474,11 +476,19 @@ const UserHomeScreen = () => {
     }, [false]);
 
     const startTrip = (info) => {
+        // 
+        console.log(JSON.stringify(info?.name));
+        // post details /
+        const PostDetails = {
+            postIntor: info?.name + ', Board Name' + info.board_name !== null ? info?.board_name : 'N/A',
+            ContactDetails: info?.name,
+            PostLink: ""
+        }
         const options = Platform.select({
             default: {
-                title: 'Hey',
-                subject: 'Hey please',
-                message: `Hey please share me`,
+                title: "Share " + info?.name + " ",
+                subject: PostDetails.postIntor,
+                message: PostDetails.ContactDetails,
             },
         });
         Share.open(options)
@@ -527,6 +537,26 @@ const UserHomeScreen = () => {
         }
 
         return caller_id;
+    };
+
+    const requestPermission = async () => {
+        const checkPermission = await checkNotificationPermission();
+        if (checkPermission !== RESULTS.GRANTED) {
+            const request = await requestNotificationPermission();
+            if (request !== RESULTS.GRANTED) {
+                // permission not granted
+            }
+        }
+    };
+
+    const requestNotificationPermission = async () => {
+        const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+        return result;
+    };
+
+    const checkNotificationPermission = async () => {
+        const result = await check(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+        return result;
     };
 
     const renderHistoryView = (item) => {
@@ -760,6 +790,9 @@ const UserHomeScreen = () => {
                             onRefresh={() => onRefresh()}
                             refreshing={isFetching}
                             showsVerticalScrollIndicator={false}
+                            ListFooterComponent={() => <View style={{ padding: 10, marginBottom: 20 }}>
+                                <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Tuitionbot {apps.version}</Text>
+                            </View>}
                         />}
                 </View>
             </View>

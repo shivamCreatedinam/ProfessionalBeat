@@ -137,7 +137,16 @@ const CallHistoryScreen = () => {
         //     });
     }
 
+    const callBlockRequest = (info) => {
+        Toast.show({
+            type: 'success',
+            text1: 'Call Block Request',
+            text2: 'Call Block Request For ' + info + ' Has Been Registerd!',
+        });
+    }
+
     const renderHistoryView = (items) => {
+
         return (
             <View style={{ backgroundColor: '#fff', elevation: 5, marginBottom: 10, borderRadius: 10, padding: 10, margin: 5 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
@@ -148,6 +157,9 @@ const CallHistoryScreen = () => {
                         <Text style={{ fontWeight: 'bold', marginRight: 6 }} numberOfLines={1}>{items?.item?.user_details?.name}</Text>
                         <Text style={{ fontWeight: 'bold', fontSize: 10, }}> {getTimesAgo(items?.item?.created_date)}</Text>
                     </View>
+                    <TouchableOpacity onPress={() => callBlockRequest(items?.item?.user_details?.name)} style={{ padding: 10, alignItems: 'center', }}>
+                        <Image style={{ width: 22, height: 22, resizeMode: 'contain' }} source={require('../../assets/call_block.png')} />
+                    </TouchableOpacity>
                     <View style={{ padding: 10, alignItems: 'center', }}>
                         <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/phone_call.png')} />
                     </View>

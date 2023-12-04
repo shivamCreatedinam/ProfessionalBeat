@@ -13,7 +13,7 @@ import {
   SafeAreaView,
   ScrollView,
   PermissionsAndroid,
-  Platform
+  Platform,
 } from 'react-native';
 import {
   createAgoraRtcEngine,
@@ -143,7 +143,7 @@ const App = () => {
       console.log(e);
     }
   };
-
+  
   return (
     <SafeAreaView style={styles.main}>
       <Text style={styles.head}>Agora Voice Calling Quickstart</Text>

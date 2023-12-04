@@ -81,6 +81,7 @@ const ConfirmTuiitionScreen = () => {
         axios.request(config)
             .then((response) => {
                 console.log('sendConfirmationRequest', JSON.stringify(response?.data));
+                getTransaction();
                 if (response?.data?.status) {
                     setLoading(false);
                 } else {
@@ -115,20 +116,21 @@ const ConfirmTuiitionScreen = () => {
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
                     <Text style={{ marginTop: 5, flex: 1 }}> {items?.item?.comfirmed_by}</Text>
-                    <Text style={{ marginTop: 5 }}>Status {items?.item?.confirm_status}</Text>
+                    <Text style={{ marginTop: 5 }}>Status {items?.item?.is_request_sent === 0 ? 'No Status' : items?.item?.is_confirmed}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
                     <Text style={{ marginTop: 5, fontWeight: 'bold', flex: 1 }}>Locality {items?.item?.locality}</Text>
                     <Text style={{ marginTop: 5 }}>{getTimesAgo(items?.item?.created_date)}</Text>
                 </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
-                    <TouchableOpacity
-                        disabled={items?.item?.confirm_status === 'Pending' ? true : false}
-                        onPress={() => sendConfirmationRequest(items?.item?.short_id)}
-                        style={{ flex: 1, padding: 10, marginRight: 5, backgroundColor: items?.item?.confirm_status === 'Pending' ? 'grey' : 'green', elevation: 5, borderRadius: 5 }}>
-                        <Text style={{ textAlign: 'center', color: '#ffffff', textTransform: 'uppercase' }}>Send Request</Text>
-                    </TouchableOpacity>
-                </View>
+                {items?.item?.is_confirmed === 'Confirmed' ? null :
+                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
+                        <TouchableOpacity
+                            disabled={items?.item?.is_request_sent === 0 ? false : true}
+                            onPress={() => sendConfirmationRequest(items?.item?.short_id)}
+                            style={{ flex: 1, padding: 10, marginRight: 5, backgroundColor: items?.item?.is_request_sent === 0 ? 'green' : 'grey', elevation: 5, borderRadius: 5 }}>
+                            <Text style={{ textAlign: 'center', color: '#ffffff', textTransform: 'uppercase' }}>Send Request</Text>
+                        </TouchableOpacity>
+                    </View>}
             </View>
         )
     }
@@ -146,7 +148,7 @@ const ConfirmTuiitionScreen = () => {
                 </TouchableOpacity>
                 <Text style={{ textAlign: 'center', flex: 1, fontWeight: 'bold' }}>Confirmation Tuition</Text>
             </View>
-            <View style={{ margin: 10, borderRadius: 5 }}>
+            <View style={{ margin: 10, borderRadius: 5, marginBottom: 80 }}>
                 <FlatList
                     style={{}}
                     data={DataTransaction}

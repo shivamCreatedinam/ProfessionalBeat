@@ -519,7 +519,7 @@ const QualificationScreen = () => {
                         <Text style={{ fontWeight: 'bold', color: 'grey' }}>Upload {valueName} Details </Text>
                         <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 5 }}>
-                                <TextInput style={{ marginLeft: 15 }} maxLength={12} keyboardType={'default'} defaultValue={CollageSchoolName} placeholder='School / College Name' onChangeText={(e) => setCollageSchoolName(e)} />
+                                <TextInput style={{ marginLeft: 15 }} keyboardType={'default'} defaultValue={CollageSchoolName} placeholder='School / College Name' onChangeText={(e) => setCollageSchoolName(e)} />
                             </View>
                         </View>
                         <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
@@ -535,7 +535,7 @@ const QualificationScreen = () => {
                         </View>
                         <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
                             <View onPress={() => showDatePicker()} style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15 }} maxLength={12} keyboardType='number-pad' defaultValue={PercentageCgpa} placeholder='Percentage / CGPA' onChangeText={(e) => setPercentageCgpa(e)} />
+                                <TextInput style={{ marginLeft: 15 }} maxLength={2} keyboardType='number-pad' defaultValue={PercentageCgpa} placeholder='Percentage / CGPA' onChangeText={(e) => setPercentageCgpa(e)} />
                             </View>
                         </View>
                         <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 0, paddingRight: 0 }]}>
@@ -593,7 +593,7 @@ const QualificationScreen = () => {
                         </View>
                         <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15 }} maxLength={12} keyboardType='number-pad' defaultValue={Designation} placeholder='Designation' onChangeText={(e) => setDesignation(e)} />
+                                <TextInput style={{ marginLeft: 15 }} maxLength={12} keyboardType={'default'} defaultValue={Designation} placeholder='Designation' onChangeText={(e) => setDesignation(e)} />
                             </View>
                         </View>
                         <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
@@ -601,12 +601,12 @@ const QualificationScreen = () => {
                                 <TextInput style={{ marginLeft: 15 }} maxLength={2} keyboardType='number-pad' defaultValue={DateExperience} placeholder={Experience === null ? 'Experience in years (Digits 1 to 10)' : '' + DateExperience} onChangeText={(e) => setDateExperience(e)} />
                             </TouchableOpacity>
                         </View>
-                        <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 0, paddingRight: 0 }]}>
+                        {/* <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 0, paddingRight: 0 }]}>
                             <TouchableOpacity onPress={() => uploadAdharFrontCard()} style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15, }}>
                                 <Text numberOfLines={1} style={{ marginLeft: 5, padding: 15, flex: 1, color: 'grey' }}>{uploadAFProfile === null ? 'Certificate Image' : uploadAFProfile}</Text>
                                 <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 10 }} source={require('../../assets/camera.png')} />
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
                     </View> : null}
                     <View style={[styles.searchInputContainer, { marginBottom: 150 }]}>
                         <TouchableOpacity onPress={() => validationCheck()} style={{ padding: 15, alignItems: 'center', backgroundColor: '#000', borderRadius: 10, marginTop: 15, marginLeft: 10, marginRight: 10 }}>

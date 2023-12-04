@@ -190,14 +190,14 @@ const TutorProfileScreen = () => {
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 5 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Edit Profile</Text>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: data?.user?.is_update === 1 ? null : 'red' }} source={require('../../assets/verified.png')} />
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: Number(data?.user?.tutor_is_update) > 1 ? null : 'red' }} source={require('../../assets/verified.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => navigate.navigate('QualificationScreen')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/books.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Qualification</Text>
-                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: data?.user?.tutor_is_update === 5 ? null : 'red' }} source={require('../../assets/verified.png')} />
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: data?.user?.tutor_is_update === 4 ? null : 'red' }} source={require('../../assets/verified.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => navigate.navigate('TransactionHistoryScreen')}

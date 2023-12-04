@@ -46,11 +46,30 @@
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-            <action android:name="android.intent.action.VIEW" />
-        </intent-filter>
+        <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="tuitionbot.com" />
+                <data android:host="www.tuitionbot.com" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true" tools:targetApi="m">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tuitionbototpless" />
+                <data android:host="otpless" />
+            </intent-filter>
       </activity>
         <service android:name="io.wazo.callkeep.VoiceConnectionService"
             android:label="Wazo"

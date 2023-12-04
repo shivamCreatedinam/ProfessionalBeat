@@ -334,7 +334,7 @@ const TutorNewPostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('saveChildProfile', JSON.stringify(requestOptions))
+        console.log('saveChildProfile', JSON.stringify(requestOptions) + data)
         fetch(globle.API_BASE_URL + 'tutor-create-post', requestOptions)
             .then(response => response.json())
             .then(result => {

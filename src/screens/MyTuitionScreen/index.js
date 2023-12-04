@@ -101,6 +101,7 @@ const MyTuitionScreen = () => {
                     keyExtractor={(e) => e.id}
                     renderItem={(items) => renderHistoryView(items)}
                     showsVerticalScrollIndicator={false}
+                    ListFooterComponent={() => <View style={{ marginBottom: 180 }} />}
                 />
             </View>
         </SafeAreaView>

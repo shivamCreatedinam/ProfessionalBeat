@@ -60,7 +60,6 @@ const userEditProfile = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            loadProfile();
             getStateData();
             console.log('', JSON.stringify(routes?.params?.screenType))
             return () => {
@@ -192,6 +191,7 @@ const userEditProfile = () => {
             .then((response) => {
                 setLoading(false);
                 setState(response.data?.data);
+                loadProfile();
             })
             .catch((error) => {
                 setLoading(false);
@@ -388,7 +388,7 @@ const userEditProfile = () => {
                                     style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
                                     selectedTextStyle={styles.selectedTextStyle1}
                                     data={State}
-                                    value={value}
+                                    value={Number(value)}
                                     maxHeight={300}
                                     labelField={"name"}
                                     valueField={"id"}

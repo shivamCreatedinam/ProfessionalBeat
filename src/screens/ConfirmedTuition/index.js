@@ -89,6 +89,7 @@ const ConfirmedTuitionScreen = () => {
                         text1: 'Congratulations!',
                         text2: result?.message,
                     });
+                    getTransaction();
                 } else {
                     setLoading(false)
                     Toast.show({
@@ -114,27 +115,27 @@ const ConfirmedTuitionScreen = () => {
 
         return (
             <View style={{ padding: 10, backgroundColor: '#fff', margin: 5, elevation: 5, borderRadius: 15 }}>
-                <Text style={{ marginTop: 5 }}>{JSON.stringify(items?.item?.locality)}</Text>
-                <Text style={{ marginTop: 5 }}>{JSON.stringify(items?.item?.created_date)}</Text>
-                <Text style={{ marginTop: 5 }}>{JSON.stringify(items?.item?.state_name)}</Text>
-                <Text style={{ marginTop: 5 }}>{JSON.stringify(items?.item?.city_name)}</Text>
-                <Text style={{ marginTop: 5 }}>{JSON.stringify(items?.item?.user_id)}</Text>
+                <Text style={{ marginTop: 5 }}>{items?.item?.locality}</Text>
+                <Text style={{ marginTop: 5 }}>{items?.item?.created_date}</Text>
+                <Text style={{ marginTop: 5 }}>{items?.item?.state_name}</Text>
+                <Text style={{ marginTop: 5 }}>{items?.item?.city_name}</Text>
+                <Text style={{ marginTop: 5 }}>{items?.item?.user_id}</Text>
                 <View>
                     {items?.item?.child.map((items) =>
-                        <Text>{JSON.stringify(items?.child_name)}</Text>
+                        <Text>{items?.child_name}</Text>
                     )}
                 </View>
-                <Text style={{ marginTop: 5 }}>{JSON.stringify()}</Text>
-                <Text style={{ marginTop: 5 }}>{JSON.stringify(items?.item?.pincode)}</Text>
-                <Text style={{ marginTop: 5 }}>{JSON.stringify(items?.item?.confirm_status)}</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
-                    <TouchableOpacity onPress={() => sendConformation(items?.item?.confirm_id, 'Cancel')} style={{ flex: 1, padding: 10, marginRight: 5, backgroundColor: '#FFA500', elevation: 5, borderRadius: 5 }}>
-                        <Text style={{ textAlign: 'center', color: '#ffffff', textTransform: 'uppercase' }}>Cancel Tuition</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => sendConformation(items?.item?.confirm_id, 'Confirm')} style={{ flex: 1, padding: 10, marginRight: 5, backgroundColor: 'green', elevation: 5, borderRadius: 5 }}>
-                        <Text style={{ textAlign: 'center', color: '#ffffff', textTransform: 'uppercase' }}>Confirm Tuition</Text>
-                    </TouchableOpacity>
-                </View>
+                <Text style={{ marginTop: 5 }}>{items?.item?.pincode}</Text>
+                <Text style={{ marginTop: 5 }}>{items?.item?.is_confirmed}</Text>
+                {items?.item?.is_confirmed === 'Confirmed' ? null :
+                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+                        <TouchableOpacity onPress={() => sendConformation(items?.item?.confirm_id, 'Cancel')} style={{ flex: 1, padding: 10, marginRight: 5, backgroundColor: '#FFA500', elevation: 5, borderRadius: 5 }}>
+                            <Text style={{ textAlign: 'center', color: '#ffffff', textTransform: 'uppercase' }}>Cancel Tuition</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => sendConformation(items?.item?.confirm_id, 'Confirm')} style={{ flex: 1, padding: 10, marginRight: 5, backgroundColor: 'green', elevation: 5, borderRadius: 5 }}>
+                            <Text style={{ textAlign: 'center', color: '#ffffff', textTransform: 'uppercase' }}>Confirm Tuition</Text>
+                        </TouchableOpacity>
+                    </View>}
             </View>
         )
     }
@@ -158,6 +159,7 @@ const ConfirmedTuitionScreen = () => {
                             renderItem={(items) => renderHistoryView(items)}
                             onRefresh={() => onRefresh()}
                             refreshing={isFetching}
+                            ListFooterComponent={() => <View style={{ marginBottom: 180 }} />}
                             showsVerticalScrollIndicator={false}
                         /> : <View style={{ padding: 20, alignItems: 'center', marginTop: Dimensions.get('screen').width / 2 - 50 }}>
                             <Image style={{ width: 250, height: 250, resizeMode: 'contain' }} source={require('../../assets/no_record_found.png')} />
