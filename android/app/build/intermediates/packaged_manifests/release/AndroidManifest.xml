@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.createdinam.professionbeat"
-    android:versionCode="9"
-    android:versionName="Tuitour Bot: 1.1.9" >
+    android:versionCode="11"
+    android:versionName="Tuitour Bot: 1.1.11" >
 
     <uses-sdk
         android:minSdkVersion="21"
@@ -141,12 +141,32 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize" >
-            <intent-filter>
+            <intent-filter android:autoVerify="true" >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
 
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true" >
                 <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="tuitionbot.com" />
+                <data android:host="www.tuitionbot.com" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true" >
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tuitionbototpless" />
+                <data android:host="otpless" />
             </intent-filter>
         </activity>
 

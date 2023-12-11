@@ -54,7 +54,7 @@ const QualificationScreen = () => {
     // 
     const [isFocusEnglishSpk, setIsFocusEnglishSpk] = React.useState(false);
     const [ValueEnglishSpk, setEnglishSpk] = React.useState(null);
-    const EnglishSpk = [{ label: 'Yes', value: '1' }, { label: 'No', value: '2' }];
+    const EnglishSpk = [{ label: 'Yes', id: '1' }, { label: 'No', id: '2' }];
     // employment
     const [isFocusEmployment, setIsFocusEmployment] = React.useState(false);
     const [ValueEmployment, setEmployment] = React.useState(null);
@@ -93,7 +93,6 @@ const QualificationScreen = () => {
     ]), []);
 
     const setSelectedxId = (ids) => {
-        console.log('setSelectedxId', ids);
         setSelectedId(ids)
     }
 
@@ -106,9 +105,10 @@ const QualificationScreen = () => {
     };
 
     const handleConfirm = (date) => {
-        console.warn("A date has been picked: ", date);
+        const formattedDate = moment(date).format('YYYY');
+        console.warn(">>>", formattedDate);
         setDate(date)
-        setFormetDate(getParsedDate(date))
+        setFormetDate(formattedDate)
         hideDatePicker();
     };
 
@@ -133,6 +133,7 @@ const QualificationScreen = () => {
             };
         }, [])
     );
+
 
     const getQualificationData = async () => {
         setLoading(true)
@@ -359,9 +360,10 @@ const QualificationScreen = () => {
         formdata.append('qualification_id', value);
         formdata.append('qualification_title', valueName);
         formdata.append('college', CollageSchoolName);
-        formdata.append('pass_year', value);
+        formdata.append('pass_year', FormetDate);
         formdata.append('percentage', PercentageCgpa);
         formdata.append('university', CollageSchoolName);
+        formdata.append('',);
         console.log('uploadProfile', valueX)
         var requestOptions = {
             method: 'POST',
@@ -371,10 +373,11 @@ const QualificationScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('uploadProfile', requestOptions)
+        console.log('form in 376', JSON.stringify(formdata))
         fetch(globle.API_BASE_URL + 'tutor_step_three_update_profile', requestOptions)
             .then(response => response.json())
             .then(result => {
+                console.log("result", result)
                 if (result.status) {
                     setLoading(false)
                     Toast.show({
@@ -524,7 +527,7 @@ const QualificationScreen = () => {
                         </View>
                         <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
                             <TouchableOpacity onPress={() => showDatePicker()} style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15 }} editable={false} maxLength={12} keyboardType='number-pad' placeholder={FormetDate === null ? 'Passing Year' : '' + FormetDate} />
+                                <TextInput style={{ marginLeft: 15 }} editable={false} maxLength={12} keyboardType='number-pad' placeholder={FormetDate === null ? 'Passing Year' : FormetDate} value={FormetDate} />
                                 <DateTimePickerModal
                                     isVisible={isDatePickerVisible}
                                     mode={"date"}

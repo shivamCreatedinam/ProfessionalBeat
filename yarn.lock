@@ -8492,6 +8492,11 @@ react-native-otp-textinput@^1.1.1:
   dependencies:
     react "^16.8.6"
 
+react-native-otp-verify@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.npmjs.org/react-native-otp-verify/-/react-native-otp-verify-1.1.6.tgz"
+  integrity sha512-EeGSWwA81zLCXb4Q7qLJ5T1SqAjwWYH7evP5yZknWWbU8xnySoSwQBz/p7FBsh5MIcM1pJadt8E+Pp3BTvh1cw==
+
 react-native-otp@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/react-native-otp/-/react-native-otp-1.0.0.tgz"

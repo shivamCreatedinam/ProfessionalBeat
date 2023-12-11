@@ -2,13 +2,13 @@
  * @format
  */
 import 'react-native-gesture-handler';
+import React from 'react';
 import { AppRegistry, LogBox, Linking, AppState } from 'react-native';
 import App from './App_old';
 import { name as appName } from './app.json';
 import { enableLatestRenderer } from 'react-native-maps';
 import { firebase } from '@react-native-firebase/database';
-import invokeApp from 'react-native-invoke-app';
-import notifee from '@notifee/react-native';
+import RNOtpVerify from 'react-native-otp-verify';
 const Urls = require('./urls.json');
 // 
 enableLatestRenderer();
@@ -32,6 +32,12 @@ function HeadlessCheck({ isHeadless }) {
     return <App />;
 }
 
+console.log('RNOtpVerify')
+RNOtpVerify.getHash()
+    .then(console.log)
+    .catch(console.log);
+
+
 // AgoraRtcEngine.createEngine('YOUR_APP_ID');
 
 LogBox.ignoreAllLogs(true);
@@ -39,7 +45,6 @@ LogBox.ignoreAllLogs(true);
 AppRegistry.registerHeadlessTask('RNPushNotificationActionHandlerTask', () => notificationActionHandler,);
 
 AppRegistry.registerComponent(appName, () => HeadlessCheck);
-
 
 const AppFake = () => {
     return null;

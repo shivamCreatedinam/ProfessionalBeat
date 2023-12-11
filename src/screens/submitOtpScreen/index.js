@@ -12,7 +12,8 @@ import {
     Dimensions,
     ScrollView,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    Platform
 } from 'react-native';
 import OTPInput from 'react-native-otp';
 import globle from '../../../common/env';
@@ -21,6 +22,7 @@ import auth from '@react-native-firebase/auth';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Image } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNOtpVerify from 'react-native-otp-verify';
 
 import axios from 'axios';
 
@@ -29,6 +31,7 @@ const OTPSubmitScreen = () => {
     const navigation = useNavigation();
     const routes = useRoute();
     let otpInput = useRef(null);
+    const isPlatformIOS = Platform.OS == 'ios';
     const [initializing, setInitializing] = React.useState(true);
     const [secure, setSecure] = React.useState(true);
     const [loader, serLoader] = React.useState(false);
@@ -49,6 +52,29 @@ const OTPSubmitScreen = () => {
         const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
         return subscriber; // unsubscribe on unmount
     }, []);
+
+
+    // using methods
+    React.useEffect(() => {
+        if (!isPlatformIOS) {
+            RNOtpVerify.getOtp()
+                .then(p => RNOtpVerify.addListener(otpHandler))
+                .catch(p => console.log("err", p));
+        }
+        return () => RNOtpVerify.removeListener();
+    }, []);
+
+    const otpHandler = (message) => {
+        console.log('SMS :: ', message)
+        let detectedCode = getCodeFromText(message)
+        setUserOTP(detectedCode);
+    }
+
+    function getCodeFromText(msg) {
+        var numb = msg.match(/\d/g);
+        var stringNumber = numb.slice(0, 4).toString();
+        return stringNumber.replace(/,/g, '');
+    }
 
     React.useEffect(() => {
         console.log('addEventListener', JSON.stringify(routes?.params?.mobileNumber));
@@ -71,7 +97,7 @@ const OTPSubmitScreen = () => {
     const showOTPSendToast = (value) => {
         Toast.show({
             type: 'success',
-            text1: 'OTP Send Successfully',
+            text1: value,
             text2: value
         });
     }
@@ -123,7 +149,7 @@ const OTPSubmitScreen = () => {
     const showPasswordToast = () => Toast.show({ type: 'error', text1: 'Invalid Password!', });
 
     const validation = () => {
-        console.log('validation3');
+        console.log('validation3', OTP);
         if (OTP.length === 4) {
             console.log('validation4');
             loggedUsingSubmitMobileIn();
@@ -193,7 +219,7 @@ const OTPSubmitScreen = () => {
                 if (response.status) {
                     serLoader(false);
                     console.log(response.data);
-                    showOTPSendToast(response.data.message + '\n your OTP is: ' + response.data.otp);
+                    showOTPSendToast(response.data.message);
                 } else {
                     serLoader(false);
                     console.log(response.data);
@@ -215,6 +241,7 @@ const OTPSubmitScreen = () => {
                     <OTPInput
                         tintColor="#FB6C6A"
                         offTintColor="#BBBCBE"
+                        value={OTP}
                         otpLength={4}
                         onChange={(code) => setUserOTP(code)}
                         fontWeight={'900'}

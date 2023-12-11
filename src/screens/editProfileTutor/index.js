@@ -6,7 +6,7 @@
  */
 
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Image,
     View,
@@ -55,6 +55,8 @@ const EditTutorProfileScreen = () => {
     // state
     const [value, setValue] = React.useState(null);
     const [isFocus, setIsFocus] = React.useState(false);
+    const [valName, sValName] = React.useState(null);
+
     // city
     const [valueCity, setValueCity] = React.useState(null);
     const [isFocusCity, setIsFocusCity] = React.useState(false);
@@ -64,8 +66,29 @@ const EditTutorProfileScreen = () => {
     const gender = [{ label: 'Female', value: '1' }, { label: 'Male', value: '2' }];
     const [selectedId, setSelectedId] = React.useState(1);
 
+
+    const [stName, setStName] = useState(null);
+    const [ctName, setCtName] = useState(null);
+    // React.useEffect(() => {
+    //     if (value !== null && State.length > 0) {
+    //         console.log("Selected value:", Number(value));
+    //         const selectedState = State.find(stateItem => stateItem.id === value);
+    //         console.log("iddd", selectedState)
+    //         if (selectedState) {
+    //             console.log("Selected state:", selectedState);
+    //             setValue(selectedState.name);
+    //         } else {
+    //             console.warn('No matching state found in the State array.');
+    //             console.log("All States:", State);
+    //             console.log("Type of value:", typeof Number(value));
+    //             console.log("Type of state IDs:", State.map(state => state.id).map(id => typeof id));
+    //         }
+    //     }
+    // }, [value, State]);
+
+
+
     const setSelectedxId = (xx) => {
-        console.log('setSelectedxId', selectedId)
         if (Number(xx) === 1) {
             console.log('Male')
             setSelectedId(xx)
@@ -80,6 +103,7 @@ const EditTutorProfileScreen = () => {
             getStateData();
             loadProfile();
             loadAadharData();
+            loadCcity();
             return () => {
                 // Useful for cleanup functions
             };
@@ -99,6 +123,31 @@ const EditTutorProfileScreen = () => {
         }
     ]), []);
 
+    const loadCcity = async () => {
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'states',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('GetSubscription', config);
+        axios.request(config)
+            .then((response) => {
+                setLoading(false)
+                setState(response.data?.data);
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error);
+            });
+    }
+
+
     const loadProfile = async () => {
         setLoading(true)
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
@@ -113,11 +162,24 @@ const EditTutorProfileScreen = () => {
         };
         axios.request(config)
             .then((response) => {
+                console.log("res", response?.data)
                 setLoading(false)
                 console.log('-------><><><><>', JSON.stringify(response.data));
                 setData(response.data);
                 setName(response.data?.user?.name);
-                setValueCity(response.data?.user?.name);
+                // setValueCity(response.data?.user?.city);
+                setValue(response?.data?.user?.state)
+                // const selectedStateId = response.data?.user?.state;
+                // sValName(selectedStateId);
+                // if (sValName === value) {
+                //     console.log("inside", sValName === value)
+                //     setValue(response.data?.user?.state_name);
+                // }
+                // else {
+                //     console.log("in else")
+                // }
+                setStName(response?.data?.user?.state_name);
+                setCtName(response?.data?.user?.city_name);
                 setEmail(response.data?.user?.email);
                 setAddress(response.data?.user?.localty);
                 setMobile(response.data?.user?.mobile);
@@ -131,6 +193,13 @@ const EditTutorProfileScreen = () => {
                 console.log(error);
             });
     }
+
+    useEffect(() => {
+        console.log("called", State)
+        const filteredState = State?.filter(st => st.id === value)
+        console.log("filteredState", filteredState[0]?.name)
+        sValName(filteredState[0]?.name ? filteredState[0]?.name : "")
+    }, [State, value])
 
     const loadAadharData = async () => {
         // api/
@@ -178,6 +247,7 @@ const EditTutorProfileScreen = () => {
             updateUserProfile();
         });
     }
+
 
     const updateUserProfile = async () => {
         setLoading(true)
@@ -347,7 +417,7 @@ const EditTutorProfileScreen = () => {
         formdata.append('password', '123456');
         formdata.append('pincode', Number(pincode));
         // formdata.append('profile_image', uploadProfile);
-        console.log('uploadProfile', valueX)
+        console.log('****', valueX, formdata)
         var requestOptions = {
             method: 'POST',
             body: formdata,
@@ -356,7 +426,7 @@ const EditTutorProfileScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('uploadProfile', JSON.stringify(requestOptions))
+        console.log('uploadProfileeewwww', JSON.stringify(requestOptions))
         fetch(globle.API_BASE_URL + 'updateProfile', requestOptions)
             .then(response => response.json())
             .then(result => {
@@ -382,6 +452,7 @@ const EditTutorProfileScreen = () => {
                 setLoading(false)
             });
     }
+
 
     const checkORUploadImage = () => {
         if (uploadAFProfile !== null) {
@@ -463,7 +534,7 @@ const EditTutorProfileScreen = () => {
                         text1: 'Congratulations! Profile, Update!',
                         text2: result?.message,
                     });
-                    navigate.replace('UserHomeScreen');
+                    navigate.replace('HomeScreen');
                     // loadProfile();
                 } else {
                     setLoading(false);
@@ -543,35 +614,38 @@ const EditTutorProfileScreen = () => {
                                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 15 }} source={require('../../assets/camera.png')} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                            <View style={{ alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                                 <Dropdown
                                     style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
                                     selectedTextStyle={styles.selectedTextStyle1}
+                                    placeholderStyle={styles.placeholderStyle}
+                                    iconStyle={styles.iconStyle}
                                     data={State}
-                                    value={Number(value)}
                                     maxHeight={300}
                                     labelField="name"
                                     valueField="id"
-                                    placeholder={!isFocus ? 'Select State' : value}
+                                    placeholder={isFocus ? 'Select State' : stName}
                                     onFocus={() => setIsFocus(true)}
                                     onBlur={() => setIsFocus(false)}
                                     onChange={item => {
                                         setValue(item.id);
                                         getCityData(item.id);
                                         setIsFocus(false);
+
                                     }}
                                 />
                             </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                            <View style={{ alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                                 <Dropdown
                                     style={[styles.dropdown1, isFocusCity && { borderColor: 'blue' }]}
                                     selectedTextStyle={styles.selectedTextStyle1}
+                                    placeholderStyle={styles.placeholderStyle}
+                                    iconStyle={styles.iconStyle}
                                     data={City}
-                                    value={valueCity}
                                     maxHeight={300}
                                     labelField={"name"}
                                     valueField={"id"}
-                                    placeholder={!isFocusCity ? 'Select City' : valueCity}
+                                    placeholder={isFocusCity ? 'Select City' : ctName}
                                     onFocus={() => setIsFocusCity(true)}
                                     onBlur={() => setIsFocusCity(false)}
                                     onChange={item => {
@@ -580,6 +654,7 @@ const EditTutorProfileScreen = () => {
                                     }}
                                 />
                             </View>
+
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                                 <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.localty} placeholder='Locality' onChangeText={(e) => setAddress(e)} />
                             </View>
@@ -607,10 +682,20 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         borderColor: 'gray',
         borderRadius: 8,
-        paddingHorizontal: 8,
+        // paddingHorizontal: 5,
     },
     selectedTextStyle1: {
-        fontSize: 16,
+        fontSize: 14,
+        paddingLeft: 12
+    },
+    placeholderStyle: {
+        fontSize: 14,
+        paddingLeft: 12
+    },
+    iconStyle: {
+        width: 20,
+        height: 20,
+        marginRight: 8
     },
 });
 

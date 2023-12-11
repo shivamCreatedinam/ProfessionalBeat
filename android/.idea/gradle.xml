@@ -50,6 +50,7 @@
             <option value="$PROJECT_DIR$/../node_modules/react-native-invoke-app/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-loader-kit/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-maps/android" />
+            <option value="$PROJECT_DIR$/../node_modules/react-native-otp-verify/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-pager-view/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-permissions/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-push-notification/android" />

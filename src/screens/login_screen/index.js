@@ -67,7 +67,7 @@ const LoginScreen = () => {
     const showSuccessToast = (msg) => {
         Toast.show({
             type: 'success',
-            text1: 'Login Success',
+            text1: msg,
             text2: msg,
         });
         setTimeout(() => {
@@ -135,7 +135,7 @@ const LoginScreen = () => {
                 if (response.status) {
                     serLoader(false);
                     console.log(response.data);
-                    showSuccessToast(response.data.message + '\n your OTP is: ' + response.data.otp);
+                    showSuccessToast(response.data.message);
                 } else {
                     serLoader(false);
                     console.log(response.data);

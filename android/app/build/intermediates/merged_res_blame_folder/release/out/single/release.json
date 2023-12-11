@@ -56,6 +56,10 @@
         "source": "com.createdinam.professionbeat.app-react-50:/drawable-mdpi/src_assets_notification_logo.png"
     },
     {
+        "merged": "com.createdinam.professionbeat.app-merged_res-55:/drawable-mdpi_src_assets_call_block.png.flat",
+        "source": "com.createdinam.professionbeat.app-react-50:/drawable-mdpi/src_assets_call_block.png"
+    },
+    {
         "merged": "com.createdinam.professionbeat.app-merged_res-55:/drawable-mdpi_src_assets_history.png.flat",
         "source": "com.createdinam.professionbeat.app-react-50:/drawable-mdpi/src_assets_history.png"
     },

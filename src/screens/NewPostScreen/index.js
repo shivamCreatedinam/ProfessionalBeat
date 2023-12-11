@@ -17,7 +17,8 @@ import {
     Alert,
     Dimensions,
     Image,
-    ScrollView
+    ScrollView,
+    ActivityIndicator
 } from 'react-native';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import TutorHeader from '../../components/TutorHeader';
@@ -36,6 +37,7 @@ const NewPostScreen = () => {
 
     const navigate = useNavigation();
     const [loading, setLoading] = React.useState(false);
+    const [submitPost, setSubmitPost] = React.useState(false);
     const [name, setName] = React.useState('');
     const [FullAddress, setFullAddress] = React.useState('');
     const [Locality, setLocality] = React.useState('');
@@ -413,6 +415,7 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data,
             }
         };
+        setSubmitPost(true);
         console.log('updateUserDemoProfile', JSON.stringify(requestOptions))
         fetch(globle.API_BASE_URL + 'create-parent-post', requestOptions)
             .then(response => response.json())
@@ -420,6 +423,7 @@ const NewPostScreen = () => {
                 console.log('updateUserDemoProfile', result)
                 if (result.status) {
                     setLoading(false);
+                    setSubmitPost(false);
                     setVisiblePopup(false);
                     resetValues();
                     Toast.show({
@@ -428,7 +432,8 @@ const NewPostScreen = () => {
                         text2: result?.message,
                     });
                 } else {
-                    setLoading(false)
+                    setLoading(false);
+                    setSubmitPost(false);
                     Toast.show({
                         type: 'success',
                         text1: 'Something went wrong!',
@@ -444,6 +449,7 @@ const NewPostScreen = () => {
                     text2: error,
                 });
                 setLoading(false)
+                setSubmitPost(false);
             });
     }
 
@@ -463,7 +469,7 @@ const NewPostScreen = () => {
             'Post Uploaded Successfully!',
             'You post uploaded Successfully',
             [
-                { text: 'ok', onPress: () => navigate.navigate('MyPostScreen') },
+                { text: 'ok', onPress: () => navigate.replace('UserBottomNavigation') },
             ]
         );
     }
@@ -603,7 +609,7 @@ const NewPostScreen = () => {
                                 selectedTextStyle={styles.selectedTextStyle}
                                 data={SubjectsData}
                                 maxHeight={300}
-                                labelField="subject_name"
+                                labelField={"subject_name"}
                                 valueField="id"
                                 placeholder={!isSubjectFocus ? 'Select Subjects' : valueSubject}
                                 onFocus={() => setIssubjectFocus(true)}
@@ -622,8 +628,8 @@ const NewPostScreen = () => {
                         </TouchableOpacity>
                     </View> */}
                     <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 10, paddingRight: 10 }]}>
-                        <TouchableOpacity onPress={() => validationCheck()} style={{ padding: 15, alignItems: 'center', backgroundColor: '#000', borderRadius: 10, marginTop: 15, }}>
-                            <Text style={{ color: '#ffffff', textTransform: 'uppercase' }}>Create New Post</Text>
+                        <TouchableOpacity disabled={submitPost} onPress={() => validationCheck()} style={{ padding: 15, alignItems: 'center', backgroundColor: '#000', borderRadius: 10, marginTop: 15, }}>
+                            {submitPost === true ? <ActivityIndicator color={'white'} style={{ alignSelf: 'center' }} /> : <Text style={{ color: '#ffffff', textTransform: 'uppercase' }}>Create New Post</Text>}
                         </TouchableOpacity>
                     </View>
                     <Dialog

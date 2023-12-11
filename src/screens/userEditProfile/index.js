@@ -6,7 +6,7 @@
  */
 
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Image,
     View,
@@ -58,6 +58,9 @@ const userEditProfile = () => {
     const gender = [{ label: 'Female', value: '1' }, { label: 'Male', value: '2' }];
 
 
+
+
+
     useFocusEffect(
         React.useCallback(() => {
             getStateData();
@@ -90,9 +93,11 @@ const userEditProfile = () => {
                         setEmail(response.data?.user?.email);
                         setMobile(response.data?.user?.mobile);
                         setValueGender(response?.data?.user?.gender);
-                        setTimeout(() =>
-                            setValueCity(response?.data?.user?.city)
-                            , 2000);
+                        setValueCity(response?.data?.city)
+                        setValue(response?.data?.user?.state);
+                        // setTimeout(() =>
+                        //     setValueCity(response?.data?.user?.city)
+                        //     , 2000);
                     } else {
                         setMobile(response.data?.user?.mobile);
                         console.log('loadProfile', response.data?.user?.mobile);
@@ -223,6 +228,8 @@ const userEditProfile = () => {
             });
     }
 
+
+
     const checkValidation = () => {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
         var isValidZip = /([1-9]{1}[0-9]{5}|[1-9]{1}[0-9]{3}\\s[0-9]{3})/
@@ -330,7 +337,6 @@ const userEditProfile = () => {
             });
     }
 
-
     return (
         <View style={{ flex: 1, paddingTop: 25, backgroundColor: '#000000' }}>
             <Spinner
@@ -344,20 +350,21 @@ const userEditProfile = () => {
                     style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', padding: 5 }}
                     behavior='height'
                     enabled
-                    keyboardVerticalOffset={10}>
+                // keyboardVerticalOffset={10}
+                >
                     <ScrollView
                         style={{ flex: 1, padding: 0, backgroundColor: '#F1F6F9' }}
-                        contentContainerStyle={{ padding: 5, zIndex: 9999, paddingBottom: 80 }}>
+                        contentContainerStyle={{ padding: 5, zIndex: 9999, paddingBottom: 10 }}>
                         <View style={{ padding: 10 }}>
                             <TouchableOpacity
                                 style={{ paddingTop: 20, alignItems: 'center' }}>
                                 <Image style={{ height: 140, width: 140, resizeMode: 'contain', alignSelf: 'center', alignItems: 'center', marginBottom: 20, borderRadius: 150, borderWidth: 2 }} source={require('../../assets/notification_logo.png')} />
                             </TouchableOpacity>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.name} placeholder='Enter Full Name' onChangeText={(e) => setName(e)} />
+                                <TextInput style={{ marginLeft: 15, }} defaultValue={data?.user?.name} placeholder='Enter Full Name' onChangeText={(e) => setName(e)} />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.email} placeholder='Enter Email' onChangeText={(e) => setEmail(e)} />
+                                <TextInput style={{ marginLeft: 15, }} defaultValue={data?.user?.email} placeholder='Enter Email' onChangeText={(e) => setEmail(e)} />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                                 <TextInput editable={false} style={{ marginLeft: 15 }} value={mobile} placeholder='Enter Mobile' />
@@ -417,15 +424,16 @@ const userEditProfile = () => {
                                     onBlur={() => setIsFocusCity(false)}
                                     onChange={item => {
                                         setValueCity(item.id);
+                                        getCityData(item.id)
                                         setIsFocusCity(false);
                                     }}
                                 />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.localty} placeholder='Enter Locality' onChangeText={(e) => setAddress(e)} />
+                                <TextInput style={{ marginLeft: 15, }} defaultValue={data?.user?.localty} placeholder='Enter Locality' onChangeText={(e) => setAddress(e)} />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15, flex: 1 }} maxLength={6} keyboardType='number-pad' defaultValue={data?.user?.pincode} placeholder='Enter Pincode' onChangeText={(e) => setPincode(e)} />
+                                <TextInput style={{ marginLeft: 15, }} maxLength={6} keyboardType='number-pad' defaultValue={data?.user?.pincode} placeholder='Enter Pincode' onChangeText={(e) => setPincode(e)} />
                             </View>
                             <View style={{ marginTop: 15 }}>
                                 <TouchableOpacity onPress={() => checkValidation()} style={{ padding: 20, alignItems: 'center', backgroundColor: '#000', borderRadius: 50, }}>

@@ -65,6 +65,8 @@ import com.codegulp.invokeapp.ReactNativeInvokeAppPackage;
 import com.reactnativeloaderkit.LoaderKitPackage;
 // react-native-maps
 import com.airbnb.android.react.maps.MapsPackage;
+// react-native-otp-verify
+import com.faizal.OtpVerify.OtpVerifyPackage;
 // react-native-pager-view
 import com.reactnativepagerview.PagerViewPackage;
 // react-native-permissions
@@ -165,6 +167,7 @@ public class PackageList {
       new ReactNativeInvokeAppPackage(),
       new LoaderKitPackage(),
       new MapsPackage(),
+      new OtpVerifyPackage(),
       new PagerViewPackage(),
       new RNPermissionsPackage(),
       new ReactNativePushNotificationPackage(),

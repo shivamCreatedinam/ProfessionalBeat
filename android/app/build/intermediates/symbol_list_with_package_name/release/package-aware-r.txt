@@ -3331,6 +3331,7 @@ drawable src_assets_bell_icon
 drawable src_assets_bell_notification
 drawable src_assets_books
 drawable src_assets_cal
+drawable src_assets_call_block
 drawable src_assets_call_icon
 drawable src_assets_camera
 drawable src_assets_car_pointer

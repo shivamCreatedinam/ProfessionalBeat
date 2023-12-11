@@ -43,7 +43,7 @@ const App = () => {
     setMessage(msg);
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Initialize Agora engine when the app starts
     setupVoiceSDKEngine();
   });
@@ -143,7 +143,7 @@ const App = () => {
       console.log(e);
     }
   };
-  
+
   return (
     <SafeAreaView style={styles.main}>
       <Text style={styles.head}>Agora Voice Calling Quickstart</Text>

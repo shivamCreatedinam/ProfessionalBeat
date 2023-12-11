@@ -250,10 +250,12 @@ const AddChildProfileScreen = () => {
                 <Text><Text style={{ fontWeight: 'bold' }}>Name :</Text> {items?.item?.child_name}</Text>
                 <Text><Text style={{ fontWeight: 'bold' }}>Class :</Text> {items?.item?.class_name}</Text>
                 <Text><Text style={{ fontWeight: 'bold' }}>Board :</Text> {items?.item?.board_name}</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ fontWeight: 'bold' }}>Subjects :</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap',width:'100%'  }}>
+                    <Text style={{ fontWeight: 'bold' }}>Subjects : </Text>
                     {items?.item?.subjects.map((data) =>
-                        <Text numberOfLines={2} style={{ padding: 5, }}>{data?.subject_name},</Text>
+                        <View style={{ display: 'flex' }}>
+                            <Text numberOfLines={2} style={{  }}  >{data?.subject_name}, </Text>
+                        </View>
                     )}
                 </View>
             </View>

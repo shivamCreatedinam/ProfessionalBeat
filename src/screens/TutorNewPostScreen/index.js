@@ -146,7 +146,6 @@ const TutorNewPostScreen = () => {
             .then((response) => {
                 setLoading(false);
                 setFees(response.data?.data);
-                console.log('getFeeList', response.data?.data);
             })
             .catch((error) => {
                 setLoading(false);
@@ -346,7 +345,8 @@ const TutorNewPostScreen = () => {
                         text1: 'Congratulations!',
                         text2: result?.message,
                     });
-                    saveAndAlert();
+                    // saveAndAlert();
+                    PostDone();
                 } else {
                     setLoading(false)
                     Toast.show({
@@ -367,12 +367,27 @@ const TutorNewPostScreen = () => {
             });
     }
 
-    const saveAndAlert = () => {
+    const resetValues = () => {
+        setLocality("");
+        setValue([]);
+        setValueCity([]);
+        setValueClasses([]);
+        setSubjectsValue([]);
+        setFeesValue([]);
+        setValueBoard([]);
+        setValueClasses([]);
+        setValueToClasses([]);
+       
+    }
+
+    console.log("loc",Locality)
+
+    const PostDone = () => {
         Alert.alert(
             'Post Uploaded Successfully!',
             'You post uploaded Successfully',
             [
-                { text: 'ok', onPress: () => navigate.replace('MyTuitorPostScreen') },
+                { text: 'ok', onPress: () => { resetValues(); navigate.navigate('HomeScreen')}},
             ]
         );
     }
@@ -422,7 +437,7 @@ const TutorNewPostScreen = () => {
                             }}
                         />
                     </View>
-                    <TextInput onChangeText={(e) => setLocality(e)} placeholder='Locality' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
+                    <TextInput value={Locality} onChangeText={(e) => setLocality(e)} placeholder='Locality' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
                     {/* <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10, }]}>
                         <View style={[{ marginTop: 15, marginLeft: -10 }]}>
                             <MultiSelect

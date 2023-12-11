@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 9,
-      "versionName": "Tuitour Bot: 1.1.9",
+      "versionCode": 11,
+      "versionName": "Tuitour Bot: 1.1.11",
       "outputFile": "AndroidManifest.xml"
     }
   ],
