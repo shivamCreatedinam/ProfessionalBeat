@@ -47,6 +47,7 @@ anim m3_side_sheet_slide_out
 anim mtrl_bottom_sheet_slide_in
 anim mtrl_bottom_sheet_slide_out
 anim mtrl_card_lowers_interpolator
+anim otpless_slide_up_anim
 anim rns_default_enter_in
 anim rns_default_enter_out
 anim rns_default_exit_in
@@ -219,6 +220,8 @@ attr behavior_peekHeight
 attr behavior_saveFlags
 attr behavior_significantVelocityThreshold
 attr behavior_skipCollapsed
+attr blurOverlayColor
+attr blurRadius
 attr borderWidth
 attr borderlessButtonStyle
 attr bottomAppBarStyle
@@ -482,6 +485,7 @@ attr dividerInsetStart
 attr dividerPadding
 attr dividerThickness
 attr dividerVertical
+attr downsampleFactor
 attr dragDirection
 attr dragScale
 attr dragThreshold
@@ -948,8 +952,12 @@ attr onNegativeCross
 attr onPositiveCross
 attr onShow
 attr onTouchUp
+attr otplessCornerRadius
+attr otplessTextSize
+attr otpless_link
 attr overlapAnchor
 attr overlay
+attr overlayColor
 attr overlayImage
 attr paddingBottomNoButtons
 attr paddingBottomSystemWindowInsets
@@ -1454,6 +1462,7 @@ color darkturquoise
 color darkviolet
 color deeppink
 color deepskyblue
+color default_overlay_color
 color design_bottom_navigation_shadow_color
 color design_box_stroke_color
 color design_dark_default_color_background
@@ -2189,6 +2198,9 @@ color olivedrab
 color orange
 color orangered
 color orchid
+color otpless_gray
+color otpless_primary
+color otpless_transparent
 color palegoldenrod
 color palegreen
 color paleturquoise
@@ -2222,6 +2234,7 @@ color secondary_text_default_material_dark
 color secondary_text_default_material_light
 color secondary_text_disabled_material_dark
 color secondary_text_disabled_material_light
+color semi_transparent_gray
 color sienna
 color silver
 color skyblue
@@ -2372,6 +2385,8 @@ dimen appcompat_dialog_background_inset
 dimen autofill_inline_suggestion_icon_size
 dimen browser_actions_context_menu_max_width
 dimen browser_actions_context_menu_min_padding
+dimen button_padding_horizontal
+dimen button_padding_vertical
 dimen cardview_compat_inset_shadow
 dimen cardview_default_elevation
 dimen cardview_default_radius
@@ -2432,6 +2447,7 @@ dimen design_tab_scrollable_min_width
 dimen design_tab_text_size
 dimen design_tab_text_size_2line
 dimen design_textinput_caption_translate_y
+dimen dim_20
 dimen disabled_alpha_material_dark
 dimen disabled_alpha_material_light
 dimen fastscroll_default_thickness
@@ -3057,6 +3073,9 @@ dimen notification_small_icon_size_as_large
 dimen notification_subtext_size
 dimen notification_top_pad
 dimen notification_top_pad_large_text
+dimen otpless_btn_top_margin
+dimen otpless_whatsapp_dim
+dimen progress_bar_size
 dimen tooltip_corner_radius
 dimen tooltip_horizontal_padding
 dimen tooltip_margin
@@ -3171,6 +3190,7 @@ drawable amu_bubble_shadow
 drawable autofill_inline_suggestion_chip_background
 drawable avd_hide_password
 drawable avd_show_password
+drawable bg_snack_bar_no_internet
 drawable btn_checkbox_checked_mtrl
 drawable btn_checkbox_checked_to_unchecked_mtrl_animation
 drawable btn_checkbox_unchecked_mtrl
@@ -3221,6 +3241,7 @@ drawable ic_mtrl_checked_circle
 drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
+drawable ic_retry_otpless
 drawable ic_search_black_24
 drawable ic_stat_notification_logo
 drawable ic_tick_mark
@@ -3295,6 +3316,8 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable otpless_fab_bg
+drawable otpless_secondary_btn_bg
 drawable redbox_top_border_background
 drawable rn_edit_text_material
 drawable rzp_border
@@ -3632,6 +3655,7 @@ id matrix
 id menu_crop
 id menu_loader
 id message
+id message_tv
 id middle
 id mini
 id monochrome
@@ -3682,6 +3706,10 @@ id notification_main_column
 id notification_main_column_container
 id off
 id on
+id otpless_no_internet_tv
+id otpless_parent_vg
+id otpless_progress_bar
+id otpless_web_wrapper
 id outline
 id outward
 id packed
@@ -3708,6 +3736,7 @@ id radio
 id ratio
 id react_test_id
 id rectangles
+id retry_btn
 id reverseSawtooth
 id right
 id rightToLeft
@@ -3897,6 +3926,8 @@ integer app_bar_elevation_anim_duration
 integer bottom_sheet_slide_duration
 integer cancel_button_image_alpha
 integer config_tooltipAnimTime
+integer default_blur_radius
+integer default_downsample_factor
 integer design_snackbar_text_max_lines
 integer design_tab_indicator_anim_duration_ms
 integer google_play_services_version
@@ -4083,12 +4114,16 @@ layout mtrl_picker_text_input_date
 layout mtrl_picker_text_input_date_range
 layout mtrl_search_bar
 layout mtrl_search_view
+layout no_network_view
 layout notification_action
 layout notification_action_tombstone
 layout notification_template_custom_big
 layout notification_template_icon_group
 layout notification_template_part_chronometer
 layout notification_template_part_time
+layout otpless_content_view
+layout otpless_fab_button
+layout otpless_web_error_view
 layout redbox_item_frame
 layout redbox_item_title
 layout redbox_view
@@ -4348,6 +4383,8 @@ string mtrl_switch_track_decoration_path
 string mtrl_switch_track_path
 string mtrl_timepicker_cancel
 string mtrl_timepicker_confirm
+string otpless_go_otpless
+string otpless_retry
 string password_toggle_content_description
 string path_password_eye
 string path_password_eye_mask_strike_through
@@ -5027,6 +5064,7 @@ style Theme_MaterialComponents_Light_NoActionBar
 style Theme_MaterialComponents_Light_NoActionBar_Bridge
 style Theme_MaterialComponents_NoActionBar
 style Theme_MaterialComponents_NoActionBar_Bridge
+style Theme_Otpless_NoActionBar
 style Theme_ReactNative_AppCompat_Light
 style Theme_ReactNative_AppCompat_Light_NoActionBar_FullScreen
 style ThemeOverlay_AppCompat
@@ -5557,6 +5595,8 @@ styleable AppCompatTheme android_windowIsFloating android_windowAnimationStyle a
 styleable Autofill_InlineSuggestion autofillInlineSuggestionChip autofillInlineSuggestionEndIconStyle autofillInlineSuggestionStartIconStyle autofillInlineSuggestionSubtitle autofillInlineSuggestionTitle isAutofillInlineSuggestionTheme
 styleable Badge backgroundColor badgeGravity badgeHeight badgeRadius badgeShapeAppearance badgeShapeAppearanceOverlay badgeTextAppearance badgeTextColor badgeWidePadding badgeWidth badgeWithTextHeight badgeWithTextRadius badgeWithTextShapeAppearance badgeWithTextShapeAppearanceOverlay badgeWithTextWidth horizontalOffset horizontalOffsetWithText maxCharacterCount number offsetAlignmentMode verticalOffset verticalOffsetWithText
 styleable BaseProgressIndicator android_indeterminate hideAnimationBehavior indicatorColor minHideDelay showAnimationBehavior showDelay trackColor trackCornerRadius trackThickness
+styleable BlurView blurOverlayColor
+styleable BlurringView blurRadius downsampleFactor overlayColor
 styleable BottomAppBar addElevationShadow backgroundTint elevation fabAlignmentMode fabAlignmentModeEndMargin fabAnchorMode fabAnimationMode fabCradleMargin fabCradleRoundedCornerRadius fabCradleVerticalOffset hideOnScroll menuAlignmentMode navigationIconTint paddingBottomSystemWindowInsets paddingLeftSystemWindowInsets paddingRightSystemWindowInsets removeEmbeddedFabElevation
 styleable BottomNavigationView android_minHeight compatShadowEnabled itemHorizontalTranslationEnabled
 styleable BottomSheetBehavior_Layout android_maxWidth android_maxHeight android_elevation backgroundTint behavior_draggable behavior_expandedOffset behavior_fitToContents behavior_halfExpandedRatio behavior_hideable behavior_peekHeight behavior_saveFlags behavior_significantVelocityThreshold behavior_skipCollapsed gestureInsetBottomIgnored marginLeftSystemWindowInsets marginRightSystemWindowInsets marginTopSystemWindowInsets paddingBottomSystemWindowInsets paddingLeftSystemWindowInsets paddingRightSystemWindowInsets paddingTopSystemWindowInsets shapeAppearance shapeAppearanceOverlay shouldRemoveExpandedCorners
@@ -5690,6 +5730,7 @@ styleable ViewPager2 android_orientation
 styleable ViewStubCompat android_id android_layout android_inflatedId
 styleable WalletFragmentOptions appTheme environment fragmentMode fragmentStyle
 styleable WalletFragmentStyle buyButtonAppearance buyButtonHeight buyButtonText buyButtonWidth maskedWalletDetailsBackground maskedWalletDetailsButtonBackground maskedWalletDetailsButtonTextAppearance maskedWalletDetailsHeaderTextAppearance maskedWalletDetailsLogoImageType maskedWalletDetailsLogoTextColor maskedWalletDetailsTextAppearance
+styleable WhatsappLoginButton otplessCornerRadius otplessTextSize otpless_link
 styleable ucrop_AspectRatioTextView ucrop_artv_ratio_title ucrop_artv_ratio_x ucrop_artv_ratio_y
 styleable ucrop_UCropView ucrop_aspect_ratio_x ucrop_aspect_ratio_y ucrop_circle_dimmed_layer ucrop_dimmed_color ucrop_frame_color ucrop_frame_stroke_size ucrop_grid_color ucrop_grid_column_count ucrop_grid_row_count ucrop_grid_stroke_size ucrop_show_frame ucrop_show_grid ucrop_show_oval_crop_frame
 xml data_extraction_rules

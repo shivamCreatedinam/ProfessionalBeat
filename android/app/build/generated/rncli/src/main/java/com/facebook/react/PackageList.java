@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import io.invertase.notifee.NotifeePackage;
 // @react-native-async-storage/async-storage
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+// @react-native-community/blur
+import com.reactnativecommunity.blurview.BlurViewPackage;
 // @react-native-community/clipboard
 import com.reactnativecommunity.clipboard.ClipboardPackage;
 // @react-native-community/datetimepicker
@@ -43,6 +45,8 @@ import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage
 import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
 // appcenter-crashes
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
+// otpless-react-native
+import com.otplessreactnative.OtplessReactNativePackage;
 // react-native-agora
 import io.agora.rtc.ng.react.AgoraRtcNgPackage;
 // react-native-background-timer
@@ -142,6 +146,7 @@ public class PackageList {
       new MainReactPackage(mConfig),
       new NotifeePackage(),
       new AsyncStoragePackage(),
+      new BlurViewPackage(),
       new ClipboardPackage(),
       new RNDateTimePickerPackage(),
       new GeolocationPackage(),
@@ -156,6 +161,7 @@ public class PackageList {
       new AppCenterReactNativePackage(getApplication()),
       new AppCenterReactNativeAnalyticsPackage(getApplication(), getResources().getString(com.createdinam.professionbeat.R.string.appCenterAnalytics_whenToEnableAnalytics)),
       new AppCenterReactNativeCrashesPackage(getApplication(), getResources().getString(com.createdinam.professionbeat.R.string.appCenterCrashes_whenToSendCrashes)),
+      new OtplessReactNativePackage(),
       new AgoraRtcNgPackage(),
       new BackgroundTimerPackage(),
       new RNCallKeepPackage(),

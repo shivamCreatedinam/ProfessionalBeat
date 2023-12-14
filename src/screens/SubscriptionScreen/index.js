@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import globle from '../../../common/env';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { BlurView } from "@react-native-community/blur";
 import RazorpayCheckout from 'react-native-razorpay';
 import TutorHeader from '../../components/TutorHeader';
 import styles from './styles';
@@ -297,7 +298,8 @@ const SubscriptionScreen = () => {
             />
             <TutorHeader />
             <View style={{ flex: 1, alignItems: 'center', marginTop: 10, }}>
-                <View style={{ padding: 10, backgroundColor: 'rgb(68,114,199)', marginBottom: 25, borderRadius: 15, width: '90%', elevation: 5, height: 170 }}>
+                <View
+                    style={{ padding: 10, backgroundColor: 'rgb(68,114,199)', marginBottom: 25, borderRadius: 15, width: '90%', elevation: 5, }}>
                     <View style={{ padding: 5 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={{ fontSize: 14, color: '#ffffff', flex: 1 }}>Current Package: {PackageData?.package_type}</Text>
@@ -314,7 +316,7 @@ const SubscriptionScreen = () => {
                             <Text style={{ color: '#fff', }}>{getTimesAgo(PackageData?.created_date)}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0, paddingTop: 10 }}>
-                            <Text style={{ marginBottom: 10, color: '#ffffff' }} numberOfLines={1}>Transaction Id {PackageData?.transaction_signature}</Text>
+                            <Text style={{ marginBottom: 10, color: '#ffffff', flex: 1 }} numberOfLines={1}>Transaction Id {PackageData?.transaction_signature}</Text>
                         </View>
                     </View>
                 </View>

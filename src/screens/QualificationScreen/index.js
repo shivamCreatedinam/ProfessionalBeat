@@ -387,6 +387,8 @@ const QualificationScreen = () => {
                     });
                     if (selectedSpokenId === '1') {
                         updateOrExpereance();
+                    } else {
+                        navigate.replace('BottomNavigation');
                     }
                 } else {
                     setLoading(false)
@@ -442,6 +444,7 @@ const QualificationScreen = () => {
                         text1: 'Congratulations!',
                         text2: result?.message,
                     });
+                    navigate.replace('BottomNavigation');
                 } else {
                     setLoading(false)
                     Toast.show({

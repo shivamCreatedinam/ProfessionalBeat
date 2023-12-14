@@ -784,7 +784,7 @@ const UserHomeScreen = () => {
                     </View> :
                         <FlatList
                             style={{ height: Dimensions.get('screen').height / 1.2 - 30, marginTop: 5 }}
-                            data={dataTuitor}
+                            data={dataTuitor.slice(0, 10)}
                             keyExtractor={(e) => e.id}
                             renderItem={(items) => renderHistoryView(items)}
                             onRefresh={() => onRefresh()}

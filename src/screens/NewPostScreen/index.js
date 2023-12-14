@@ -24,6 +24,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import TutorHeader from '../../components/TutorHeader';
 import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
 import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
+import Modal from "react-native-modal";
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-toast-message';
@@ -415,7 +416,7 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data,
             }
         };
-        setSubmitPost(true);
+        setLoading(true);
         console.log('updateUserDemoProfile', JSON.stringify(requestOptions))
         fetch(globle.API_BASE_URL + 'create-parent-post', requestOptions)
             .then(response => response.json())
@@ -423,7 +424,7 @@ const NewPostScreen = () => {
                 console.log('updateUserDemoProfile', result)
                 if (result.status) {
                     setLoading(false);
-                    setSubmitPost(false);
+                    setSubmitPost(true);
                     setVisiblePopup(false);
                     resetValues();
                     Toast.show({
@@ -433,7 +434,7 @@ const NewPostScreen = () => {
                     });
                 } else {
                     setLoading(false);
-                    setSubmitPost(false);
+                    setSubmitPost(true);
                     Toast.show({
                         type: 'success',
                         text1: 'Something went wrong!',
@@ -449,7 +450,7 @@ const NewPostScreen = () => {
                     text2: error,
                 });
                 setLoading(false)
-                setSubmitPost(false);
+                setSubmitPost(true);
             });
     }
 
@@ -461,17 +462,17 @@ const NewPostScreen = () => {
         setValueClasses();
         setFullAddress();
         setSelected([]);
-        PostDone();
+        // PostDone();
     }
 
     const PostDone = () => {
-        Alert.alert(
-            'Post Uploaded Successfully!',
-            'You post uploaded Successfully',
-            [
-                { text: 'ok', onPress: () => navigate.replace('UserBottomNavigation') },
-            ]
-        );
+        // Alert.alert(
+        //     'Post Uploaded Successfully!',
+        //     'You post uploaded Successfully',
+        //     [
+        //         { text: 'ok', },
+        //     ]
+        // );
     }
 
     const RadioGroupCustom = ({ options, selectedValue, onSelect }) => {
@@ -561,7 +562,7 @@ const NewPostScreen = () => {
                             }}
                         />
                     </View>
-                    <TextInput onChangeText={(e) => setLocality(e)} placeholder='Locality' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
+                    <TextInput onChangeText={(e) => setLocality(e)} placeholder='Locality' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 20, color: '#000', }} />
                     {/* <TextInput maxLength={6} onChangeText={(e) => setZipCode(e)} placeholder='Zip Code' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} /> */}
                     {/* <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                         <Dropdown
@@ -714,6 +715,20 @@ const NewPostScreen = () => {
                         </DialogContent>
                     </Dialog>
                 </View>
+                <Modal isVisible={submitPost}>
+                    <View style={{ backgroundColor: '#ffffff', height: 300, width: 300, alignSelf: 'center', borderRadius: 10 }}>
+                        <View style={{ backgroundColor: 'green', flex: 1, padding: 20, borderRadius: 10, borderBottomLeftWidth: 1 }}>
+                            <Image style={{ width: 80, height: 80, resizeMode: 'contain', alignSelf: 'center', marginTop: 30 }} source={require('../../assets/success.png')} />
+                        </View>
+                        <View style={{ flex: 1, padding: 10 }}>
+                            <Text style={{ textAlign: 'center', fontWeight: '900', marginTop: 20 }} >Post Upload Successfully</Text>
+                            <Text style={{ textAlign: 'center' }}>Your post is live,</Text>
+                            <TouchableOpacity style={{ alignItems: 'center', paddingVertical: 15, paddingHorizontal: 10, backgroundColor: 'green', width: 120, alignSelf: 'center', borderRadius: 10, elevation: 5, marginTop: 15 }} onPress={() => navigate.replace('UserBottomNavigation')}>
+                                <Text style={{ color: '#fff' }}>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 6, marginTop: 20 }}>
                     <Text style={{ fontSize: 12, letterSpacing: 1 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Note: </Text>Your post visible after varification by admin, and it's visible for you selected location or city whcih you selected.</Text>
                 </View>

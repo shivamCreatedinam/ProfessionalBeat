@@ -7,6 +7,8 @@ import com.facebook.react.ReactActivityDelegate;
 import io.wazo.callkeep.RNCallKeepModule; // Add these import lines
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
+import com.otplessreactnative.OtplessReactNativeManager;
+import android.content.Intent;
 
 public class MainActivity extends ReactActivity {
 
@@ -55,6 +57,19 @@ public class MainActivity extends ReactActivity {
         RNCallKeepModule.onRequestPermissionsResult(requestCode, permissions, grantResults);
         break;
     }
+  }
+
+  @Override
+  public void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    OtplessReactNativeManager.INSTANCE.onNewIntent(intent);
+  }
+
+  @Override
+  public void onBackPressed() {
+    if (OtplessReactNativeManager.INSTANCE.onBackPressed())
+      return;
+    super.onBackPressed();
   }
 
 }

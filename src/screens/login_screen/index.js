@@ -24,6 +24,7 @@ import auth from '@react-native-firebase/auth';
 import RadioGroup from 'react-native-radio-buttons-group';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
 import { useNavigation } from "@react-navigation/native";
+import { OtplessModule } from 'otpless-react-native';
 import Global from '../../../common/env';
 import axios from 'axios';
 
@@ -51,6 +52,15 @@ const LoginScreen = () => {
             value: 'Tutor'
         }
     ]), []);
+
+    // OTP LESS
+    const module = new OtplessModule();
+    const extra = {
+        method: 'get',
+        params: {
+            cid: 'M6GAHIABAZU42JVAOV11QIP7ST7CPZ8E',
+        },
+    };
 
     // Handle user state changes
     function onAuthStateChanged(user) {
@@ -177,6 +187,20 @@ const LoginScreen = () => {
         navigation.navigate('RegisterScreen');
     }
 
+    const ClickForOTPLess = async () => {
+        module.showLoginPage((data) => {
+            let message = '';
+            if (data.data === null || data.data === undefined) {
+                message = data.errorMessage;
+            } else {
+                message = data.data.token;
+                // todo here
+                module.onSignInCompleted();
+            }
+            console.warn('ClickForOTPLess', message);
+        }, extra);
+    }
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', padding: 10 }}
@@ -230,6 +254,10 @@ const LoginScreen = () => {
                                 textTransform: 'uppercase',
                                 textAlign: 'center',
                             }}>Send OTP</Text>}
+                    </TouchableOpacity>
+                    <Text style={{ textAlign: 'center', padding: 20 }}>Or</Text>
+                    <TouchableOpacity onPress={() => ClickForOTPLess()} style={{ alignItems: 'center', padding: 10, backgroundColor: '#000', paddingVertical: 15, borderRadius: 5, elevation: 5 }}>
+                        <Text style={{ color: '#fff',fontWeight:'600' }}>OTP LESS LOGIN</Text>
                     </TouchableOpacity>
                     <View style={{ marginTop: 20 }}>
                         <Text style={{ color: '#FE0000', fontWeight: 'bold', fontSize: 10 }}>{errors}</Text>

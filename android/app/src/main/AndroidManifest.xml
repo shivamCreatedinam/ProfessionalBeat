@@ -43,7 +43,7 @@
       <activity
         android:name=".MainActivity"
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
-        android:launchMode="singleTask"
+        android:launchMode="singleTop"
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
         <intent-filter android:autoVerify="true">
@@ -62,12 +62,13 @@
                 <data android:host="tuitionbot.com" />
                 <data android:host="www.tuitionbot.com" />
             </intent-filter>
-            <intent-filter android:autoVerify="true" tools:targetApi="m">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="tuitionbototpless" />
-                <data android:host="otpless" />
+                <data
+                android:host="otpless"
+                android:scheme= "${applicationId}.otpless"/>
             </intent-filter>
       </activity>
         <service android:name="io.wazo.callkeep.VoiceConnectionService"

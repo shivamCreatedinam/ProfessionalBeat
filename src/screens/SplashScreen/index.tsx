@@ -363,11 +363,14 @@ const SplashAppScreen = () => {
         .catch(error => console.log('failed', error));
 
     messaging().onMessage(async remoteMessage => {
-        console.log('foreground--->>', remoteMessage);
+        console.log('foreground--->>', remoteMessage.data?.call_token);
         join(remoteMessage.data?.call_token, remoteMessage.data?.channel_id);
-        onDisplayNotificationx(remoteMessage?.notification?.android?.channelId, remoteMessage?.notification?.title, remoteMessage?.notification?.body);
-        // saveToCallInfo(remoteMessage?.data?.user_type, remoteMessage?.data?.tutor_ids, remoteMessage?.data?.id);
-        // onDisplayIncomingCall(remoteMessage);
+        if (remoteMessage.data?.call_token !== undefined) {
+            saveToCallInfo(remoteMessage?.data?.user_type, remoteMessage?.data?.tutor_ids, remoteMessage?.data?.id);
+            onDisplayIncomingCall(remoteMessage);
+        } else {
+            onDisplayNotificationx(remoteMessage?.notification?.android?.channelId, remoteMessage?.notification?.title, remoteMessage?.notification?.body);
+        }
     });
 
     const saveToCallInfo = async (user_type: any, user_id: any, post_id: any) => {

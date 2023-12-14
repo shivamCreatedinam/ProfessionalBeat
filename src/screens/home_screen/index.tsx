@@ -43,7 +43,7 @@ import Dialog, {
     DialogButton,
 } from 'react-native-popup-dialog';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import apps from '../../../package.json';
 import {
     createAgoraRtcEngine,
     ClientRoleType,
@@ -854,11 +854,14 @@ const HomeScreen = () => {
             <View style={{ padding: 0, backgroundColor: '#F1F6F9', }}>
                 <FlatList
                     style={{ height: Dimensions.get('screen').height - 200 }}
-                    data={dataHome}
+                    data={dataHome.slice(0, 10)}
                     renderItem={renderItem}
                     onRefresh={() => onRefresh()}
                     refreshing={isFetching}
                     keyExtractor={(item) => item.id}
+                    ListFooterComponent={() => <View style={{ padding: 10, marginBottom: 20 }}>
+                        <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Tuitionbot {apps.version}</Text>
+                    </View>}
                 />
                 {/* <View style={{ flex: 1, alignItems: 'center', marginTop: Dimensions.get('screen').width / 3 }}>
                         <Image style={{ width: 300, height: 300, resizeMode: 'cover' }} source={require('../../assets/no_record.png')} />

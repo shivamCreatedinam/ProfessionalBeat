@@ -1,7 +1,8 @@
-#Thu Dec 07 22:41:16 IST 2023
+#Thu Dec 14 07:02:55 IST 2023
 path.4=6/classes.dex
 path.3=14/classes.dex
 path.2=0/classes.dex
+renamed.9=classes10.dex
 path.1=0/classes.dex
 renamed.8=classes9.dex
 path.8=0/classes2.dex
@@ -18,6 +19,8 @@ renamed.3=classes4.dex
 renamed.2=classes3.dex
 renamed.1=classes2.dex
 renamed.0=classes.dex
+base.9=/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes3.dex
+path.9=0/classes3.dex
 renamed.7=classes8.dex
 base.8=/Users/apple/Documents/MyApps/ProfessionalBeat/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes2.dex
 renamed.6=classes7.dex

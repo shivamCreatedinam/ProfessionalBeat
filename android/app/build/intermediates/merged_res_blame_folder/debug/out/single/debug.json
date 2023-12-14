@@ -1,22 +1,22 @@
 [
     {
-        "merged": "com.createdinam.professionbeat.app-merged_res-55:/drawable_rn_edit_text_material.xml.flat",
-        "source": "com.createdinam.professionbeat.app-main-57:/drawable/rn_edit_text_material.xml"
+        "merged": "com.createdinam.professionbeat.app-merged_res-57:/drawable_rn_edit_text_material.xml.flat",
+        "source": "com.createdinam.professionbeat.app-main-59:/drawable/rn_edit_text_material.xml"
     },
     {
-        "merged": "com.createdinam.professionbeat.app-merged_res-55:/xml_data_extraction_rules.xml.flat",
-        "source": "com.createdinam.professionbeat.app-main-57:/xml/data_extraction_rules.xml"
+        "merged": "com.createdinam.professionbeat.app-merged_res-57:/drawable_ic_stat_notification_logo.png.flat",
+        "source": "com.createdinam.professionbeat.app-main-59:/drawable/ic_stat_notification_logo.png"
     },
     {
-        "merged": "com.createdinam.professionbeat.app-merged_res-55:/drawable_ic_launcher_round.png.flat",
-        "source": "com.createdinam.professionbeat.app-main-57:/drawable/ic_launcher_round.png"
+        "merged": "com.createdinam.professionbeat.app-merged_res-57:/xml_data_extraction_rules.xml.flat",
+        "source": "com.createdinam.professionbeat.app-main-59:/xml/data_extraction_rules.xml"
     },
     {
-        "merged": "com.createdinam.professionbeat.app-merged_res-55:/drawable_ic_stat_notification_logo.png.flat",
-        "source": "com.createdinam.professionbeat.app-main-57:/drawable/ic_stat_notification_logo.png"
+        "merged": "com.createdinam.professionbeat.app-merged_res-57:/drawable_ic_launcher.png.flat",
+        "source": "com.createdinam.professionbeat.app-main-59:/drawable/ic_launcher.png"
     },
     {
-        "merged": "com.createdinam.professionbeat.app-merged_res-55:/drawable_ic_launcher.png.flat",
-        "source": "com.createdinam.professionbeat.app-main-57:/drawable/ic_launcher.png"
+        "merged": "com.createdinam.professionbeat.app-merged_res-57:/drawable_ic_launcher_round.png.flat",
+        "source": "com.createdinam.professionbeat.app-main-59:/drawable/ic_launcher_round.png"
     }
 ]

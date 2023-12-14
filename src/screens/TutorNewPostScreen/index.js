@@ -21,6 +21,7 @@ import {
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import TutorHeader from '../../components/TutorHeader';
 import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
+import Modal from "react-native-modal";
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-toast-message';
@@ -33,6 +34,7 @@ const TutorNewPostScreen = () => {
     const navigate = useNavigation();
     const [loading, setLoading] = React.useState(false);
     const [Locality, setLocality] = React.useState(null);
+    const [postUploaded, isPostUploaded] = React.useState(false);
     // subjects 
     const [SubjectsData, setSubjectsData] = React.useState([]);
     const [valueSubject, setSubjectValue] = React.useState(null);
@@ -301,6 +303,7 @@ const TutorNewPostScreen = () => {
 
 
     const updateUserDemoProfile = async () => {
+        setLoading(true);
         console.log('Class Save');
         console.log('saveChildProfile');
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
@@ -345,7 +348,6 @@ const TutorNewPostScreen = () => {
                         text1: 'Congratulations!',
                         text2: result?.message,
                     });
-                    // saveAndAlert();
                     PostDone();
                 } else {
                     setLoading(false)
@@ -377,19 +379,20 @@ const TutorNewPostScreen = () => {
         setValueBoard([]);
         setValueClasses([]);
         setValueToClasses([]);
-       
+
     }
 
-    console.log("loc",Locality)
+    console.log("loc", Locality)
 
     const PostDone = () => {
-        Alert.alert(
-            'Post Uploaded Successfully!',
-            'You post uploaded Successfully',
-            [
-                { text: 'ok', onPress: () => { resetValues(); navigate.navigate('HomeScreen')}},
-            ]
-        );
+        isPostUploaded(true)
+        // Alert.alert(
+        //     'Post Uploaded Successfully!',
+        //     'You post uploaded Successfully',
+        //     [
+        //         { text: 'ok', onPress: () => { resetValues(); navigate.navigate('HomeScreen') } },
+        //     ]
+        // );
     }
 
     return (
@@ -437,7 +440,7 @@ const TutorNewPostScreen = () => {
                             }}
                         />
                     </View>
-                    <TextInput value={Locality} onChangeText={(e) => setLocality(e)} placeholder='Locality' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 15, fontWeight: 'bold', color: '#000' }} />
+                    <TextInput value={Locality} onChangeText={(e) => setLocality(e)} placeholder='Locality' style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, height: 45, paddingLeft: 20, fontWeight: '600', color: '#000' }} />
                     {/* <View style={[{ marginTop: 0, paddingLeft: 10, paddingRight: 10, }]}>
                         <View style={[{ marginTop: 15, marginLeft: -10 }]}>
                             <MultiSelect
@@ -480,7 +483,7 @@ const TutorNewPostScreen = () => {
                                 selectedStyle={styles.selectedStyle}
                             />
                         </View>
-                    </View>
+                    </View> 
                     <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                         <Dropdown
                             style={[styles.dropdown1, isFeesFocus && { borderColor: 'blue' }]}
@@ -559,6 +562,20 @@ const TutorNewPostScreen = () => {
                     <Text style={{ fontSize: 12, letterSpacing: 1 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Note: </Text>Your post visible after varification by admin, and it's visible for you selected location or city whcih you selected.</Text>
                 </View>
             </ScrollView>
+            <Modal isVisible={postUploaded}>
+                <View style={{ backgroundColor: '#ffffff', height: '50%', width: 300, alignSelf: 'center', borderRadius: 10 }}>
+                    <View style={{ backgroundColor: 'green', flex: 1, padding: 20, borderRadius: 10, borderBottomLeftWidth: 1 }}>
+                        <Image style={{ width: 80, height: 80, resizeMode: 'contain', alignSelf: 'center', marginTop: 30 }} source={require('../../assets/success.png')} />
+                    </View>
+                    <View style={{ flex: 1, padding: 10 }}>
+                        <Text style={{ textAlign: 'center', fontWeight: '900', marginTop: 20 }} >Post Upload Successfully</Text>
+                        <Text style={{ textAlign: 'center' }}>Your post is live,</Text>
+                        <TouchableOpacity style={{ alignItems: 'center', paddingVertical: 15, paddingHorizontal: 10, backgroundColor: 'green', width: 120, alignSelf: 'center', borderRadius: 10, elevation: 5, marginTop: 25 }} onPress={() => navigate.replace('BottomNavigation')}>
+                            <Text style={{ color: '#fff' }}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
