@@ -276,6 +276,10 @@
         "source": "com.createdinam.professionbeat.app-react-53:/drawable-mdpi/src_assets_presentation.png"
     },
     {
+        "merged": "com.createdinam.professionbeat.app-merged_res-58:/drawable-mdpi_src_assets_call_drop.png.flat",
+        "source": "com.createdinam.professionbeat.app-react-53:/drawable-mdpi/src_assets_call_drop.png"
+    },
+    {
         "merged": "com.createdinam.professionbeat.app-merged_res-58:/drawable-mdpi_src_assets_flat_icon_app_removebg.png.flat",
         "source": "com.createdinam.professionbeat.app-react-53:/drawable-mdpi/src_assets_flat_icon_app_removebg.png"
     },
