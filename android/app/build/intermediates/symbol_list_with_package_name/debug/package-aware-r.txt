@@ -813,6 +813,24 @@ attr logo
 attr logoAdjustViewBounds
 attr logoDescription
 attr logoScaleType
+attr lottieAnimationViewStyle
+attr lottie_autoPlay
+attr lottie_cacheComposition
+attr lottie_clipToCompositionBounds
+attr lottie_colorFilter
+attr lottie_enableMergePathsForKitKatAndAbove
+attr lottie_fallbackRes
+attr lottie_fileName
+attr lottie_ignoreDisabledSystemAnimations
+attr lottie_imageAssetsFolder
+attr lottie_loop
+attr lottie_progress
+attr lottie_rawRes
+attr lottie_renderMode
+attr lottie_repeatCount
+attr lottie_repeatMode
+attr lottie_speed
+attr lottie_url
 attr mapId
 attr mapType
 attr marginHorizontal
@@ -1394,6 +1412,7 @@ color antiquewhite
 color aqua
 color aquamarine
 color azure
+color background
 color background_floating_material_dark
 color background_floating_material_light
 color background_material_dark
@@ -1427,6 +1446,7 @@ color catalyst_logbox_background
 color catalyst_redbox_background
 color chartreuse
 color chocolate
+color colorAccent
 color common_google_signin_btn_text_dark
 color common_google_signin_btn_text_dark_default
 color common_google_signin_btn_text_dark_disabled
@@ -2190,7 +2210,9 @@ color mtrl_textinput_focused_box_stroke_color
 color mtrl_textinput_hovered_box_stroke_color
 color navajowhite
 color navy
+color notification_action_accept
 color notification_action_color_filter
+color notification_action_decline
 color notification_icon_bg_color
 color oldlace
 color olive
@@ -2211,6 +2233,7 @@ color peru
 color pink
 color plum
 color powderblue
+color primary_dark
 color primary_dark_material_dark
 color primary_dark_material_light
 color primary_material_dark
@@ -3229,10 +3252,13 @@ drawable ic_alert
 drawable ic_arrow_back_black
 drawable ic_arrow_back_black_24
 drawable ic_arrow_back_white
+drawable ic_avatar_default
 drawable ic_clear_black_24
 drawable ic_clock_black_24dp
 drawable ic_keyboard_black_24dp
 drawable ic_launcher
+drawable ic_launcher_background
+drawable ic_launcher_foreground
 drawable ic_launcher_round
 drawable ic_m3_chip_check
 drawable ic_m3_chip_checked_circle
@@ -3304,6 +3330,23 @@ drawable mtrl_switch_track
 drawable mtrl_switch_track_decoration
 drawable mtrl_tabs_default_indicator
 drawable navigation_empty_icon
+drawable node_modules_reactnativeelementdropdown_src_assets_close
+drawable node_modules_reactnativeelementdropdown_src_assets_down
+drawable node_modules_reactnativeelements_node_modules_reactnativeratings_dist_images_airbnbstar
+drawable node_modules_reactnativeelements_node_modules_reactnativeratings_dist_images_airbnbstarselected
+drawable node_modules_reactnativeelements_node_modules_reactnativeratings_dist_images_bell
+drawable node_modules_reactnativeelements_node_modules_reactnativeratings_dist_images_heart
+drawable node_modules_reactnativeelements_node_modules_reactnativeratings_dist_images_rocket
+drawable node_modules_reactnativeelements_node_modules_reactnativeratings_dist_images_star
+drawable node_modules_reactnativegoogleplacesautocomplete_images_powered_by_google_on_white
+drawable node_modules_reactnativeratings_dist_images_airbnbstar
+drawable node_modules_reactnativeratings_dist_images_airbnbstarselected
+drawable node_modules_reactnativeratings_dist_images_bell
+drawable node_modules_reactnativeratings_dist_images_heart
+drawable node_modules_reactnativeratings_dist_images_rocket
+drawable node_modules_reactnativeratings_dist_images_star
+drawable node_modules_reactnavigation_elements_src_assets_backicon
+drawable node_modules_reactnavigation_elements_src_assets_backiconmask
 drawable notification_action_background
 drawable notification_bg
 drawable notification_bg_low
@@ -3329,6 +3372,73 @@ drawable rzp_name_logo
 drawable rzp_poweredby
 drawable rzp_secured_by_bg
 drawable rzp_white_border_black_bg
+drawable splash_screen_background
+drawable src_assets_activity_history
+drawable src_assets_addition
+drawable src_assets_back_school
+drawable src_assets_background_maps
+drawable src_assets_bell_icon
+drawable src_assets_bell_notification
+drawable src_assets_books
+drawable src_assets_cal
+drawable src_assets_call_block
+drawable src_assets_call_drop
+drawable src_assets_call_icon
+drawable src_assets_camera
+drawable src_assets_car_pointer
+drawable src_assets_clock
+drawable src_assets_data_auto_rickshaw
+drawable src_assets_distance
+drawable src_assets_document_icon
+drawable src_assets_driver_profile
+drawable src_assets_english_speak
+drawable src_assets_filter
+drawable src_assets_flat_icon_app_removebg
+drawable src_assets_green_check
+drawable src_assets_greenindicator
+drawable src_assets_greenmarker
+drawable src_assets_help
+drawable src_assets_history
+drawable src_assets_home
+drawable src_assets_home_shield
+drawable src_assets_ic_launcher_round
+drawable src_assets_icons_eye
+drawable src_assets_left_icon
+drawable src_assets_loader_driver
+drawable src_assets_logo
+drawable src_assets_map_pointer
+drawable src_assets_medium
+drawable src_assets_navigation_icon
+drawable src_assets_no_record_found
+drawable src_assets_notification_logo
+drawable src_assets_oval
+drawable src_assets_phone_call
+drawable src_assets_pin_start
+drawable src_assets_placeholder
+drawable src_assets_pointer_picker
+drawable src_assets_post
+drawable src_assets_power_off
+drawable src_assets_presentation
+drawable src_assets_previous
+drawable src_assets_privacy
+drawable src_assets_profile_icon
+drawable src_assets_profile_man
+drawable src_assets_profile_picture
+drawable src_assets_referral_bonus
+drawable src_assets_routes
+drawable src_assets_search_books
+drawable src_assets_search_driver
+drawable src_assets_setting
+drawable src_assets_share
+drawable src_assets_star
+drawable src_assets_subscription
+drawable src_assets_success
+drawable src_assets_support
+drawable src_assets_teach
+drawable src_assets_time
+drawable src_assets_time_icon
+drawable src_assets_tuition_icon
+drawable src_assets_verified
 drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
@@ -3452,6 +3562,7 @@ id autofill_inline_suggestion_end_icon
 id autofill_inline_suggestion_start_icon
 id autofill_inline_suggestion_subtitle
 id autofill_inline_suggestion_title
+id automatic
 id barrier
 id baseline
 id beginOnFirstDraw
@@ -3580,6 +3691,7 @@ id graph_wrap
 id grayscale
 id group_divider
 id groups
+id hardware
 id header_title
 id hideable
 id holo_dark
@@ -3606,6 +3718,9 @@ id invisible
 id inward
 id italic
 id item_touch_helper_previous_elevation
+id ivAcceptCall
+id ivAvatar
+id ivDeclineCall
 id iv_check_mark
 id jumpToEnd
 id jumpToStart
@@ -3625,7 +3740,10 @@ id linear
 id listMode
 id list_item
 id ll_loader
+id lnAcceptCall
+id lnDeclineCall
 id logo_only
+id lottie_layer_name
 id m3_side_sheet
 id marquee
 id masked
@@ -3734,9 +3852,12 @@ id progress_circular
 id progress_horizontal
 id radio
 id ratio
+id reactNativeFragment
 id react_test_id
 id rectangles
+id restart
 id retry_btn
+id reverse
 id reverseSawtooth
 id right
 id rightToLeft
@@ -3810,6 +3931,7 @@ id snackbar_action
 id snackbar_text
 id snap
 id snapMargins
+id software
 id spacer
 id special_effects_controller_view_tag
 id spline
@@ -3888,6 +4010,10 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id tvAccept
+id tvDecline
+id tvInfo
+id tvName
 id tv_sub_item
 id tv_title
 id ucrop
@@ -4039,6 +4165,7 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_call_incoming
 layout amu_info_window
 layout amu_text_bubble
 layout amu_webview
@@ -4046,6 +4173,7 @@ layout autofill_inline_suggestion
 layout browser_actions_context_menu_page
 layout browser_actions_context_menu_row
 layout custom_dialog
+layout custom_ingcoming_call_rn
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog
 layout design_layout_snackbar
@@ -4194,6 +4322,7 @@ string abc_searchview_description_voice
 string abc_shareactionprovider_share_with
 string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
+string accept
 string alert_description
 string androidx_startup
 string appCenterAnalytics_whenToEnableAnalytics
@@ -4260,6 +4389,7 @@ string common_open_on_phone
 string common_signin_button_text
 string common_signin_button_text_long
 string copy_toast_msg
+string decline
 string error_a11y_label
 string error_icon_content_description
 string exposed_dropdown_menu_content_description
@@ -5565,6 +5695,7 @@ style Widget_Support_CoordinatorLayout
 style amu_Bubble_TextAppearance_Dark
 style amu_Bubble_TextAppearance_Light
 style amu_ClusterIcon_TextAppearance
+style incomingCall
 style redboxButton
 style ucrop_ImageViewWidgetIcon
 style ucrop_TextViewCropAspectRatio
@@ -5652,6 +5783,7 @@ styleable LinearLayoutCompat_Layout android_layout_gravity android_layout_width 
 styleable LinearProgressIndicator indeterminateAnimationType indicatorDirectionLinear
 styleable ListPopupWindow android_dropDownHorizontalOffset android_dropDownVerticalOffset
 styleable LoadingImageView circleCrop imageAspectRatio imageAspectRatioAdjust
+styleable LottieAnimationView lottie_autoPlay lottie_cacheComposition lottie_clipToCompositionBounds lottie_colorFilter lottie_enableMergePathsForKitKatAndAbove lottie_fallbackRes lottie_fileName lottie_ignoreDisabledSystemAnimations lottie_imageAssetsFolder lottie_loop lottie_progress lottie_rawRes lottie_renderMode lottie_repeatCount lottie_repeatMode lottie_speed lottie_url
 styleable MapAttrs ambientEnabled backgroundColor cameraBearing cameraMaxZoomPreference cameraMinZoomPreference cameraTargetLat cameraTargetLng cameraTilt cameraZoom latLngBoundsNorthEastLatitude latLngBoundsNorthEastLongitude latLngBoundsSouthWestLatitude latLngBoundsSouthWestLongitude liteMode mapId mapType uiCompass uiMapToolbar uiRotateGestures uiScrollGestures uiScrollGesturesDuringRotateOrZoom uiTiltGestures uiZoomControls uiZoomGestures useViewLifecycle zOrderOnTop
 styleable MaterialAlertDialog backgroundInsetBottom backgroundInsetEnd backgroundInsetStart backgroundInsetTop
 styleable MaterialAlertDialogTheme materialAlertDialogBodyTextStyle materialAlertDialogButtonSpacerVisibility materialAlertDialogTheme materialAlertDialogTitleIconStyle materialAlertDialogTitlePanelStyle materialAlertDialogTitleTextStyle

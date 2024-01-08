@@ -22,7 +22,7 @@ import OTPSubmitScreen from '../src/screens/submitOtpScreen';
 import UserHomeScreen from '../src/screens/UserHomeScreen';
 import TripHistoryScreen from '../src/screens/TripHistory';
 import RegisterDriverTwoScreen from '../src/screens/registerDrivertwo';
-import UserEditProfileScreen from '../src/screens/userEditProfile';
+import UserEditProfileScreen from '../src/screens/UserEditProfile';
 // driver
 import DriverLoginScreen from '../src/screens/driverLogin';
 import DriverProfileScreen from '../src/screens/driverProfile';

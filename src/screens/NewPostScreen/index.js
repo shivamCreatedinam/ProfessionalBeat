@@ -5,8 +5,6 @@
  * @format
  */
 
-
-
 import React from 'react';
 import {
     StyleSheet,
@@ -37,6 +35,9 @@ import CommonHeader from '../../components/CommonHeader';
 const NewPostScreen = () => {
 
     const navigate = useNavigation();
+    const getFeeList = async () => {
+
+    }
     const [loading, setLoading] = React.useState(false);
     const [submitPost, setSubmitPost] = React.useState(false);
     const [name, setName] = React.useState('');
@@ -106,16 +107,13 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('Profile', config);
         axios.request(config)
             .then((response) => {
                 setLoading(false);
                 setQualification(response.data?.data);
-                console.log('Profile', response.data?.data);
             })
             .catch((error) => {
                 setLoading(false);
-                console.log(error);
             });
     }
 
@@ -132,16 +130,13 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data,
             }
         };
-        console.log('loadSessionStorage', config);
         axios.request(config)
             .then((response) => {
                 setLoading(false);
                 setChildList(response.data?.data);
-                console.log('loadSessionStorage', response.data);
             })
             .catch((error) => {
                 setLoading(false);
-                console.log(error);
             });
     }
 
@@ -157,20 +152,15 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('Profile', config);
         axios.request(config)
             .then((response) => {
                 setLoading(false);
                 setSubjectsData(response.data?.data);
-                console.log('getSubjectsData', response.data?.data);
             })
             .catch((error) => {
                 setLoading(false);
-                console.log(error);
             });
     }
-
-    const getFeeList = async () => { }
 
     const getChildList = async () => {
         setLoading(true);
@@ -188,16 +178,14 @@ const NewPostScreen = () => {
             .then((response) => {
                 if (response.status) {
                     setLoading(false);
-                    console.log(response.data?.data)
                     setChildList(response.data?.data);
                 } else {
                     setLoading(false);
-                    setChildList([]);
+                    // setChildList([]);
                 }
             })
             .catch((error) => {
                 setLoading(false);
-                console.log(error);
             });
     }
 
@@ -213,16 +201,13 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('GetSubscription', config);
         axios.request(config)
             .then((response) => {
                 setLoading(false);
                 setState(response.data?.data);
-                console.log('GetSubscription', JSON.stringify(response.data));
             })
             .catch((error) => {
                 setLoading(false);
-                console.log(error);
             });
     }
 
@@ -238,7 +223,6 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('Profile', config);
         axios.request(config)
             .then((response) => {
                 setLoading(false);
@@ -246,7 +230,6 @@ const NewPostScreen = () => {
             })
             .catch((error) => {
                 setLoading(false);
-                console.log(error);
             });
     }
 
@@ -263,16 +246,13 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getFeeList', config);
         axios.request(config)
             .then((response) => {
                 setLoading(false);
                 setBoard(response.data?.data);
-                console.log('getFeeList', response.data?.data);
             })
             .catch((error) => {
                 setLoading(false);
-                console.log(error);
             });
     }
 
@@ -289,21 +269,17 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getClasses', config);
         axios.request(config)
             .then((response) => {
                 setLoading(false);
                 setClasses(response.data?.data);
-                console.log('getClasses', response.data?.data);
             })
             .catch((error) => {
                 setLoading(false);
-                console.log(error);
             });
     }
 
     const saveChildProfile = async () => {
-        console.log('saveChildProfile');
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
@@ -313,7 +289,6 @@ const NewPostScreen = () => {
         formdata.append('board_id', valueBoard);
         formdata.append('class_id', valueClasses);
         formdata.append('name', name);
-        console.log('uploadProfile', valueX)
         var requestOptions = {
             method: 'POST',
             body: formdata,
@@ -322,11 +297,9 @@ const NewPostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('saveChildProfile', JSON.stringify(requestOptions))
         fetch(globle.API_BASE_URL + 'add-parent-child', requestOptions)
             .then(response => response.json())
             .then(result => {
-                console.log('saveChildProfile', result)
                 if (result.status) {
                     setLoading(false);
                     setVisiblePopup(false);
@@ -346,7 +319,6 @@ const NewPostScreen = () => {
                 }
             })
             .catch((error) => {
-                console.log('error--->', error);
                 Toast.show({
                     type: 'success',
                     text1: 'Something went wrong!',
@@ -389,7 +361,6 @@ const NewPostScreen = () => {
     }
 
     const updateUserDemoProfile = async () => {
-        console.log('saveChildProfile');
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
@@ -407,7 +378,6 @@ const NewPostScreen = () => {
         formdata.append('city', valueCity);
         formdata.append('latitude', '23.5348934');
         formdata.append('longitude', '23.9850292');
-        console.log('uploadProfile', valueX);
         var requestOptions = {
             method: 'POST',
             body: formdata,
@@ -417,11 +387,9 @@ const NewPostScreen = () => {
             }
         };
         setLoading(true);
-        console.log('updateUserDemoProfile', JSON.stringify(requestOptions))
         fetch(globle.API_BASE_URL + 'create-parent-post', requestOptions)
             .then(response => response.json())
             .then(result => {
-                console.log('updateUserDemoProfile', result)
                 if (result.status) {
                     setLoading(false);
                     setSubmitPost(true);
@@ -443,7 +411,6 @@ const NewPostScreen = () => {
                 }
             })
             .catch((error) => {
-                console.log('error--->', error);
                 Toast.show({
                     type: 'success',
                     text1: 'Something went wrong!',

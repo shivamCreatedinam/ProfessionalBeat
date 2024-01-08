@@ -181,12 +181,13 @@ const QualificationScreen = () => {
                 setuploadAFProfile(response.data?.data?.experiences[0]?.emp_type);
                 setSelectedId(response.data?.data?.experience === null ? '2' : '1')
                 // 
+                setValueExprence(response.data?.data?.experiences[0]?.emp_type);
                 setValue(response.data?.data?.qualification_id);
                 setCollageSchoolName(response.data?.data?.college);
                 setPercentageCgpa(response.data?.data?.percentage);
                 setUploadCertificate(response.data?.data?.certificate_image);
                 setSelectedSpokenId(response.data?.data?.experience === null ? '2' : '1');
-                console.log('getExperienceData', JSON.stringify(response.data));
+                console.log('getExperienceData', JSON.stringify(response.data?.data?.experiences[0]?.emp_type));
                 if (Number(response.data?.data?.qualification_id) !== 0) {
                     setQualificationSelected(true);
                 }
@@ -594,12 +595,12 @@ const QualificationScreen = () => {
                         <Text style={{ fontWeight: 'bold', color: 'grey' }}>Experience Details</Text>
                         <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 5 }}>
-                                <TextInput style={{ marginLeft: 15 }} maxLength={12} keyboardType={'default'} defaultValue={CompanyOrigination} placeholder='Company / Organization name' onChangeText={(e) => setCompanyOrigination(e)} />
+                                <TextInput style={{ marginLeft: 15 }} keyboardType={'default'} defaultValue={CompanyOrigination} placeholder='Company / Organization name' onChangeText={(e) => setCompanyOrigination(e)} />
                             </View>
                         </View>
                         <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15 }} maxLength={12} keyboardType={'default'} defaultValue={Designation} placeholder='Designation' onChangeText={(e) => setDesignation(e)} />
+                                <TextInput style={{ marginLeft: 15 }} keyboardType={'default'} defaultValue={Designation} placeholder='Designation' onChangeText={(e) => setDesignation(e)} />
                             </View>
                         </View>
                         <View style={[styles.searchInputContainer, { marginTop: 0 }]}>

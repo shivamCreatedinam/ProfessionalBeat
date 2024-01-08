@@ -100,6 +100,7 @@ const EditTutorProfileScreen = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            console.log('--------------------------editProfile------>>>>', JSON.stringify(routes?.params?.screenType))
             getStateData();
             loadProfile();
             loadAadharData();
@@ -167,7 +168,7 @@ const EditTutorProfileScreen = () => {
                 console.log('-------><><><><>', JSON.stringify(response.data));
                 setData(response.data);
                 setName(response.data?.user?.name);
-                // setValueCity(response.data?.user?.city);
+                setValueCity(response.data?.user?.city);
                 setValue(response?.data?.user?.state)
                 // const selectedStateId = response.data?.user?.state;
                 // sValName(selectedStateId);
@@ -195,7 +196,6 @@ const EditTutorProfileScreen = () => {
     }
 
     useEffect(() => {
-        console.log("called", State)
         const filteredState = State?.filter(st => st.id === value)
         console.log("filteredState", filteredState[0]?.name)
         sValName(filteredState[0]?.name ? filteredState[0]?.name : "")
@@ -343,6 +343,7 @@ const EditTutorProfileScreen = () => {
 
     const validationCheck = () => {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+        let pincode_regex = /^\d{6}$/;
         if (uploadProfile === null) {
             showErrorMessage("Please Upload Profile Picture!");
         } else {
@@ -373,7 +374,7 @@ const EditTutorProfileScreen = () => {
                                             if (address === null || address.trim().length < 4) {
                                                 showErrorMessage("Please Enter Locality!");
                                             } else {
-                                                if (pincode === null || pincode.trim().length < 4) {
+                                                if (pincode_regex.test(pincode) === false) {
                                                     showErrorMessage("Please Enter Pincode!");
                                                 } else {
                                                     updateUserDemoProfile();
@@ -437,7 +438,9 @@ const EditTutorProfileScreen = () => {
                         text1: result?.message,
                         text2: result?.message,
                     });
-                    updateUserAadharrofile();
+                    if (routes?.params?.screenType !== 'editProfile') {
+                        updateUserAadharrofile();
+                    }
                 } else {
                     setLoading(false)
                     Toast.show({
@@ -534,7 +537,7 @@ const EditTutorProfileScreen = () => {
                         text1: 'Congratulations! Profile, Update!',
                         text2: result?.message,
                     });
-                    navigate.replace('BottomNavigation');
+                    navigate.navigate('BottomNavigation');
                     // loadProfile();
                 } else {
                     setLoading(false);
@@ -584,7 +587,7 @@ const EditTutorProfileScreen = () => {
                                 <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.name} placeholder='Enter Full Name' onChangeText={(e) => setName(e)} />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.email} placeholder='Enter Email' onChangeText={(e) => setEmail(e)} />
+                                <TextInput style={{ marginLeft: 15, flex: 1, textTransform: 'lowercase' }} defaultValue={data?.user?.email} placeholder='Enter Email' onChangeText={(e) => setEmail(e)} />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                                 <TextInput editable={false} style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.mobile} placeholder='Enter Mobile' />
@@ -602,19 +605,39 @@ const EditTutorProfileScreen = () => {
                                     <TextInput style={{ marginLeft: 15, flex: 1 }} maxLength={12} keyboardType='number-pad' defaultValue={AddharNumber} placeholder='Aadhar Number' onChangeText={(e) => setAddharNumber(e)} />
                                 </View>
                             </View>
-                            <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
-                                <TouchableOpacity onPress={() => checkORUploadImage()} style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                    <Text numberOfLines={1} style={{ marginLeft: 5, padding: 15, flex: 1 }}>{uploadAFProfile === null ? 'Aadhar Front Image' : uploadAFProfile}</Text>
-                                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 15 }} source={require('../../assets/camera.png')} />
-                                </TouchableOpacity>
+                            <View>
+                                {routes?.params?.screenType === 'editProfile' ?
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                                        <View style={[styles.searchInputContainer, { marginTop: 0, alignItems: 'center', flex: 1 }]}>
+                                            <View>
+                                                <Image style={{ width: 120, height: 120, resizeMode: 'contain' }} source={{ uri: globle.IMAGE_BASE_URL + uploadAFProfile }} />
+                                                <Text style={{ fontSize: 10, fontWeight: 'bold', textAlign: 'center' }} >Addhar Card Front</Text>
+                                            </View>
+                                        </View>
+                                        <View style={[styles.searchInputContainer, { marginTop: 0, alignItems: 'center', flex: 1 }]}>
+                                            <View>
+                                                <Image style={{ width: 120, height: 120, resizeMode: 'contain' }} source={{ uri: globle.IMAGE_BASE_URL + uploadABProfile }} />
+                                                <Text style={{ fontSize: 10, fontWeight: 'bold', textAlign: 'center' }} >Addhar Card Back</Text>
+                                            </View>
+                                        </View>
+                                    </View> :
+                                    <View>
+                                        <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
+                                            <TouchableOpacity onPress={() => checkORUploadImage()} style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                                                <Text numberOfLines={1} style={{ marginLeft: 5, padding: 15, flex: 1 }}>{uploadAFProfile === null ? 'Aadhar Front Image' : uploadAFProfile}</Text>
+                                                <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 15 }} source={require('../../assets/camera.png')} />
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
+                                            <TouchableOpacity onPress={() => checkAadharBackORUploadImage()} style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                                                <Text numberOfLines={1} style={{ marginLeft: 5, padding: 15, flex: 1 }}>{uploadABProfile === null ? 'Aadhar Back Image' : uploadABProfile}</Text>
+                                                <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 15 }} source={require('../../assets/camera.png')} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                }
                             </View>
-                            <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
-                                <TouchableOpacity onPress={() => checkAadharBackORUploadImage()} style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                    <Text numberOfLines={1} style={{ marginLeft: 5, padding: 15, flex: 1 }}>{uploadABProfile === null ? 'Aadhar Back Image' : uploadABProfile}</Text>
-                                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 15 }} source={require('../../assets/camera.png')} />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{ alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                            <View style={{ alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999, display: routes?.params?.screenType === 'editProfile' ? 'none' : 'flex' }}>
                                 <Dropdown
                                     style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
                                     selectedTextStyle={styles.selectedTextStyle1}
@@ -624,7 +647,7 @@ const EditTutorProfileScreen = () => {
                                     maxHeight={300}
                                     labelField="name"
                                     valueField="id"
-                                    placeholder={isFocus ? 'Select State' : stName}
+                                    placeholder={!isFocus ? 'Select State' : stName}
                                     onFocus={() => setIsFocus(true)}
                                     onBlur={() => setIsFocus(false)}
                                     onChange={item => {
@@ -635,7 +658,7 @@ const EditTutorProfileScreen = () => {
                                     }}
                                 />
                             </View>
-                            <View style={{ alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                            <View style={{ alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999, display: routes?.params?.screenType === 'editProfile' ? 'none' : 'flex' }}>
                                 <Dropdown
                                     style={[styles.dropdown1, isFocusCity && { borderColor: 'blue' }]}
                                     selectedTextStyle={styles.selectedTextStyle1}
@@ -645,7 +668,7 @@ const EditTutorProfileScreen = () => {
                                     maxHeight={300}
                                     labelField={"name"}
                                     valueField={"id"}
-                                    placeholder={isFocusCity ? 'Select City' : ctName}
+                                    placeholder={!isFocusCity ? 'Select City' : ctName}
                                     onFocus={() => setIsFocusCity(true)}
                                     onBlur={() => setIsFocusCity(false)}
                                     onChange={item => {
@@ -678,8 +701,8 @@ const styles = StyleSheet.create({
     dropdown1: {
         height: 50,
         width: 350,
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
         borderColor: 'gray',
         borderRadius: 8,
         // paddingHorizontal: 5,
@@ -690,7 +713,8 @@ const styles = StyleSheet.create({
     },
     placeholderStyle: {
         fontSize: 14,
-        paddingLeft: 12
+        paddingLeft: 12,
+        color: '#000'
     },
     iconStyle: {
         width: 20,

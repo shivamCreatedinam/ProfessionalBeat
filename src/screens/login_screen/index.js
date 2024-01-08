@@ -136,24 +136,30 @@ const LoginScreen = () => {
             url: Global.API_BASE_URL + 'requesting_for_otp',
             data: JSON.stringify({ "mobile": email, 'user_type': LoginType, refferal_id: '' }),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             json: true
         };
         axios(authOptions)
             .then((response) => {
-                if (response.status) {
+                console.log('loggedUsingMobileIn', JSON.stringify(response));
+                if (response?.data?.status) {
                     serLoader(false);
                     console.log(response.data);
                     showSuccessToast(response.data.message);
                 } else {
                     serLoader(false);
+                    Toast.show({
+                        type: 'error',
+                        text1: response.data.message,
+                        text2: response.data.message + ' Please register this app!',
+                    });
                     console.log(response.data);
                 }
             })
             .catch((error) => {
                 serLoader(false);
-                alert(error)
+                Alert.alert(error)
             });
     }
 
@@ -257,7 +263,7 @@ const LoginScreen = () => {
                     </TouchableOpacity>
                     <Text style={{ textAlign: 'center', padding: 20 }}>Or</Text>
                     <TouchableOpacity onPress={() => ClickForOTPLess()} style={{ alignItems: 'center', padding: 10, backgroundColor: '#000', paddingVertical: 15, borderRadius: 5, elevation: 5 }}>
-                        <Text style={{ color: '#fff',fontWeight:'600' }}>OTP LESS LOGIN</Text>
+                        <Text style={{ color: '#fff', fontWeight: '600' }}>OTP LESS LOGIN</Text>
                     </TouchableOpacity>
                     <View style={{ marginTop: 20 }}>
                         <Text style={{ color: '#FE0000', fontWeight: 'bold', fontSize: 10 }}>{errors}</Text>

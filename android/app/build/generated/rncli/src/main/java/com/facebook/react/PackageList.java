@@ -33,6 +33,8 @@ import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 // @react-native-firebase/database
 import io.invertase.firebase.database.ReactNativeFirebaseDatabasePackage;
+// @react-native-firebase/dynamic-links
+import io.invertase.firebase.dynamiclinks.ReactNativeFirebaseDynamicLinksPackage;
 // @react-native-firebase/firestore
 import io.invertase.firebase.firestore.ReactNativeFirebaseFirestorePackage;
 // @react-native-firebase/messaging
@@ -53,6 +55,8 @@ import io.agora.rtc.ng.react.AgoraRtcNgPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 // react-native-callkeep
 import io.wazo.callkeep.RNCallKeepPackage;
+// react-native-full-screen-notification-incoming-call
+import com.reactnativefullscreennotificationincomingcall.FullScreenNotificationIncomingCallPackage;
 // react-native-geolocation-service
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 // react-native-gesture-handler
@@ -155,6 +159,7 @@ public class PackageList {
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
       new ReactNativeFirebaseDatabasePackage(),
+      new ReactNativeFirebaseDynamicLinksPackage(),
       new ReactNativeFirebaseFirestorePackage(),
       new ReactNativeFirebaseMessagingPackage(),
       new AgoraRTMPackage(),
@@ -165,6 +170,7 @@ public class PackageList {
       new AgoraRtcNgPackage(),
       new BackgroundTimerPackage(),
       new RNCallKeepPackage(),
+      new FullScreenNotificationIncomingCallPackage(),
       new RNFusedLocationPackage(),
       new RNGestureHandlerPackage(),
       new RNGetRandomValuesPackage(),

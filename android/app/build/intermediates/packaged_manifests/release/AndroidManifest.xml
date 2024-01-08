@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.createdinam.professionbeat"
-    android:versionCode="11"
-    android:versionName="Tuitour Bot: 1.1.11" >
+    android:versionCode="14"
+    android:versionName="Tuitour Bot: 1.1.14" >
 
     <uses-sdk
         android:minSdkVersion="21"
@@ -31,6 +31,11 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <!-- The Agora SDK requires Bluetooth permissions in case users are using Bluetooth devices. -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -71,13 +76,15 @@
             <action android:name="rzp.device_token.share" />
         </intent> <!-- Needs to be explicitly declared on Android R+ -->
         <package android:name="com.google.android.apps.maps" />
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
+        <package android:name="com.otpless.app" />
 
         <intent>
             <action android:name="com.huawei.hms.core.aidlservice" />
         </intent>
     </queries>
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
     <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
@@ -87,6 +94,7 @@
         android:required="true" /> <!-- Required by older versions of Google Play services to create IID tokens -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+    <uses-permission android:name="android.permission.GET_SIGNATURES" />
     <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -95,8 +103,6 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.createdinam.professionbeat.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission
         android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
@@ -139,7 +145,7 @@
             android:name="com.createdinam.professionbeat.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
             android:exported="true"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" >
             <intent-filter android:autoVerify="true" >
                 <action android:name="android.intent.action.MAIN" />
@@ -154,22 +160,45 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="tuitionbot.com" />
-                <data android:host="www.tuitionbot.com" />
+                <data android:host="http" />
+                <data
+                    android:host="professionbeat.page.link"
+                    android:pathPrefix="/ghHK"
+                    android:scheme="https" />
             </intent-filter>
-            <intent-filter android:autoVerify="true" >
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tuitionbototpless" />
-                <data android:host="otpless" />
+                <data
+                    android:host="otpless"
+                    android:scheme="com.createdinam.professionbeat.otpless" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.reactnativefullscreennotificationincomingcall.IncomingCallActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:showWhenLocked="true"
+            android:theme="@style/incomingCall"
+            android:turnScreenOn="true" />
+        <activity
+            android:name="com.reactnativefullscreennotificationincomingcall.NotificationReceiverActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:showWhenLocked="true"
+            android:theme="@style/incomingCall"
+            android:turnScreenOn="true" />
 
+        <service
+            android:name="com.reactnativefullscreennotificationincomingcall.IncomingCallService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false" />
         <service
             android:name="io.wazo.callkeep.VoiceConnectionService"
             android:exported="true"
@@ -311,6 +340,9 @@
                 android:value="com.google.firebase.components.ComponentRegistrar" />
             <meta-data
                 android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonKtxRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.dynamiclinks.internal.FirebaseDynamicLinkRegistrar"
                 android:value="com.google.firebase.components.ComponentRegistrar" />
             <meta-data
                 android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
@@ -638,6 +670,11 @@
                 <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
             </intent-filter>
         </receiver>
+
+        <provider
+            android:name="com.squareup.picasso.PicassoProvider"
+            android:authorities="com.createdinam.professionbeat.com.squareup.picasso"
+            android:exported="false" />
 
         <service
             android:name="androidx.room.MultiInstanceInvalidationService"

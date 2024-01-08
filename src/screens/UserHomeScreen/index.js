@@ -16,7 +16,8 @@ import {
     TouchableOpacity,
     FlatList,
     PermissionsAndroid,
-    ActivityIndicator
+    ActivityIndicator,
+    Share
 } from 'react-native';
 import axios from 'axios';
 import uuid from 'react-native-uuid';
@@ -34,12 +35,16 @@ import BottomSheet from "react-native-gesture-bottom-sheet";
 import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 import notifee, { AndroidImportance, AndroidBadgeIconType, AndroidVisibility, AndroidColor, AndroidCategory } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Geolocation from 'react-native-geolocation-service';
 import RadioGroup from 'react-native-radio-buttons-group';
 import Toast from 'react-native-toast-message';
 import apps from '../../../package.json';
-import Share from 'react-native-share';
+// import Share from 'react-native-share';
+import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
+//  
 import styles from './styles';
+import { Linking } from 'react-native';
 
 const UserHomeScreen = () => {
 
@@ -559,6 +564,60 @@ const UserHomeScreen = () => {
         return result;
     };
 
+    const generateSharableLink = async (info) => {
+        try {
+
+            const link = await dynamicLinks().buildLink({
+                link: 'https://tuitionbot.com/',
+                // domainUriPrefix is created in your Firebase console
+                domainUriPrefix: 'https://professionbeat.page.link',
+                // optional setup which updates Firebase analytics campaign
+                // "banner". This also needs setting up before hand
+                analytics: {
+                    campaign: 'banner',
+                },
+            });
+            const result = await Share.share({
+                title: 'Post By - ' + info?.name,
+                message: 'Share Post by : ' + info?.name + ', Please install this Tuitorbot app and stay safe, open post here : ' + link + ' , download app here from here :https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en',
+                url: 'https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en'
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+        return link;
+    }
+
+    const DisplayIncomingCall = async () => {
+        RNNotificationCall.displayNotification(
+            '22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad',
+            null,
+            30000,
+            {
+                channelId: 'com.abc.incomingcall',
+                channelName: 'Incoming video call',
+                notificationIcon: 'ic_launcher', //mipmap
+                notificationTitle: 'Linh Vo',
+                notificationBody: 'Incoming video call',
+                answerText: 'Answer',
+                declineText: 'Decline',
+                notificationColor: 'colorAccent',
+                notificationSound: null, //raw
+                //mainComponent:'MyReactNativeApp',//AppRegistry.registerComponent('MyReactNativeApp', () => CustomIncomingCall);
+                // payload:{name:'Test',Body:'test'}
+            }
+        );
+    }
+
     const renderHistoryView = (item) => {
         return (
             <View style={{ backgroundColor: '#fff', marginBottom: 10, borderRadius: 10, padding: 15, margin: 5, borderRadius: 10, elevation: 5 }}>
@@ -591,7 +650,7 @@ const UserHomeScreen = () => {
                         onPress={() => onAddToFavourite(item.item?.id)} >
                         <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, alignItems: 'center' }} source={require('../../assets/star.png')} />
                     </TouchableOpacity>}
-                    <TouchableOpacity onPress={() => startTrip(item?.item)} style={{ width: 30, height: 30, borderRadius: 150, marginTop: -40, marginLeft: 10 }}>
+                    <TouchableOpacity onPress={() => generateSharableLink(item?.item)} style={{ width: 30, height: 30, borderRadius: 150, marginTop: -40, marginLeft: 10 }}>
                         <Image style={{ width: 25, height: 25, resizeMode: 'contain', marginTop: 8, tintColor: '#000', alignItems: 'center' }} source={require('../../assets/share.png')} />
                     </TouchableOpacity>
                 </View>
@@ -753,7 +812,7 @@ const UserHomeScreen = () => {
     const onDisplayNotification = () => {
         navigate.navigate('VoiceCall');
     }
-
+    // DisplayIncomingCall bottomSheet.current.show()
     return (
         <View style={{ flex: 1, paddingTop: 20, backgroundColor: '#F1F6F9' }}>
             <Spinner

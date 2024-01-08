@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.createdinam.professionbeat.app-mergeDebugResources-55:/values-lv/values-lv.xml",
+            "outputFile": "com.createdinam.professionbeat.app-mergeDebugResources-56:/values-lv/values-lv.xml",
             "map": [
                 {
                     "source": "/Users/apple/.gradle/caches/transforms-3/15a57b7be4a044055cfebf45f345142e/transformed/jetified-play-services-basement-18.2.0/res/values-lv/values.xml",

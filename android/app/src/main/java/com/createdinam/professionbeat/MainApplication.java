@@ -12,6 +12,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import androidx.appcompat.app.AppCompatDelegate;
 import com.facebook.soloader.SoLoader;
+import com.reactnativefullscreennotificationincomingcall.FullScreenNotificationIncomingCallPackage;
 import com.reactnativerestart.RestartPackage;  // <--- Import
 import java.util.List;
 

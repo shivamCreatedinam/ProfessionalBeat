@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.createdinam.professionbeat.app-mergeDebugResources-55:/values-sv/values-sv.xml",
+            "outputFile": "com.createdinam.professionbeat.app-mergeDebugResources-56:/values-sv/values-sv.xml",
             "map": [
                 {
                     "source": "/Users/apple/.gradle/caches/transforms-3/51523299b862454926548e78f123f226/transformed/jetified-play-services-wallet-18.1.3/res/values-sv/values.xml",

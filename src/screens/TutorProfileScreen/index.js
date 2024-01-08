@@ -186,7 +186,7 @@ const TutorProfileScreen = () => {
             </View>
             <View style={{ padding: 20, alignItems: 'center' }}>
                 <TouchableOpacity
-                    onPress={() => navigate.navigate('EditTutorProfileScreen')}
+                    onPress={() => navigate.navigate('EditTutorProfileScreen', { screenType: 'editProfile' })}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 5 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/driver_profile.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Edit Profile</Text>

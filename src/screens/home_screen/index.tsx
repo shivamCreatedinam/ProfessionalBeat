@@ -322,12 +322,41 @@ const HomeScreen = () => {
             'Are you sure, want to call ' + info?.child[0]?.child_name,
             [
                 { text: 'Cancel', onPress: () => console.log('cancel') },
-                { text: 'Call', onPress: () => getCallingToken(info) },
+                { text: 'Call', onPress: () => getTokenForCalls(info) }
             ]
         );
     }
 
+    const getTokenForCalls = (info: any) => {
+        // getCallingToken(info)
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: 'https://tuitionbot.com/agora_live_token/KBC/sample/RtcTokenBuilderSample.php',
+            headers: {
+                'Authorization': 'Bearer '
+            }
+        };
+        console.log('getCallingToken', config);
+        axios.request(config)
+            .then((response) => {
+                console.log('getCallingToken', JSON.stringify(response.data));
+                if (Number(response?.data?.status) === 1) {
+                    let information: any = {
+                        user_info: info,
+                        response_data: response?.data,
+                    }
+                    navigate.navigate('CallingScreen', information);
+                    // setCallNotification(info, response?.data?.token2, response?.data?.channelName)
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     const getCallingToken = async (info: any) => {
+        // getCallingToken(info)
         let config = {
             method: 'get',
             maxBodyLength: Infinity,

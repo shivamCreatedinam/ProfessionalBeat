@@ -28,7 +28,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useFocusEffect, useNavigation } from "@react-navigation/native";
 
-const userEditProfile = () => {
+const UserEditProfile = () => {
 
     const navigate = useNavigation();
     const routes = useRoute();
@@ -64,7 +64,7 @@ const userEditProfile = () => {
     useFocusEffect(
         React.useCallback(() => {
             getStateData();
-            console.log('', JSON.stringify(routes?.params?.screenType))
+            console.log('useFocusEffect----------------->>>', JSON.stringify(routes?.params?.screenType))
             return () => {
                 // Useful for cleanup functions
             };
@@ -86,7 +86,6 @@ const userEditProfile = () => {
         axios.request(config)
             .then((response) => {
                 if (response.status) {
-                    console.log('loadProfile', JSON.stringify(response.data?.user));
                     if (response.data?.user?.name !== null) {
                         setLoading(false);
                         setData(response?.data);
@@ -99,6 +98,7 @@ const userEditProfile = () => {
                         //     setValueCity(response?.data?.user?.city)
                         //     , 2000);
                     } else {
+                        setLoading(false);
                         setMobile(response.data?.user?.mobile);
                         console.log('loadProfile', response.data?.user?.mobile);
                     }
@@ -229,7 +229,6 @@ const userEditProfile = () => {
     }
 
 
-
     const checkValidation = () => {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
         var isValidZip = /([1-9]{1}[0-9]{5}|[1-9]{1}[0-9]{3}\\s[0-9]{3})/
@@ -278,8 +277,8 @@ const userEditProfile = () => {
         formdata.append('name', name);
         formdata.append('email', Email);
         formdata.append('mobile', mobile);
-        formdata.append('city', valueCity);
-        formdata.append('state', value);
+        // formdata.append('city', valueCity);
+        // formdata.append('state', value);
         formdata.append('street', address);
         formdata.append('l_name', name);
         formdata.append('latitude', '65.25236409');
@@ -361,13 +360,13 @@ const userEditProfile = () => {
                                 <Image style={{ height: 140, width: 140, resizeMode: 'contain', alignSelf: 'center', alignItems: 'center', marginBottom: 20, borderRadius: 150, borderWidth: 2 }} source={require('../../assets/notification_logo.png')} />
                             </TouchableOpacity>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15, }} defaultValue={data?.user?.name} placeholder='Enter Full Name' onChangeText={(e) => setName(e)} />
+                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.name} placeholder='Enter Full Name' onChangeText={(e) => setName(e)} />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15, }} defaultValue={data?.user?.email} placeholder='Enter Email' onChangeText={(e) => setEmail(e)} />
+                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.email} placeholder='Enter Email' onChangeText={(e) => setEmail(e)} />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput editable={false} style={{ marginLeft: 15 }} value={mobile} placeholder='Enter Mobile' />
+                                <TextInput editable={false} style={{ marginLeft: 15, flex: 1 }} value={mobile} placeholder='Enter Mobile' />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                                 <Dropdown
@@ -390,7 +389,7 @@ const userEditProfile = () => {
                             {/* <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                             <TextInput style={{ marginLeft: 15 }} defaultValue={data?.user?.street} placeholder='Enter City' onChangeText={(e) => setStreet(e)} />
                         </View> */}
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999, display: routes?.params?.screenType === 'OldUser' ? 'none' : 'flex' }}>
                                 <Dropdown
                                     style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
                                     selectedTextStyle={styles.selectedTextStyle1}
@@ -410,7 +409,7 @@ const userEditProfile = () => {
                                 />
                             </View>
                             <View
-                                style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
+                                style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999, display: routes?.params?.screenType === 'OldUser' ? 'none' : 'flex' }}>
                                 <Dropdown
                                     style={[styles.dropdown1, isFocusCity && { borderColor: 'blue' }]}
                                     selectedTextStyle={styles.selectedTextStyle1}
@@ -424,18 +423,17 @@ const userEditProfile = () => {
                                     onBlur={() => setIsFocusCity(false)}
                                     onChange={item => {
                                         setValueCity(item.id);
-                                        getCityData(item.id)
                                         setIsFocusCity(false);
                                     }}
                                 />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15, }} defaultValue={data?.user?.localty} placeholder='Enter Locality' onChangeText={(e) => setAddress(e)} />
+                                <TextInput style={{ marginLeft: 15, flex: 1 }} defaultValue={data?.user?.localty} placeholder='Enter Locality' onChangeText={(e) => setAddress(e)} />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15, }} maxLength={6} keyboardType='number-pad' defaultValue={data?.user?.pincode} placeholder='Enter Pincode' onChangeText={(e) => setPincode(e)} />
+                                <TextInput style={{ marginLeft: 15, flex: 1 }} maxLength={6} keyboardType='number-pad' defaultValue={data?.user?.pincode} placeholder='Enter Pincode' onChangeText={(e) => setPincode(e)} />
                             </View>
-                            <View style={{ marginTop: 15 }}>
+                            <View style={{ marginTop: 15, marginBottom: 100 }}>
                                 <TouchableOpacity onPress={() => checkValidation()} style={{ padding: 20, alignItems: 'center', backgroundColor: '#000', borderRadius: 50, }}>
                                     <Text style={{ color: '#ffffff', textTransform: 'uppercase' }}>Update Profile</Text>
                                 </TouchableOpacity>
@@ -453,8 +451,8 @@ const styles = StyleSheet.create({
     dropdown1: {
         height: 50,
         width: 350,
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
         borderColor: 'gray',
         borderRadius: 8,
         paddingHorizontal: 8,
@@ -464,4 +462,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default userEditProfile;
+export default UserEditProfile;

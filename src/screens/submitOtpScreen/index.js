@@ -43,14 +43,14 @@ const OTPSubmitScreen = () => {
 
     // Handle user state changes
     function onAuthStateChanged(user) {
-        setUser(user);
+        // setUser(user);
         setUserData(user);
         if (initializing) setInitializing(false);
     }
 
     React.useEffect(() => {
         const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-        return subscriber; // unsubscribe on unmount
+        return () => subscriber; // unsubscribe on unmount
     }, []);
 
 

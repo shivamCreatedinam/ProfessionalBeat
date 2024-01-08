@@ -570,7 +570,7 @@ const TutorNewPostScreen = () => {
                     <View style={{ flex: 1, padding: 10 }}>
                         <Text style={{ textAlign: 'center', fontWeight: '900', marginTop: 20 }} >Post Upload Successfully</Text>
                         <Text style={{ textAlign: 'center' }}>Your post is live,</Text>
-                        <TouchableOpacity style={{ alignItems: 'center', paddingVertical: 15, paddingHorizontal: 10, backgroundColor: 'green', width: 120, alignSelf: 'center', borderRadius: 10, elevation: 5, marginTop: 25 }} onPress={() => navigate.replace('BottomNavigation')}>
+                        <TouchableOpacity style={{ alignItems: 'center', paddingVertical: 15, paddingHorizontal: 10, backgroundColor: 'green', width: 120, alignSelf: 'center', borderRadius: 10, elevation: 5, marginTop: 25 }} onPress={() => navigate.replace('HomeBottomNavigation')}>
                             <Text style={{ color: '#fff' }}>Close</Text>
                         </TouchableOpacity>
                     </View>

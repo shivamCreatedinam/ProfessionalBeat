@@ -23,6 +23,10 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <!-- The Agora SDK requires Bluetooth permissions in case users are using Bluetooth devices.-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -53,14 +57,12 @@
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="tuitionbot.com" />
-                <data android:host="www.tuitionbot.com" />
+                <data android:host="http" />
+                <data android:scheme="https"
+                    android:host="professionbeat.page.link"
+                    android:pathPrefix="/ghHK" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -71,6 +73,27 @@
                 android:scheme= "${applicationId}.otpless"/>
             </intent-filter>
       </activity>
+        <activity android:name="com.reactnativefullscreennotificationincomingcall.IncomingCallActivity"
+            android:theme="@style/incomingCall"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            />
+        <activity android:name="com.reactnativefullscreennotificationincomingcall.NotificationReceiverActivity"
+            android:theme="@style/incomingCall"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            />
+        <service
+            android:name="com.reactnativefullscreennotificationincomingcall.IncomingCallService"
+            android:enabled="true"
+            android:stopWithTask="false"
+            android:exported="true" />
         <service android:name="io.wazo.callkeep.VoiceConnectionService"
             android:label="Wazo"
             android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE"

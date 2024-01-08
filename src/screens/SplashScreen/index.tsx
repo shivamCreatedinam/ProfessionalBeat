@@ -42,6 +42,8 @@ import {
     IRtcEngine,
     ChannelProfileType,
 } from 'react-native-agora';
+// incoming call
+import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
 
 RNCallKeep.setup({
     ios: {
@@ -343,28 +345,26 @@ const SplashAppScreen = () => {
 
     messaging().setBackgroundMessageHandler(async remoteMessage => {
         // Handle the background message here
-        console.log('Received a background message', remoteMessage);
-        // onDisplayIncomingCall(remoteMessage);
-        onDisplayNotificationx(remoteMessage?.notification?.android?.channelId, remoteMessage?.notification?.title, remoteMessage?.notification?.body);
+        if (remoteMessage?.data?.call_token !== undefined) {
+            DisplayIncomingCall(remoteMessage);
+        } else {
+            onDisplayNotificationx(remoteMessage?.notification?.android?.channelId, remoteMessage?.notification?.title, remoteMessage?.notification?.body);
+        }
     });
 
     // Quiet and Background State -> Check whether an initial notification is available
     messaging()
         .getInitialNotification()
-        .then(remoteMessage => {
-            if (remoteMessage) {
-                console.log(
-                    'Notification caused app to open from quit state:',
-                    remoteMessage.notification,
-                );
-                onDisplayIncomingCall(remoteMessage);
+        .then((remoteMessage) => {
+            if (remoteMessage?.data?.call_token !== undefined) {
+                DisplayIncomingCall(remoteMessage);
+            } else {
+                onDisplayNotificationx(remoteMessage?.notification?.android?.channelId, remoteMessage?.notification?.title, remoteMessage?.notification?.body);
             }
         })
         .catch(error => console.log('failed', error));
 
     messaging().onMessage(async remoteMessage => {
-        console.log('foreground--->>', remoteMessage.data?.call_token);
-        join(remoteMessage.data?.call_token, remoteMessage.data?.channel_id);
         if (remoteMessage.data?.call_token !== undefined) {
             saveToCallInfo(remoteMessage?.data?.user_type, remoteMessage?.data?.tutor_ids, remoteMessage?.data?.id);
             onDisplayIncomingCall(remoteMessage);
@@ -416,16 +416,50 @@ const SplashAppScreen = () => {
         try {
             let caller_id = null;
             caller_id = uuid.v4();
-            console.log('calling....', JSON.stringify(info?.data?.user_type));
+            console.log('calling....', JSON.stringify(info?.data));
             if (info?.data?.user_type === 'Parent') {
-                RNCallKeep.displayIncomingCall(caller_id, 'c8c7c7c7c7cchh3', localizedCallerName = 'Monika Verma', handleType = '847387d7d6gd', hasVideo = false, options = null);
+                DisplayIncomingCall(info);
+                // RNCallKeep.displayIncomingCall(caller_id, 'c8c7c7c7c7cchh3', localizedCallerName = 'Monika Verma', handleType = '847387d7d6gd', hasVideo = false, options = null);
             } else {
                 console.log('Not Tuitor');
                 DeletePreviousChannel(info);
             }
         } catch (err) {
-            console.error('initializeCallKeep error:', err.message);
+            console.error('initializeCallKeep error:', err);
         }
+    }
+
+    RNNotificationCall.addEventListener('answer', (data: any) => {
+        RNNotificationCall.backToApp();
+        const { callUUID, payload } = data;
+        console.log('press answer', callUUID, payload);
+        navigation.navigate('CallingScreen', payload);
+    });
+
+    RNNotificationCall.addEventListener('endCall', (data: any) => {
+        const { callUUID, endAction, payload } = data;
+        console.log('press endCall', callUUID, payload, endAction);
+    });
+
+    const DisplayIncomingCall = async (info: any) => {
+        RNNotificationCall.displayNotification(
+            '22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad',
+            null,
+            30000,
+            {
+                channelId: 'com.createdinam.professionbeat',
+                channelName: info?.data?.locality,
+                notificationIcon: 'ic_launcher', //mipmap
+                notificationTitle: info?.notification?.title,
+                notificationBody: info?.notification?.body,
+                answerText: 'Answer',
+                declineText: 'Decline',
+                notificationColor: 'colorAccent',
+                notificationSound: null, //raw
+                //mainComponent:'MyReactNativeApp',//AppRegistry.registerComponent('MyReactNativeApp', () => CustomIncomingCall);
+                payload: info
+            }
+        );
     }
 
     async function onDisplayNotificationx(chids: any, title: any, body: any) {

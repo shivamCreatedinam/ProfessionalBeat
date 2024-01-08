@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.createdinam.professionbeat"
-    android:versionCode="11"
-    android:versionName="Tuitour Bot: 1.1.11" >
+    android:versionCode="14"
+    android:versionName="Tuitour Bot: 1.1.14" >
 
     <uses-sdk
         android:minSdkVersion="21"
@@ -29,7 +29,12 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- The Agora SDK requires Bluetooth permissions in case users are using Bluetooth devices. -->
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" /> <!-- The Agora SDK requires Bluetooth permissions in case users are using Bluetooth devices. -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <queries>
@@ -77,7 +82,6 @@
         </intent>
     </queries>
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
     <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
@@ -96,8 +100,6 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.createdinam.professionbeat.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission
         android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
@@ -159,10 +161,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="tuitionbot.com" />
-                <data android:host="www.tuitionbot.com" />
+                <data android:host="http" />
+                <data
+                    android:host="professionbeat.page.link"
+                    android:pathPrefix="/ghHK"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -175,7 +178,28 @@
                     android:scheme="com.createdinam.professionbeat.otpless" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.reactnativefullscreennotificationincomingcall.IncomingCallActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:showWhenLocked="true"
+            android:theme="@style/incomingCall"
+            android:turnScreenOn="true" />
+        <activity
+            android:name="com.reactnativefullscreennotificationincomingcall.NotificationReceiverActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:showWhenLocked="true"
+            android:theme="@style/incomingCall"
+            android:turnScreenOn="true" />
 
+        <service
+            android:name="com.reactnativefullscreennotificationincomingcall.IncomingCallService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false" />
         <service
             android:name="io.wazo.callkeep.VoiceConnectionService"
             android:exported="true"
@@ -316,6 +340,9 @@
                 android:value="com.google.firebase.components.ComponentRegistrar" />
             <meta-data
                 android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonKtxRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.dynamiclinks.internal.FirebaseDynamicLinkRegistrar"
                 android:value="com.google.firebase.components.ComponentRegistrar" />
             <meta-data
                 android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
@@ -647,6 +674,11 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <provider
+            android:name="com.squareup.picasso.PicassoProvider"
+            android:authorities="com.createdinam.professionbeat.com.squareup.picasso"
+            android:exported="false" />
 
         <activity
             android:name="com.jakewharton.processphoenix.ProcessPhoenix"

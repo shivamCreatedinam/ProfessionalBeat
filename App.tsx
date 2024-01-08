@@ -21,7 +21,6 @@ import {
   IRtcEngine,
   ChannelProfileType,
 } from 'react-native-agora';
-import RNCallKeep from 'react-native-callkeep';
 import Globle from './common/env';
 
 const appId = '3d117a30950e4724a73c9f8b07aef599';
