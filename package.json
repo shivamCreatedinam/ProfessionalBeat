@@ -1,6 +1,6 @@
 {
   "name": "professionbeat",
-  "version": "0.1.12",
+  "version": "0.1.20",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -53,6 +53,7 @@
     "react-native-awesome-alerts": "^2.0.0",
     "react-native-background-timer": "^2.4.1",
     "react-native-callkeep": "^4.3.12",
+    "react-native-countdown-circle-timer": "^3.2.1",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-dropdown-select-list": "^2.0.5",
     "react-native-element-dropdown": "^2.10.0",

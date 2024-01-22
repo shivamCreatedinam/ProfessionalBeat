@@ -5,7 +5,6 @@
  * @format
  */
 
-
 import React from 'react';
 import {
     Image,
@@ -16,7 +15,7 @@ import {
     SafeAreaView,
     Dimensions,
     Platform,
-    PermissionsAndroid
+    PermissionsAndroid,
 } from 'react-native';
 import axios from 'axios';
 import globle from '../../../common/env';
@@ -25,42 +24,21 @@ import MarqueeText from 'react-native-marquee';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TutorHeader from '../../components/TutorHeader';
-import RNCallKeep from 'react-native-callkeep';
-// import uuid from 'react-native-uuid';
-// agora
+import TutorHeader from '../../components/TutorHeader';  
 import {
     createAgoraRtcEngine,
     ClientRoleType,
     IRtcEngine,
     ChannelProfileType,
 } from 'react-native-agora';
+
 const appId = '3d117a30950e4724a73c9f8b07aef599';
 const channelName = 'callingtestingapp';
 const token = '007eJxTYDC880X9sYM4nyG/kO8cbea2ThWt47fL1ZV0y5XTZohpv1VgME4xNDRPNDawNDVINTE3Mkk0N062TLNIMjBPTE0ztbR82xya2hDIyBAduYCJkQECQXxBhuTEnJzMvPSS1OISIJVYUMDAAAB8OCCH';
 const uid = 0;
+
 import styles from './styles';
-
-RNCallKeep.setup({
-    ios: {
-        appName: 'CallKeepDemo',
-    },
-    android: {
-        alertTitle: 'Permissions required',
-        alertDescription: 'This application needs to access your phone accounts',
-        cancelButton: 'Cancel',
-        okButton: 'ok',
-    },
-});
-
-const getNewUuid = () => '123e4567-e89b-12d3-a456-426614174000';
-
-const format = uuid => '123e4567-e89b-12d3-a456-426614174000';
-
-const getRandomNumber = () => String(Math.floor(Math.random() * 100000));
-
-const isIOS = Platform.OS === 'ios';
-
+ 
 const TutorFavourtePostScreen = () => {
 
     const navigate = useNavigation();
@@ -75,117 +53,12 @@ const TutorFavourtePostScreen = () => {
     const [message, setMessage] = React.useState(''); // Message to the user
     const [volume, setVolume] = React.useState(10); // volume to the user
 
-
-    function showMessage(msg: string) {
-        setMessage(msg);
-    }
-
-    React.useEffect(() => {
-        // Initialize Agora engine when the app starts
-        setupVoiceSDKEngine();
-    });
-
-    const setupVoiceSDKEngine = async () => {
-        try {
-            // use the helper function to get permissions
-            if (Platform.OS === 'android') { await getPermission() };
-            agoraEngineRef.current = createAgoraRtcEngine();
-            const agoraEngine = agoraEngineRef.current;
-            agoraEngine.registerEventHandler({
-                onJoinChannelSuccess: () => {
-                    showMessage('Successfully joined the channel ' + channelName);
-                    setIsJoined(true);
-                },
-                onUserJoined: (_connection, Uid) => {
-                    showMessage('Remote user joined with uid ' + Uid);
-                    setRemoteUid(Uid);
-                },
-                onUserOffline: (_connection, Uid) => {
-                    showMessage('Remote user left the channel. uid: ' + Uid);
-                    setRemoteUid(0);
-                },
-            });
-            agoraEngine.initialize({
-                appId: appId,
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const getPermission = async () => {
-        if (Platform.OS === 'android') {
-            await PermissionsAndroid.requestMultiple([
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-            ]);
-        }
-    };
-
-    React.useEffect(() => {
-        const engine = createAgoraRtcEngine();
-        engine.initialize({ appId: globle.AppIdAgora });
-        console.warn('All Setup Done')
-    }, []);
-
-    React.useEffect(() => {
-        setIsSwitched(IsSwitched);
-        console.log('IsSwitched', IsSwitched);
-        agoraEngineRef.current?.setDefaultAudioRouteToSpeakerphone(false); // Disable the default audio route.
-        agoraEngineRef.current?.setEnableSpeakerphone(IsSwitched); // Enable or disable the speakerphone temporarily.
-    }, [IsSwitched]);
-
-    const leave = () => {
-        try {
-            agoraEngineRef.current?.leaveChannel();
-            setRemoteUid(0);
-            setIsJoined(false);
-            showMessage('You left the channel');
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    React.useEffect(() => {
-        setisMuted(isMuted);
-        console.log('isMuted', isMuted);
-        agoraEngineRef.current?.muteRemoteAudioStream(remoteUid, isMuted);
-    }, [isMuted]);
-
-    const increaseVolume = () => {
-        if (volume !== 100) {
-            setVolume(volume + 5);
-        }
-        agoraEngineRef.current?.adjustRecordingSignalVolume(volume);
-    };
-
-    const decreaseVolume = () => {
-        if (volume !== 0) {
-            setVolume(volume - 5);
-        }
-        agoraEngineRef.current?.adjustRecordingSignalVolume(volume);
-    };
-
-    const join = async () => {
-        if (isJoined) {
-            return;
-        }
-        try {
-            agoraEngineRef.current?.setChannelProfile(
-                ChannelProfileType.ChannelProfileCommunication,
-            );
-            agoraEngineRef.current?.joinChannel(token, channelName, uid, {
-                clientRoleType: ClientRoleType.ClientRoleBroadcaster,
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
     useFocusEffect(
         React.useCallback(() => {
             getNotificationUser();
             return () => {
                 // Useful for cleanup functions
+                
             };
         }, [])
     );

@@ -87,7 +87,7 @@ const CommonHeader = () => {
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 0, marginBottom: 15 }}>
-                <TouchableOpacity onPress={() => navigate.navigate('UserHomeScreen')} style={{ flex: 1 }} >
+                <TouchableOpacity onPress={() => navigate.navigate('UserBottomNavigation')} style={{ flex: 1 }} >
                     <Image style={{ height: 35, width: '100%', resizeMode: 'contain' }} source={require('../../assets/flat_icon_app_removebg.png')} />
                 </TouchableOpacity>
                 <View style={{ flex: 1 }} />

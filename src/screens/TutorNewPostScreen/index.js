@@ -77,9 +77,18 @@ const TutorNewPostScreen = () => {
             getSubjectsData();
             getClasses();
             getBoard();
-            // getFeeList();
+            resetFieldValues();
+            resetValues();
         }, [])
     );
+
+    const resetFieldValues = () => {
+        setCity([]);
+        setLocality('');
+        setFeesValue(null);
+        setIsFeesFocus(true);
+        setSubjectsValue([]);
+    }
 
     const getQualificationData = async () => {
         setLoading(true);
@@ -398,7 +407,7 @@ const TutorNewPostScreen = () => {
     return (
         <View style={styles.container}>
             <TutorHeader />
-            <ScrollView style={{ flex: 1, padding: 10, backgroundColor: '#F1F6F9' }} contentContainerStyle={{ padding: 5, zIndex: 9999 }}>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1, padding: 10, backgroundColor: '#F1F6F9' }} contentContainerStyle={{ padding: 5, zIndex: 9999 }}>
                 <Spinner
                     visible={loading}
                     textContent={'Loading...'}
@@ -483,7 +492,7 @@ const TutorNewPostScreen = () => {
                                 selectedStyle={styles.selectedStyle}
                             />
                         </View>
-                    </View> 
+                    </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15, zIndex: 999 }}>
                         <Dropdown
                             style={[styles.dropdown1, isFeesFocus && { borderColor: 'blue' }]}
@@ -558,7 +567,7 @@ const TutorNewPostScreen = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 6, marginTop: 20 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 6, marginTop: 20, marginBottom: 30 }}>
                     <Text style={{ fontSize: 12, letterSpacing: 1 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Note: </Text>Your post visible after varification by admin, and it's visible for you selected location or city whcih you selected.</Text>
                 </View>
             </ScrollView>

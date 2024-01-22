@@ -3408,6 +3408,7 @@ drawable src_assets_loader_driver
 drawable src_assets_logo
 drawable src_assets_map_pointer
 drawable src_assets_medium
+drawable src_assets_muteicon
 drawable src_assets_navigation_icon
 drawable src_assets_no_record_found
 drawable src_assets_notification_logo
@@ -3430,6 +3431,7 @@ drawable src_assets_search_books
 drawable src_assets_search_driver
 drawable src_assets_setting
 drawable src_assets_share
+drawable src_assets_speaker_icon
 drawable src_assets_star
 drawable src_assets_subscription
 drawable src_assets_success
@@ -4397,6 +4399,7 @@ string fallback_menu_item_copy_link
 string fallback_menu_item_open_in_browser
 string fallback_menu_item_share_link
 string fcm_fallback_notification_channel_label
+string firebase_database_url
 string gcm_defaultSenderId
 string google_api_key
 string google_app_id

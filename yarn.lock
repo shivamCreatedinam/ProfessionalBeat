@@ -8372,6 +8372,11 @@ react-native-codegen@^0.71.5:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
+react-native-countdown-circle-timer@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.npmjs.org/react-native-countdown-circle-timer/-/react-native-countdown-circle-timer-3.2.1.tgz"
+  integrity sha512-iHiOgipG0hMprerswqUCUfjGo9hL0UhKNS0BGh4o6yY9Lu7f3VXQ7EJt757Obwn74AiF5MOHURIdqldoGnVrDw==
+
 react-native-debug@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/react-native-debug/-/react-native-debug-3.0.0.tgz"
@@ -8704,7 +8709,7 @@ react-native-size-matters@^0.3.1:
   resolved "https://registry.npmjs.org/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz"
   integrity sha512-mKOfBLIBFBcs9br1rlZDvxD5+mAl8Gfr5CounwJtxI6Z82rGrMO+Kgl9EIg3RMVf3G855a85YVqHJL2f5EDRlw==
 
-react-native-svg@^13.10.0:
+react-native-svg@^13.10.0, react-native-svg@>=6.2.1:
   version "13.10.0"
   resolved "https://registry.npmjs.org/react-native-svg/-/react-native-svg-13.10.0.tgz"
   integrity sha512-D/oYTmUi5nsA/2Nw4WYlF1UUi3vZqhpESpiEhpYCIFB/EMd6vz4A/uq3tIzZFcfa5z2oAdGSxRU1TaYr8IcPlQ==

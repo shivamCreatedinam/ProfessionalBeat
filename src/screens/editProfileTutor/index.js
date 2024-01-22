@@ -456,7 +456,6 @@ const EditTutorProfileScreen = () => {
             });
     }
 
-
     const checkORUploadImage = () => {
         if (uploadAFProfile !== null) {
             Alert.alert(
@@ -537,7 +536,7 @@ const EditTutorProfileScreen = () => {
                         text1: 'Congratulations! Profile, Update!',
                         text2: result?.message,
                     });
-                    navigate.navigate('BottomNavigation');
+                    navigate.navigate('HomeBottomNavigation');
                     // loadProfile();
                 } else {
                     setLoading(false);

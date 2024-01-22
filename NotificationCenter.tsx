@@ -3,8 +3,7 @@ import { Animated, Easing, Text, TouchableOpacity, View, Image } from 'react-nat
 import messaging, {
     FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
-import React, { FC } from 'react';
-import RNCallKeep from 'react-native-callkeep';
+import React, { FC } from 'react'; 
 import notifee, {
     AndroidImportance,
     AndroidBadgeIconType,

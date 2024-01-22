@@ -15,7 +15,6 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    PermissionsAndroid,
     ActivityIndicator,
     Share
 } from 'react-native';
@@ -23,7 +22,6 @@ import axios from 'axios';
 import uuid from 'react-native-uuid';
 import globle from '../../../common/env';
 import moment from 'moment';
-import RNCallKeep from 'react-native-callkeep';
 import MarqueeText from 'react-native-marquee';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -32,8 +30,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import BottomSheet from "react-native-gesture-bottom-sheet";
-import Dialog, { SlideAnimation, DialogTitle, DialogContent, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
-import notifee, { AndroidImportance, AndroidBadgeIconType, AndroidVisibility, AndroidColor, AndroidCategory } from '@notifee/react-native';
+import Dialog, { SlideAnimation, DialogContent } from 'react-native-popup-dialog';
 import messaging from '@react-native-firebase/messaging';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Geolocation from 'react-native-geolocation-service';
@@ -44,13 +41,13 @@ import apps from '../../../package.json';
 import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
 //  
 import styles from './styles';
-import { Linking } from 'react-native';
 
 const UserHomeScreen = () => {
 
     const permModal = useRef();
     const navigate = useNavigation();
     const bottomSheet = React.useRef();
+    const GOOGLE_API_KEY = '';
     const [data, setData] = React.useState(null);
     const [selectedId, setSelectedId] = useState();
     const [isFetching, setIsFetching] = React.useState(false);
@@ -108,7 +105,6 @@ const UserHomeScreen = () => {
             getTutorPostForUser();
             loadCcity();
             saveToken();
-            setCallNotification();
             loadProfile();
             return () => {
                 // Useful for cleanup functions
@@ -225,14 +221,6 @@ const UserHomeScreen = () => {
                 setLoading(false);
                 console.log(error);
             });
-    }
-
-    async function onDisplayIncomingCallX() {
-        try {
-            RNCallKeep.displayIncomingCall(getCurrentCallId(), 'c8c7c7c7c7cchh3', localizedCallerName = 'Lisa Pinto', handleType = '847387d7d6gd', hasVideo = false, options = null);
-        } catch (err) {
-            console.error('initializeCallKeep error:', err.message);
-        }
     }
 
     async function onAddToFavourite(post_id) {
@@ -505,35 +493,6 @@ const UserHomeScreen = () => {
             });
     }
 
-    const setCallNotification = () => {
-        const options = {
-            ios: {
-                appName: 'ReactNativeWazoDemo',
-                imageName: 'sim_icon',
-                supportsVideo: false,
-                maximumCallGroups: '1',
-                maximumCallsPerCallGroup: '1'
-            },
-            android: {
-                alertTitle: 'Permissions Required',
-                alertDescription:
-                    'This application needs to access your phone calling accounts to make calls',
-                cancelButton: 'Cancel',
-                okButton: 'ok',
-                imageName: 'sim_icon',
-                additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
-            }
-        };
-
-        try {
-            RNCallKeep.setup(options);
-            RNCallKeep.setAvailable(true); // Only used for Android, see doc above.
-            // RNCallKeep.startCall(getCurrentCallId(), '57d6g7dhh3hd8d', 'Atul');
-        } catch (err) {
-            console.error('initializeCallKeep error:', err.message);
-        }
-    }
-
     const getCurrentCallId = () => {
         let caller_id = null;
         if (!currentCallId) {
@@ -618,6 +577,21 @@ const UserHomeScreen = () => {
         );
     }
 
+    const getDistanceOneToOne = async (lat1, lng1, lat2, lng2) => {
+        const Location1Str = lat1 + "," + lng1;
+        const Location2Str = lat2 + "," + lng2;
+
+        let ApiURL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+
+        let params = `origins=${Location1Str}&destinations=${Location2Str}&key=${GOOGLE_API_KEY}`; // you need to get a key
+        let finalApiURL = `${ApiURL}${encodeURI(params)}`;
+
+        let fetchResult = await fetch(finalApiURL); // call API
+        let Result = await fetchResult.json(); // extract json
+
+        return Result.rows[0].elements[0].distance;
+    }
+
     const renderHistoryView = (item) => {
         return (
             <View style={{ backgroundColor: '#fff', marginBottom: 10, borderRadius: 10, padding: 15, margin: 5, borderRadius: 10, elevation: 5 }}>
@@ -660,7 +634,7 @@ const UserHomeScreen = () => {
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/profile_icon.png')} /> */}
                                 <Text style={{ fontSize: 12 }}>Qualification: </Text>
-                                <Text style={{ fontSize: 12 }}>B.Sc., M.Sc</Text>
+                                <Text style={{ fontSize: 12 }}>{item.item?.qualifications?.length === undefined ? 'No Qualification' : JSON.stringify(item.item?.qualifications)}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} /> */}
@@ -761,7 +735,6 @@ const UserHomeScreen = () => {
 
     ]), []);
 
-
     const onRefresh = () => {
         getTutorPostForUser();
     }
@@ -809,9 +782,6 @@ const UserHomeScreen = () => {
             });
     }
 
-    const onDisplayNotification = () => {
-        navigate.navigate('VoiceCall');
-    }
     // DisplayIncomingCall bottomSheet.current.show()
     return (
         <View style={{ flex: 1, paddingTop: 20, backgroundColor: '#F1F6F9' }}>
@@ -870,18 +840,6 @@ const UserHomeScreen = () => {
                             onPress={() => setVisible(!visible)}>
                             <Text style={{ color: '#fff', justifyContent: 'center', alignSelf: 'center', fontSize: 12 }}>Ok</Text>
                         </TouchableOpacity>
-                        {/* <View>
-                                <Text>1- Seeking new tuition</Text>
-                                <Text>2- Have new career option</Text>
-                                <Text>3- Low fee</Text>
-                                <Text>4- Found better tuition</Text>
-                                <Text>5- Others</Text>
-                            </View> */}
-
-                        {/* <View>
-                            <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Feedback and Remarks:</Text>
-                            <TextInput multiline={true} style={{ height: 120, borderRadius: 10, borderWidth: 1, textAlignVertical: 'top', padding: 5, paddingLeft: 10 }} placeholder='Feedback and Remarks here' />
-                        </View> */}
                     </View>
                 </DialogContent>
             </Dialog>

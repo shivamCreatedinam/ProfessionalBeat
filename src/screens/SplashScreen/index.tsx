@@ -9,87 +9,25 @@ import React from 'react';
 import {
     Platform,
     View,
-    Text,
     BackHandler,
     Dimensions,
-    Animated,
-    Easing,
-    ImageBackground,
     Alert,
-    PermissionsAndroid
 } from 'react-native';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import notifee, { AndroidImportance, AndroidBadgeIconType, AndroidVisibility, AndroidColor, AndroidCategory } from '@notifee/react-native';
-import BackgroundTimer from 'react-native-background-timer';
 import messaging from '@react-native-firebase/messaging';
-import RNCallKeep from 'react-native-callkeep';
 import uuid from 'react-native-uuid';
-import {
-    INPUT_RANGE_START,
-    INPUT_RANGE_END,
-    OUTPUT_RANGE_START,
-    OUTPUT_RANGE_END,
-    ANIMATION_TO_VALUE,
-    ANIMATION_DURATION,
-} from '../../../common/constants';
 import globle from '../../../common/env';
 import { Image } from 'react-native-elements';
 import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-    createAgoraRtcEngine,
-    ClientRoleType,
-    IRtcEngine,
-    ChannelProfileType,
-} from 'react-native-agora';
-// incoming call
 import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
 
-RNCallKeep.setup({
-    ios: {
-        appName: 'CallKeepDemo',
-    },
-    android: {
-        alertTitle: 'Permissions required',
-        alertDescription: 'This application needs to access your phone accounts',
-        cancelButton: 'Cancel',
-        okButton: 'ok',
-    },
-});
-
-const getNewUuid = () => '123e4567-e89b-12d3-a456-426614174000';
-
-const format = uuid => '123e4567-e89b-12d3-a456-426614174000';
-
-const getRandomNumber = () => String(Math.floor(Math.random() * 100000));
-
-const isIOS = Platform.OS === 'ios';
-
-const appId = '3d117a30950e4724a73c9f8b07aef599';
-const channelName = 'callingtestingapp';
-const token = '007eJxTYDC880X9sYM4nyG/kO8cbea2ThWt47fL1ZV0y5XTZohpv1VgME4xNDRPNDawNDVINTE3Mkk0N062TLNIMjBPTE0ztbR82xya2hDIyBAduYCJkQECQXxBhuTEnJzMvPSS1OISIJVYUMDAAAB8OCCH';
-const uid = 0;
 
 const SplashAppScreen = () => {
 
-    const initialValue = 0;
     const navigation = useNavigation();
-    const translateValue = React.useRef(new Animated.Value(initialValue)).current;
-    const AnimetedImage = Animated.createAnimatedComponent(ImageBackground);
-    // calling setup
-    const [logText, setLog] = React.useState('');
-    const [UserDetails, setCallingUserDetails] = React.useState(null);
-    const [heldCalls, setHeldCalls] = React.useState({}); // callKeep uuid: held
-    const [mutedCalls, setMutedCalls] = React.useState({}); // callKeep uuid: muted
-    const [calls, setCalls] = React.useState({}); // callKeep uuid: number
-    // agora
-    const agoraEngineRef = React.useRef<IRtcEngine>(); // Agora engine instance
-    const [isJoined, setIsJoined] = React.useState(false); // Indicates if the local user has joined the channel
-    const [IsSwitched, setIsSwitched] = React.useState(false); // Indicates if the local user has joined the channel
-    const [isMuted, setisMuted] = React.useState(false);
-    const [remoteUid, setRemoteUid] = React.useState(0); // Uid of the remote user
-    const [message, setMessage] = React.useState(''); // Message to the user
-    const [volume, setVolume] = React.useState(10); // volume to the user
+    const [message, setMessage] = React.useState('');
 
     useFocusEffect(
         React.useCallback(() => {
@@ -131,7 +69,7 @@ const SplashAppScreen = () => {
             // You can perform any necessary actions or navigate to a different screen
             Alert.alert(
                 'Close Application',
-                'Are you sure, Close Go Ride?',
+                'Are you sure, Close app?',
                 [
                     {
                         text: 'Cancel',
@@ -151,197 +89,6 @@ const SplashAppScreen = () => {
         // Clean up the event listener when the component is unmounted
         return () => backHandler.remove();
     }, []);
-
-    React.useEffect(() => {
-        const translate = () => {
-            translateValue.setValue(initialValue);
-            Animated.timing(translateValue, {
-                toValue: ANIMATION_TO_VALUE,
-                duration: ANIMATION_DURATION,
-                easing: Easing.linear,
-                useNativeDriver: true,
-            }).start(() => translate());
-        };
-        translate();
-    }, [translateValue]);
-
-    const translateAnimation = translateValue.interpolate({
-        inputRange: [INPUT_RANGE_START, INPUT_RANGE_END],
-        outputRange: [OUTPUT_RANGE_START, OUTPUT_RANGE_END],
-    });
-
-    // calling functions
-    // notifee.onBackgroundEvent(async ({ type, detail }) => {
-    //     const { notification, pressAction } = detail;
-    //     DeletePreviousChannel(notification);
-    //     // Check if the user pressed the "Mark as read" action
-    //     if (type === EventType.ACTION_PRESS && pressAction.id === 'mark-as-read') {
-    //         // Update external API
-    //         DeletePreviousChannel(notification);
-    //         // Remove the notification
-    //         await notifee.cancelNotification(notification.id);
-    //     }
-    // });
-
-    const log = (text: any) => {
-        console.info(text);
-        setLog(logText + "\n" + text);
-    };
-
-    const addCall = (callUUID: any, number: any) => {
-        setHeldCalls({ ...heldCalls, [callUUID]: false });
-        setCalls({ ...calls, [callUUID]: number });
-    };
-
-    const removeCall = (callUUID: any) => {
-        const { [callUUID]: _, ...updated } = calls;
-        const { [callUUID]: __, ...updatedHeldCalls } = heldCalls;
-
-        setCalls(updated);
-        setHeldCalls(updatedHeldCalls);
-    };
-
-    const setCallHeld = (callUUID: any, held: any) => {
-        setHeldCalls({ ...heldCalls, [callUUID]: held });
-    };
-
-    const setCallMuted = (callUUID: any, muted: any) => {
-        setMutedCalls({ ...mutedCalls, [callUUID]: muted });
-    };
-
-    const displayIncomingCall = (number: any) => {
-        const callUUID = getNewUuid();
-        addCall(callUUID, number);
-
-        log(`[displayIncomingCall] ${format(callUUID)}, number: ${number}`);
-
-        RNCallKeep.displayIncomingCall(callUUID, number, number, 'number', false);
-    };
-
-    const displayIncomingCallNow = () => {
-        displayIncomingCall(getRandomNumber());
-    };
-
-    const displayIncomingCallDelayed = () => {
-        BackgroundTimer.setTimeout(() => {
-            displayIncomingCall(getRandomNumber());
-        }, 3000);
-    };
-
-    const answerCall = ({ callUUID }) => {
-        const number = calls[callUUID];
-        log(`[answerCall] ${format(callUUID)}, number: ${number}`);
-
-        RNCallKeep.startCall(callUUID, number, number);
-        callPickedAndHitApis(UserDetails);
-        BackgroundTimer.setTimeout(() => {
-            log(`[setCurrentCallActive] ${format(callUUID)}, number: ${number}`);
-            RNCallKeep.setCurrentCallActive(callUUID);
-        }, 1000);
-    };
-
-    const didPerformDTMFAction = ({ callUUID, digits }) => {
-        const number = calls[callUUID];
-        log(`[didPerformDTMFAction] ${format(callUUID)}, number: ${number} (${digits})`);
-    };
-
-    const didReceiveStartCallAction = ({ handle }) => {
-        if (!handle) {
-            // @TODO: sometime we receive `didReceiveStartCallAction` with handle` undefined`
-            return;
-        }
-        const callUUID = getNewUuid();
-        addCall(callUUID, handle);
-
-        log(`[didReceiveStartCallAction] ${callUUID}, number: ${handle}`);
-
-        RNCallKeep.startCall(callUUID, handle, handle);
-
-        BackgroundTimer.setTimeout(() => {
-            log(`[setCurrentCallActive] ${format(callUUID)}, number: ${handle}`);
-            RNCallKeep.setCurrentCallActive(callUUID);
-        }, 1000);
-    };
-
-    const didPerformSetMutedCallAction = ({ muted, callUUID }) => {
-        const number = calls[callUUID];
-        log(`[didPerformSetMutedCallAction] ${format(callUUID)}, number: ${number} (${muted})`);
-
-        setCallMuted(callUUID, muted);
-    };
-
-    const didToggleHoldCallAction = ({ hold, callUUID }) => {
-        const number = calls[callUUID];
-        log(`[didToggleHoldCallAction] ${format(callUUID)}, number: ${number} (${hold})`);
-
-        setCallHeld(callUUID, hold);
-    };
-
-    const endCall = ({ callUUID }) => {
-        const handle = calls[callUUID];
-        log(`[endCall] ${format(callUUID)}, number: ${handle}`);
-        leave();
-        removeCall(callUUID);
-    };
-
-    const hangup = (callUUID: any) => {
-        RNCallKeep.endCall(callUUID);
-        removeCall(callUUID);
-    };
-
-    const setOnHold = (callUUID: any, held: any) => {
-        const handle = calls[callUUID];
-        RNCallKeep.setOnHold(callUUID, held);
-        log(`[setOnHold: ${held}] ${format(callUUID)}, number: ${handle}`);
-
-        setCallHeld(callUUID, held);
-    };
-
-    const setOnMute = (callUUID: any, muted: any) => {
-        const handle = calls[callUUID];
-        RNCallKeep.setMutedCall(callUUID, muted);
-        log(`[setMutedCall: ${muted}] ${format(callUUID)}, number: ${handle}`);
-
-        setCallMuted(callUUID, muted);
-    };
-
-    const updateDisplay = (callUUID: any) => {
-        const number = calls[callUUID];
-        // Workaround because Android doesn't display well displayName, se we have to switch ...
-        if (isIOS) {
-            RNCallKeep.updateDisplay(callUUID, 'New Name', number);
-        } else {
-            RNCallKeep.updateDisplay(callUUID, number, 'New Name');
-        }
-        log(`[updateDisplay: ${number}] ${format(callUUID)}`);
-    };
-
-    React.useEffect(() => {
-        RNCallKeep.addEventListener('answerCall', answerCall);
-        RNCallKeep.addEventListener('didPerformDTMFAction', didPerformDTMFAction);
-        RNCallKeep.addEventListener('didReceiveStartCallAction', didReceiveStartCallAction);
-        RNCallKeep.addEventListener('didPerformSetMutedCallAction', didPerformSetMutedCallAction);
-        RNCallKeep.addEventListener('didToggleHoldCallAction', didToggleHoldCallAction);
-        RNCallKeep.addEventListener('endCall', endCall);
-
-        return () => {
-            RNCallKeep.removeEventListener('answerCall', answerCall);
-            RNCallKeep.removeEventListener('didPerformDTMFAction', didPerformDTMFAction);
-            RNCallKeep.removeEventListener('didReceiveStartCallAction', didReceiveStartCallAction);
-            RNCallKeep.removeEventListener('didPerformSetMutedCallAction', didPerformSetMutedCallAction);
-            RNCallKeep.removeEventListener('didToggleHoldCallAction', didToggleHoldCallAction);
-            RNCallKeep.removeEventListener('endCall', endCall);
-        }
-    }, []);
-
-    const callPickedAndHitApis = async (info: any) => {
-        try {
-            const value = await AsyncStorage.getItem('theme');
-            console.log('value', value);
-        } catch (error) {
-            console.log('error', error);
-        };
-    }
 
     messaging().setBackgroundMessageHandler(async remoteMessage => {
         // Handle the background message here
@@ -365,9 +112,19 @@ const SplashAppScreen = () => {
         .catch(error => console.log('failed', error));
 
     messaging().onMessage(async remoteMessage => {
-        if (remoteMessage.data?.call_token !== undefined) {
+        if (remoteMessage?.data?.call_token !== undefined) {
             saveToCallInfo(remoteMessage?.data?.user_type, remoteMessage?.data?.tutor_ids, remoteMessage?.data?.id);
             onDisplayIncomingCall(remoteMessage);
+        } else {
+            onDisplayNotificationx(remoteMessage?.notification?.android?.channelId, remoteMessage?.notification?.title, remoteMessage?.notification?.body);
+        }
+    });
+
+    // normal notification
+    messaging().onNotificationOpenedApp(async remoteMessage => {
+        // onDisplayIncomingCall(remoteMessage);
+        if (remoteMessage?.data?.call_token !== undefined) {
+            DisplayIncomingCall(remoteMessage);
         } else {
             onDisplayNotificationx(remoteMessage?.notification?.android?.channelId, remoteMessage?.notification?.title, remoteMessage?.notification?.body);
         }
@@ -403,15 +160,6 @@ const SplashAppScreen = () => {
         };
     };
 
-    // normal notification
-    messaging().onNotificationOpenedApp(remoteMessage => {
-        console.log(
-            'Notification caused app to open from background state:',
-            remoteMessage.notification,
-        );
-        // onDisplayIncomingCall(remoteMessage);
-    });
-
     async function onDisplayIncomingCall(info: any) {
         try {
             let caller_id = null;
@@ -419,7 +167,6 @@ const SplashAppScreen = () => {
             console.log('calling....', JSON.stringify(info?.data));
             if (info?.data?.user_type === 'Parent') {
                 DisplayIncomingCall(info);
-                // RNCallKeep.displayIncomingCall(caller_id, 'c8c7c7c7c7cchh3', localizedCallerName = 'Monika Verma', handleType = '847387d7d6gd', hasVideo = false, options = null);
             } else {
                 console.log('Not Tuitor');
                 DeletePreviousChannel(info);
@@ -433,7 +180,7 @@ const SplashAppScreen = () => {
         RNNotificationCall.backToApp();
         const { callUUID, payload } = data;
         console.log('press answer', callUUID, payload);
-        navigation.navigate('CallingScreen', payload);
+        navigation.navigate('CallPickScreen', payload);
     });
 
     RNNotificationCall.addEventListener('endCall', (data: any) => {
@@ -543,119 +290,9 @@ const SplashAppScreen = () => {
         }
     }
 
-    const NotificationMeByTuitor = async (info: any) => {
-        // Create a channel (required for Android)
-
-        console.log('5')
-    }
-
-    // agora
-
-
     function showMessage(msg: string) {
         setMessage(msg);
     }
-
-    React.useEffect(() => {
-        // Initialize Agora engine when the app starts
-        setupVoiceSDKEngine();
-    });
-
-    const setupVoiceSDKEngine = async () => {
-        try {
-            // use the helper function to get permissions
-            if (Platform.OS === 'android') { await getPermission() };
-            agoraEngineRef.current = createAgoraRtcEngine();
-            const agoraEngine = agoraEngineRef.current;
-            agoraEngine.registerEventHandler({
-                onJoinChannelSuccess: () => {
-                    showMessage('Successfully joined the channel ' + channelName);
-                    setIsJoined(true);
-                },
-                onUserJoined: (_connection, Uid) => {
-                    showMessage('Remote user joined with uid ' + Uid);
-                    setRemoteUid(Uid);
-                },
-                onUserOffline: (_connection, Uid) => {
-                    showMessage('Remote user left the channel. uid: ' + Uid);
-                    setRemoteUid(0);
-                },
-            });
-            agoraEngine.initialize({
-                appId: appId,
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const getPermission = async () => {
-        if (Platform.OS === 'android') {
-            await PermissionsAndroid.requestMultiple([
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-            ]);
-        }
-    };
-
-    React.useEffect(() => {
-        const engine = createAgoraRtcEngine();
-        engine.initialize({ appId: globle.AppIdAgora });
-        console.warn('All Setup Done')
-    }, []);
-
-    React.useEffect(() => {
-        setIsSwitched(IsSwitched);
-        console.log('IsSwitched', IsSwitched);
-        agoraEngineRef.current?.setDefaultAudioRouteToSpeakerphone(false); // Disable the default audio route.
-        agoraEngineRef.current?.setEnableSpeakerphone(IsSwitched); // Enable or disable the speakerphone temporarily.
-    }, [IsSwitched]);
-
-    const leave = () => {
-        try {
-            agoraEngineRef.current?.leaveChannel();
-            setRemoteUid(0);
-            setIsJoined(false);
-            showMessage('You left the channel');
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    React.useEffect(() => {
-        setisMuted(isMuted);
-        console.log('isMuted', isMuted);
-        agoraEngineRef.current?.muteRemoteAudioStream(remoteUid, isMuted);
-    }, [isMuted]);
-
-    const increaseVolume = () => {
-        if (volume !== 100) {
-            setVolume(volume + 5);
-        }
-        agoraEngineRef.current?.adjustRecordingSignalVolume(volume);
-    };
-
-    const decreaseVolume = () => {
-        if (volume !== 0) {
-            setVolume(volume - 5);
-        }
-        agoraEngineRef.current?.adjustRecordingSignalVolume(volume);
-    };
-
-    const join = async (token: any, channelName: any) => {
-        if (isJoined) {
-            return;
-        }
-        try {
-            agoraEngineRef.current?.setChannelProfile(
-                ChannelProfileType.ChannelProfileCommunication,
-            );
-            agoraEngineRef.current?.joinChannel(token, channelName, uid, {
-                clientRoleType: ClientRoleType.ClientRoleBroadcaster,
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
 
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>

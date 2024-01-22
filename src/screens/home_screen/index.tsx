@@ -21,11 +21,8 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import moment from 'moment';
-import Confetti from 'react-confetti'
 import Modal from "react-native-modal";
-import uuid from 'react-native-uuid';
 import Toast from 'react-native-toast-message';
-import RNCallKeep from 'react-native-callkeep';
 import MarqueeText from 'react-native-marquee';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import BottomSheet from "react-native-gesture-bottom-sheet";
@@ -35,6 +32,7 @@ import TutorHeader from '../../components/TutorHeader';
 import messaging from '@react-native-firebase/messaging';
 import globle from '../../../common/env';
 import Spinner from 'react-native-loading-spinner-overlay';
+import database from '@react-native-firebase/database';
 import Dialog, {
     SlideAnimation,
     DialogTitle,
@@ -44,12 +42,7 @@ import Dialog, {
 } from 'react-native-popup-dialog';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import apps from '../../../package.json';
-import {
-    createAgoraRtcEngine,
-    ClientRoleType,
-    IRtcEngine,
-    ChannelProfileType,
-} from 'react-native-agora';
+import { showMessage } from 'react-native-flash-message';
 const appId = '3d117a30950e4724a73c9f8b07aef599';
 const channelName = 'callingtestingapp';
 const token = '007eJxTYDC880X9sYM4nyG/kO8cbea2ThWt47fL1ZV0y5XTZohpv1VgME4xNDRPNDawNDVINTE3Mkk0N062TLNIMjBPTE0ztbR82xya2hDIyBAduYCJkQECQXxBhuTEnJzMvPSS1OISIJVYUMDAAAB8OCCH';
@@ -60,22 +53,14 @@ const HomeScreen = () => {
 
     const navigate = useNavigation();
     const bottomSheet = React.useRef();
+    const RevertCxtUser = `/calling/${101}`;
     const [dataHome, setData] = React.useState([]);
     const [ProfileData, setProfileData] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
-    const [visible, setVisible] = React.useState(true);
     const [alert, setAlert] = React.useState(false);
-    const [isFetching, setIsFetching] = React.useState(false);
-    const [currentCallId, setCurrentCallId] = React.useState(null);
-    let [driverData, setDriverData] = React.useState(false);
-    const [dutyStatus, setDutyStatus] = React.useState('Off');
-    const [driver_activated, setDriverActivated] = React.useState(false);
-    const [errorMsg, setErrorMessage] = React.useState('');
+    const [callingStatus,setCallingStatus] = React.useState(false);
     const [userData, setTutorData] = React.useState(null);
-    const [Destinationstate, setDestinationState] = React.useState({ destinationCords: {} });
-    const [location, setLocation] = React.useState({ latitude: 60.1098678, longitude: 24.7385084, });
-    const [Pickupstate, setPickupState] = React.useState({ pickupCords: {} });
-    const [searchText, setSearchText] = React.useState('');
+    const [isFetching, setIsFetching] = React.useState(false);
     const [CompleteProfileStatus, setCompleteProfileStatus] = React.useState(false);
     // state
     const [State, setState] = React.useState([]);
@@ -85,29 +70,6 @@ const HomeScreen = () => {
     const [City, setCity] = React.useState([]);
     const [valueCity, setValueCity] = React.useState(null);
     const [isFocusCity, setIsFocusCity] = React.useState(false);
-    // agora
-    const agoraEngineRef = React.useRef<IRtcEngine>(); // Agora engine instance
-    const [isJoined, setIsJoined] = React.useState(false); // Indicates if the local user has joined the channel
-    const [IsSwitched, setIsSwitched] = React.useState(false); // Indicates if the local user has joined the channel
-    const [isMuted, setisMuted] = React.useState(false);
-    const [remoteUid, setRemoteUid] = React.useState(0); // Uid of the remote user
-    const [message, setMessage] = React.useState(''); // Message to the user
-    const [volume, setVolume] = React.useState(10); // volume to the user
-
-
-    const handleSearch = (text) => {
-        setSearchText(text);
-    }
-
-    const getCurrentCallId = () => {
-        let caller_id = null;
-        if (!currentCallId) {
-            caller_id = uuid.v4();
-            setCurrentCallId(caller_id);
-        }
-
-        return caller_id;
-    };
 
     useFocusEffect(
         React.useCallback(() => {
@@ -116,12 +78,46 @@ const HomeScreen = () => {
             getTutorPostForUser();
             loadCcity();
             saveToken();
-            callsetup();
             return () => {
                 // Useful for cleanup functions
             };
         }, [])
     );
+
+    React.useEffect(() => {
+        const dataRef = database().ref(RevertCxtUser);
+        try {
+            dataRef.on('value', (snapshot: any) => {
+                if (snapshot.val()?.status === 0) {
+                    console.warn('disconnectd_call')
+                } else if (snapshot.val()?.status === 1) {
+                    console.warn('picked_call')
+                }
+            });
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+        return () => {
+            dataRef.off(); // Clean up the listener when the component unmounts
+        };
+    }, []);
+
+    const callconnected = async () => {
+        console.log('HomeScreenSaveLoation', true);
+        const userDetails = {
+            status: 1,
+        }
+        try {
+            database()
+                .ref(RevertCxtUser)
+                .update(userDetails)
+                .then(() => {
+                    console.log('HomeScreenSaveLoation', true);
+                });
+        } catch (error) {
+            console.log('HomeScreenSaveLoation', error);
+        }
+    }
 
     const requestPermission = async () => {
         const checkPermission = await checkNotificationPermission();
@@ -158,8 +154,6 @@ const HomeScreen = () => {
         axios.request(config)
             .then((response) => {
                 if (response.status) {
-                    console.log('loadProfile', JSON.stringify(response.data?.status));
-                    console.log('loadProfile', JSON.stringify(response?.data?.user));
                     if (response.data?.status === true) {
                         setLoading(false);
                         setProfileData(response?.data);
@@ -283,7 +277,6 @@ const HomeScreen = () => {
         fetch(globle.API_BASE_URL + 'updateProfile', requestOptions)
             .then(response => response.json())
             .then(result => {
-                // console.log('uploadProfileX', result)
                 if (result.status) {
                     setLoading(false)
                     Toast.show({
@@ -322,13 +315,13 @@ const HomeScreen = () => {
             'Are you sure, want to call ' + info?.child[0]?.child_name,
             [
                 { text: 'Cancel', onPress: () => console.log('cancel') },
-                { text: 'Call', onPress: () => getTokenForCalls(info) }
+                { text: 'Call', onPress: () => getTokenForCalls(info) },
             ]
         );
     }
 
     const getTokenForCalls = (info: any) => {
-        // getCallingToken(info)
+        setCallingStatus(true);
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
@@ -337,17 +330,18 @@ const HomeScreen = () => {
                 'Authorization': 'Bearer '
             }
         };
-        console.log('getCallingToken', config);
         axios.request(config)
             .then((response) => {
-                console.log('getCallingToken', JSON.stringify(response.data));
                 if (Number(response?.data?.status) === 1) {
-                    let information: any = {
-                        user_info: info,
-                        response_data: response?.data,
+                    // console.log('inner_data:',response?.data)
+                    let information = {
+                        callerId: info?.id,
+                        Name: info?.child[0]?.child_name,
+                        channelName: response?.data?.channelName,
+                        callTokenOne: response?.data?.token1,
+                        callTokenTwo: response?.data?.token2,
                     }
-                    navigate.navigate('CallingScreen', information);
-                    // setCallNotification(info, response?.data?.token2, response?.data?.channelName)
+                    setCallNotification(info, response?.data?.token1, response?.data?.channelName, information);
                 }
             })
             .catch((error) => {
@@ -355,35 +349,12 @@ const HomeScreen = () => {
             });
     }
 
-    const getCallingToken = async (info: any) => {
-        // getCallingToken(info)
-        let config = {
-            method: 'get',
-            maxBodyLength: Infinity,
-            url: 'https://tuitionbot.com/agora_live_token/KBC/sample/RtcTokenBuilderSample.php',
-            headers: {
-                'Authorization': 'Bearer '
-            }
-        };
-        console.log('getCallingToken', config);
-        axios.request(config)
-            .then((response) => {
-                console.log('getCallingToken', JSON.stringify(response.data));
-                if (Number(response?.data?.status) === 1) {
-                    setCallNotification(info, response?.data?.token2, response?.data?.channelName)
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
 
-    const setCallNotification = async (info: any, token: any, channelName: any) => {
-        // console.log('setCallNotification', JSON.stringify(info))
+    const setCallNotification = async (info: any, token: any, channelName: any, information: any) => {
+        console.log('setCallNotification', JSON.stringify(info))
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         const fcmToken = await messaging().getToken();
         AsyncStorage.setItem('@tokenKey', fcmToken);
-        setLoading(true)
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
         formdata.append('call_token', token);
@@ -397,96 +368,29 @@ const HomeScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        // console.log('CallTuitorNotification----->', JSON.stringify(info))
-        fetch(globle.API_BASE_URL + 'tutor_request_call_for_post', requestOptions)
+        console.log('setCallNotification', JSON.stringify(formdata))
+        fetch('https://tuitionbot.com/Profession-beat/public/api/tutor_request_call_for_post', requestOptions)
             .then(response => response.json())
             .then(result => {
+                console.log('CallTuitorNotification----->', JSON.stringify(result))
                 if (result.status) {
-                    setLoading(false)
-                    setDirectCallNotification(token, info);
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Congratulations!',
-                        text2: result?.message,
-                    });
+                    setCallingStatus(false);
+                    console.log('inner_data:', JSON.stringify(info))
+                    navigate.navigate('CallingScreen', information);
                 } else {
-                    setLoading(false)
                     Toast.show({
-                        type: 'success',
-                        text1: 'Something went wrong!',
-                        text2: result?.message,
-                    });
+                        type: 'error',
+                        text1: result?.message,
+                        text2: result?.message + ' Please recharge first!',
+                    }); 
+                    setCallingStatus(false);
                 }
             })
             .catch((error) => {
                 console.log('error--->', error);
-                Toast.show({
-                    type: 'success',
-                    text1: 'Something went wrong!',
-                    text2: error,
-                });
-                setLoading(false)
             });
     }
 
-    const callsetup = () => {
-        const options = {
-            ios: {
-                appName: 'ReactNativeWazoDemo',
-                imageName: 'sim_icon',
-                supportsVideo: false,
-                maximumCallGroups: '1',
-                maximumCallsPerCallGroup: '1',
-            },
-            android: {
-                alertTitle: 'Permissions Required',
-                alertDescription:
-                    'This application needs to access your phone calling accounts to make calls',
-                cancelButton: 'Cancel',
-                okButton: 'ok',
-                imageName: 'sim_icon',
-                additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
-            }
-        };
-
-        try {
-            RNCallKeep.setup(options);
-            RNCallKeep.setAvailable(true); // Only used for Android, see doc above.
-            // RNCallKeep.startCall(getCurrentCallId(), '57d6g7dhh3hd8d', 'Shivam');
-        } catch (err) {
-            console.error('initializeCallKeep error:', err.message);
-        }
-    }
-
-    const setDirectCallNotification = (token: any, info: any) => {
-        const options = {
-            ios: {
-                appName: 'ReactNativeWazoDemo',
-                imageName: 'sim_icon',
-                supportsVideo: false,
-                maximumCallGroups: '1',
-                maximumCallsPerCallGroup: '1',
-            },
-            android: {
-                alertTitle: 'Permissions Required',
-                alertDescription:
-                    'This application needs to access your phone calling accounts to make calls',
-                cancelButton: 'Cancel',
-                okButton: 'ok',
-                imageName: 'sim_icon',
-                additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
-            }
-        };
-
-        try {
-            join();
-            RNCallKeep.setup(options);
-            RNCallKeep.setAvailable(true); // Only used for Android, see doc above.
-            RNCallKeep.startCall(getCurrentCallId(), token, info?.child[0]?.child_name);
-        } catch (err) {
-            console.error('initializeCallKeep error:', err.message);
-        }
-    }
 
     const getTutorPostForUser = async () => {
         setLoading(true)
@@ -674,7 +578,7 @@ const HomeScreen = () => {
             });
     }
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item }: any) => (
         <View style={styles.card}>
             <View style={styles.cardFooter}>
                 <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../assets/clock.png')} />
@@ -754,112 +658,6 @@ const HomeScreen = () => {
         navigate.navigate('EditTutorProfileScreen');
     }
 
-    // agora calling
-    function showMessage(msg: string) {
-        setMessage(msg);
-    }
-
-    React.useEffect(() => {
-        // Initialize Agora engine when the app starts
-        setupVoiceSDKEngine();
-    });
-
-    const setupVoiceSDKEngine = async () => {
-        try {
-            // use the helper function to get permissions
-            if (Platform.OS === 'android') { await getPermission() };
-            agoraEngineRef.current = createAgoraRtcEngine();
-            const agoraEngine = agoraEngineRef.current;
-            agoraEngine.registerEventHandler({
-                onJoinChannelSuccess: () => {
-                    showMessage('Successfully joined the channel ' + channelName);
-                    setIsJoined(true);
-                },
-                onUserJoined: (_connection, Uid) => {
-                    showMessage('Remote user joined with uid ' + Uid);
-                    setRemoteUid(Uid);
-                },
-                onUserOffline: (_connection, Uid) => {
-                    showMessage('Remote user left the channel. uid: ' + Uid);
-                    setRemoteUid(0);
-                },
-            });
-            agoraEngine.initialize({
-                appId: appId,
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const getPermission = async () => {
-        if (Platform.OS === 'android') {
-            await PermissionsAndroid.requestMultiple([
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-            ]);
-        }
-    };
-
-    React.useEffect(() => {
-        const engine = createAgoraRtcEngine();
-        engine.initialize({ appId: globle.AppIdAgora });
-        console.warn('All Setup Done')
-    }, []);
-
-    React.useEffect(() => {
-        setIsSwitched(IsSwitched);
-        console.log('IsSwitched', IsSwitched);
-        agoraEngineRef.current?.setDefaultAudioRouteToSpeakerphone(false); // Disable the default audio route.
-        agoraEngineRef.current?.setEnableSpeakerphone(IsSwitched); // Enable or disable the speakerphone temporarily.
-    }, [IsSwitched]);
-
-    const leave = () => {
-        try {
-            agoraEngineRef.current?.leaveChannel();
-            setRemoteUid(0);
-            setIsJoined(false);
-            showMessage('You left the channel');
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    React.useEffect(() => {
-        setisMuted(isMuted);
-        console.log('isMuted', isMuted);
-        agoraEngineRef.current?.muteRemoteAudioStream(remoteUid, isMuted);
-    }, [isMuted]);
-
-    const increaseVolume = () => {
-        if (volume !== 100) {
-            setVolume(volume + 5);
-        }
-        agoraEngineRef.current?.adjustRecordingSignalVolume(volume);
-    };
-
-    const decreaseVolume = () => {
-        if (volume !== 0) {
-            setVolume(volume - 5);
-        }
-        agoraEngineRef.current?.adjustRecordingSignalVolume(volume);
-    };
-
-    const join = async () => {
-        if (isJoined) {
-            return;
-        }
-        try {
-            agoraEngineRef.current?.setChannelProfile(
-                ChannelProfileType.ChannelProfileCommunication,
-            );
-            agoraEngineRef.current?.joinChannel(token, channelName, uid, {
-                clientRoleType: ClientRoleType.ClientRoleBroadcaster,
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
     return (
         <View style={{ flex: 1, marginTop: 5, backgroundColor: '#F1F6F9', padding: 10 }}>
             <Spinner
@@ -887,10 +685,10 @@ const HomeScreen = () => {
                     renderItem={renderItem}
                     onRefresh={() => onRefresh()}
                     refreshing={isFetching}
-                    keyExtractor={(item) => item.id}
-                    ListFooterComponent={() => <View style={{ padding: 10, marginBottom: 20 }}>
+                    keyExtractor={(item) => item?.id}
+                    ListFooterComponent={() => <TouchableOpacity onPress={() => callconnected()} style={{ padding: 10, marginBottom: 20 }}>
                         <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Tuitionbot {apps.version}</Text>
-                    </View>}
+                    </TouchableOpacity>}
                 />
                 {/* <View style={{ flex: 1, alignItems: 'center', marginTop: Dimensions.get('screen').width / 3 }}>
                         <Image style={{ width: 300, height: 300, resizeMode: 'cover' }} source={require('../../assets/no_record.png')} />

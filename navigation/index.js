@@ -50,9 +50,11 @@ import DocumentUploadScreen from '../src/screens/DocumentUploadScreen';
 import MyTuitorPostScreen from '../src/screens/MyParentTutiorPost';
 import TransactionHistoryScreen from '../src/screens/TransactionHistory';
 import CallingAudioApps from '../src/screens/AudioCallSetup';
-import VoiceCall from '../src/screens/CallingRecieveApps';
 import ConfirmTuitionScreen from '../src/screens/ConfirmTuitionScreen';
-import ConfirmedTuitionScreen from '../src/screens/ConfirmedTuition'
+import ConfirmedTuitionScreen from '../src/screens/ConfirmedTuition';
+import CallPickScreen from '../src/screens/CallPickScreen';
+import TuitorMyPostScreen from '../src/screens/TutorMyPostScreen';
+import TutorExperienceScreen from '../src/screens/TutorExperience';
 // Theme.
 const MyTheme = {
     dark: false,
@@ -696,15 +698,6 @@ function StackNavigation() {
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
                 <Stack.Screen
-                    name="VoiceCall"
-                    component={VoiceCall}
-                    options={{
-                        title: 'VoiceCall',
-                        headerStyle: { backgroundColor: 'black', },
-                        headerTintColor: '#fff',
-                        headerTitleStyle: { fontWeight: 'bold', },
-                    }} />
-                <Stack.Screen
                     name="ConfirmTuitionScreen"
                     component={ConfirmTuitionScreen}
                     options={{
@@ -722,9 +715,36 @@ function StackNavigation() {
                         headerTintColor: '#fff',
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
+                <Stack.Screen
+                    name="CallPickScreen"
+                    component={CallPickScreen}
+                    options={{
+                        title: 'CallPickScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+                <Stack.Screen
+                    name="TuitorMyPostScreen"
+                    component={TuitorMyPostScreen}
+                    options={{
+                        title: 'TuitorMyPostScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
+                <Stack.Screen
+                    name="TutorExperienceScreen"
+                    component={TutorExperienceScreen}
+                    options={{
+                        title: 'TutorExperienceScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
-export default StackNavigation; // ConfirmedTuitionScreen
+export default StackNavigation; // TutorExperienceScreen

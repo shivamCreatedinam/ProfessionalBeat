@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "592431823032",
+    "firebase_url": "https://tuition-bot-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "tuition-bot",
     "storage_bucket": "tuition-bot.appspot.com"
   },

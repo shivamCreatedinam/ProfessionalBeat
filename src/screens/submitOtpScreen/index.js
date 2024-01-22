@@ -38,6 +38,7 @@ const OTPSubmitScreen = () => {
     const [OTP, setUserOTP] = React.useState(null);
     const [email, setEmail] = React.useState(routes?.params?.mobileNumber); // userType
     const [userType, setUserType] = React.useState(routes?.params?.userType); // userType
+    const [refrelID, setRefrelID] = React.useState(routes?.params?.refrelID);
     const [password, setPassword] = React.useState('');
     const [errors, setErrors] = React.useState('');
 
@@ -78,7 +79,8 @@ const OTPSubmitScreen = () => {
 
     React.useEffect(() => {
         console.log('addEventListener', JSON.stringify(routes?.params?.mobileNumber));
-        console.log('addEventListener', JSON.stringify(routes?.params?.userType));
+        console.log('addEventListener', JSON.stringify(routes?.params?.userType));// refrelID
+        console.log('addEventListener', JSON.stringify(routes?.params?.refrelID));
         return () => {
             console.log('addEventListener', JSON.stringify(routes));
         };
@@ -165,7 +167,7 @@ const OTPSubmitScreen = () => {
         var authOptions = {
             method: 'POST',
             url: globle.API_BASE_URL + 'otp_verify',
-            data: JSON.stringify({ "mobile": email, 'otp': OTP, 'user_type': userType, 'refferal_id': '' }),
+            data: JSON.stringify({ "mobile": email, 'otp': OTP, 'user_type': userType, 'refferal_id': refrelID }),
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -207,7 +209,7 @@ const OTPSubmitScreen = () => {
         var authOptions = {
             method: 'post',
             url: globle.API_BASE_URL + 'requesting_for_otp',
-            data: JSON.stringify({ "mobile": email, 'user_type': userType, refferal_id: '' }),
+            data: JSON.stringify({ "mobile": email, 'user_type': userType, 'refferal_id': refrelID }),
             headers: {
                 'Content-Type': 'application/json'
             },

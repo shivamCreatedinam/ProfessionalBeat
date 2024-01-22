@@ -386,11 +386,7 @@ const QualificationScreen = () => {
                         text1: 'Congratulations!',
                         text2: result?.message,
                     });
-                    if (selectedSpokenId === '1') {
-                        updateOrExpereance();
-                    } else {
-                        navigate.replace('BottomNavigation');
-                    }
+                    navigate.replace('HomeBottomNavigation');
                 } else {
                     setLoading(false)
                     Toast.show({
@@ -431,7 +427,7 @@ const QualificationScreen = () => {
             body: formdata,
             redirect: 'follow',
             headers: {
-                'Authorization': 'Bearer ' + data
+                'Authorization': 'Bearer ' + data,
             }
         };
         console.log('updateOrExpereance', requestOptions)
@@ -445,7 +441,7 @@ const QualificationScreen = () => {
                         text1: 'Congratulations!',
                         text2: result?.message,
                     });
-                    navigate.replace('BottomNavigation');
+                    navigate.replace('HomeBottomNavigation');
                 } else {
                     setLoading(false)
                     Toast.show({
@@ -493,7 +489,7 @@ const QualificationScreen = () => {
             />
             <TutorHeader />
             <ScrollView
-                style={{ padding: 0, backgroundColor: '#F1F6F9' }}>
+                style={{ padding: 0, backgroundColor: '#F1F6F9', height: Dimensions.get('screen').height }}>
                 <KeyboardAvoidingView
                     behavior="padding" enabled
                     style={{ padding: 0, backgroundColor: '#F1F6F9' }}
@@ -501,7 +497,7 @@ const QualificationScreen = () => {
                     <View style={{ padding: 10 }}>
                         <Text style={
                             { fontWeight: 'bold', textAlign: 'center', fontSize: 22 }
-                        }>Tuitour Details</Text>
+                        }>Tuitour Qualification</Text>
                     </View>
                     <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 10, paddingRight: 10, }]}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15, zIndex: 999 }}>
@@ -552,72 +548,9 @@ const QualificationScreen = () => {
                             </TouchableOpacity>
                         </View>
                     </View> : null}
-                    <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 10, paddingRight: 10, }]}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15, paddingLeft: 0, paddingRight: 10, }}>
-                            <Dropdown
-                                style={[styles.dropdown1, isFocusExprence && { borderColor: 'blue' }]}
-                                selectedTextStyle={styles.selectedTextStyle1}
-                                data={employment}
-                                value={valueExprence}
-                                maxHeight={300}
-                                labelField="label"
-                                valueField="value"
-                                placeholder={!isFocusExprence ? 'Type of employment' : valueExprence}
-                                onFocus={() => setIsFocusExprence(true)}
-                                onBlur={() => setIsFocusExprence(false)}
-                                onChange={item => {
-                                    console.log('setValueExprence', item.value);
-                                    setValueExprence(item.value);
-                                    setIsFocusExprence(false);
-                                }}
-                            />
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '95%', borderRadius: 10, marginTop: 15, marginLeft: 10, marginRight: 20 }}>
-                        <Text style={{ flex: 1 }}>Do you english spoken?</Text>
-                        <RadioGroup
-                            containerStyle={{ flexDirection: 'row', alignItems: 'center' }}
-                            radioButtons={EnglishSpk}
-                            onPress={(ox) => setSelectedxId(ox)}
-                            selectedId={selectedId}
-                        />
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '95%', borderRadius: 10, marginTop: 15, marginLeft: 10, marginRight: 20 }}>
-                        <Text style={{ flex: 1 }}>Do you have any Experience?</Text>
-                        <RadioGroup
-                            containerStyle={{ flexDirection: 'row', alignItems: 'center' }}
-                            radioButtons={radioButtons}
-                            onPress={(ox) => setExpFull(ox)}
-                            selectedId={selectedSpokenId}
-                        />
-                    </View>
-                    {exp === 'Yes' ? <View style={{ padding: 15, marginTop: 5 }}>
-                        <Text style={{ fontWeight: 'bold', color: 'grey' }}>Experience Details</Text>
-                        <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 5 }}>
-                                <TextInput style={{ marginLeft: 15 }} keyboardType={'default'} defaultValue={CompanyOrigination} placeholder='Company / Organization name' onChangeText={(e) => setCompanyOrigination(e)} />
-                            </View>
-                        </View>
-                        <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15 }} keyboardType={'default'} defaultValue={Designation} placeholder='Designation' onChangeText={(e) => setDesignation(e)} />
-                            </View>
-                        </View>
-                        <View style={[styles.searchInputContainer, { marginTop: 0 }]}>
-                            <TouchableOpacity onPress={() => showDatePicker()} style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15 }}>
-                                <TextInput style={{ marginLeft: 15 }} maxLength={2} keyboardType='number-pad' defaultValue={DateExperience} placeholder={Experience === null ? 'Experience in years (Digits 1 to 10)' : '' + DateExperience} onChangeText={(e) => setDateExperience(e)} />
-                            </TouchableOpacity>
-                        </View>
-                        {/* <View style={[styles.searchInputContainer, { marginTop: 0, paddingLeft: 0, paddingRight: 0 }]}>
-                            <TouchableOpacity onPress={() => uploadAdharFrontCard()} style={{ flexDirection: 'row', alignItems: 'center', padding: 0, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 10, marginTop: 15, }}>
-                                <Text numberOfLines={1} style={{ marginLeft: 5, padding: 15, flex: 1, color: 'grey' }}>{uploadAFProfile === null ? 'Certificate Image' : uploadAFProfile}</Text>
-                                <Image style={{ width: 20, height: 20, resizeMode: 'contain', marginRight: 10 }} source={require('../../assets/camera.png')} />
-                            </TouchableOpacity>
-                        </View> */}
-                    </View> : null}
                     <View style={[styles.searchInputContainer, { marginBottom: 150 }]}>
                         <TouchableOpacity onPress={() => validationCheck()} style={{ padding: 15, alignItems: 'center', backgroundColor: '#000', borderRadius: 10, marginTop: 15, marginLeft: 10, marginRight: 10 }}>
-                            <Text style={{ color: '#ffffff', textTransform: 'uppercase' }}>Update Profile</Text>
+                            <Text style={{ color: '#ffffff', textTransform: 'uppercase' }}>Update Qualification</Text>
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>

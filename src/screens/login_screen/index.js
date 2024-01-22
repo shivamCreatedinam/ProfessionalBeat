@@ -36,6 +36,7 @@ const LoginScreen = () => {
     const [loader, serLoader] = React.useState(false);
     const [user, setUser] = React.useState();
     const [email, setEmail] = React.useState('');
+    const [refrelID, setRefrelID] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [LoginType, setLoginType] = React.useState('');
     const [errors, setErrors] = React.useState('');
@@ -48,7 +49,7 @@ const LoginScreen = () => {
         },
         {
             id: '2',
-            label: 'Tuitor',
+            label: 'Tutor',
             value: 'Tutor'
         }
     ]), []);
@@ -82,7 +83,7 @@ const LoginScreen = () => {
         });
         setTimeout(() => {
             // setTimeout
-            navigation.replace('OTPSubmitScreen', { mobileNumber: email, userType: LoginType });
+            navigation.replace('OTPSubmitScreen', { mobileNumber: email, userType: LoginType, refrelID: refrelID });
         }, 2000);
     }
 
@@ -134,7 +135,7 @@ const LoginScreen = () => {
         var authOptions = {
             method: 'POST',
             url: Global.API_BASE_URL + 'requesting_for_otp',
-            data: JSON.stringify({ "mobile": email, 'user_type': LoginType, refferal_id: '' }),
+            data: JSON.stringify({ "mobile": email, 'user_type': LoginType, 'refferal_id': refrelID }), // refrelID
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -214,7 +215,7 @@ const LoginScreen = () => {
             enabled
             keyboardVerticalOffset={10}>
             <ScrollView>
-                <View style={{ elevation: 10, height: Dimensions.get('screen').height - 100, margin: 10, padding: 20, backgroundColor: '#ffffff', borderRadius: 10, marginBottom: 50, top: 35, }}>
+                <View style={{ elevation: 10, height: Dimensions.get('screen').height - 70, margin: 10, padding: 20, backgroundColor: '#ffffff', borderRadius: 10, marginBottom: 50, top: 35, }}>
                     <View style={{ padding: 20, flex: 1, alignItems: 'center' }}>
                         <Image style={{ height: 200, width: 200, resizeMode: 'cover', marginBottom: 10, borderRadius: 150 }} source={require('../../assets/notification_logo.png')} />
                         <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
@@ -236,7 +237,7 @@ const LoginScreen = () => {
                     </View>
                     {LoginType === 'Tutor' ? <View style={{ marginTop: 20 }}>
                         <Text style={{ fontSize: 10, position: 'absolute', backgroundColor: '#ffffff', padding: 3, marginTop: -15, zIndex: 999, left: 2 }}>Refferal Code</Text>
-                        <TextInput autoCapitalize='characters' autoCorrect={false} inputMode='text' keyboardType='ascii-capable' maxLength={8} placeholder='Enter 8 digit refferal code' style={{ borderWidth: 1, borderColor: '#b4b4b4', borderRadius: 4, padding: 10, fontWeight: 'bold' }} onChangeText={(e) => setEmail(e)} />
+                        <TextInput autoCapitalize='characters' autoCorrect={false} inputMode='text' keyboardType='ascii-capable' maxLength={8} placeholder='Enter 8 digit refferal code (optional)' style={{ borderWidth: 1, borderColor: '#b4b4b4', borderRadius: 4, padding: 10, fontWeight: 'bold' }} onChangeText={(e) => setRefrelID(e)} />
                     </View> : null}
                     <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <TouchableOpacity onPress={() => setSecure(!secure)}>

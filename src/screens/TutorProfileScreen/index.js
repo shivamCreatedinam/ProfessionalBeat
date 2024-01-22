@@ -34,6 +34,7 @@ const TutorProfileScreen = () => {
     const navigate = useNavigation();
     const [data, setData] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
+    const [reffrelCode, setReffrelCode] = React.useState('');
 
 
     function trackMaps(data) {
@@ -65,8 +66,8 @@ const TutorProfileScreen = () => {
         axios.request(config)
             .then((response) => {
                 setLoading(false)
+                setReffrelCode(response?.data?.user?.user_id);
                 setData(response.data);
-                console.log(JSON.stringify(response.data));
             })
             .catch((error) => {
                 setLoading(false)
@@ -127,9 +128,9 @@ const TutorProfileScreen = () => {
     const ShareApp = () => {
         const options = Platform.select({
             default: {
-                title: 'Amazing Tuition Bot Application',
-                subject: 'Download & install get Tuitour at your near by place',
-                message: `Tuition Bot tutor is an online classes app to help students with homework, questions & concepts. Link:https://play.google.com/store/apps/details?id=com.createdinam.professionbeat`,
+                title: 'Tuitionbot *Help to Find Tuition',
+                message: `Tuitionbot helps parents/students to find the best tutors or teachers for home tuition and online classes. Please Use My Reffrel Code ${reffrelCode} And you Earn Reward and Points, AppLink :https://play.google.com/store/apps/details?id=com.createdinam.professionbeat`,
+                url: 'https://play.google.com/store/apps/details?id=com.createdinam.professionbeat'
             },
         });
         Share.open(options)
@@ -165,7 +166,7 @@ const TutorProfileScreen = () => {
                 textStyle={{ color: 'black', fontSize: 12 }}
             />
             <View style={styles.headerContainer}>
-                <TouchableOpacity onPress={() => navigate.goBack()} style={{ position: 'absolute', left: 10, top: 50, zIndex: 999, backgroundColor: '#0066cc', borderRadius: 140 }}>
+                <TouchableOpacity onPress={() => navigate.navigate('HomeBottomNavigation')} style={{ position: 'absolute', left: 10, top: 50, zIndex: 999, backgroundColor: '#0066cc', borderRadius: 140 }}>
                     <Image style={{ width: 30, height: 30, resizeMode: 'contain', tintColor: '#fff' }} source={require('../../assets/previous.png')} />
                 </TouchableOpacity>
                 <Image
@@ -200,13 +201,20 @@ const TutorProfileScreen = () => {
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: data?.user?.tutor_is_update === 4 ? null : 'red' }} source={require('../../assets/verified.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity
+                    onPress={() => navigate.navigate('TutorExperienceScreen')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/exp_logo.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Experience</Text>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: data?.user?.tutor_is_update === 4 ? null : 'red' }} source={require('../../assets/verified.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity
                     onPress={() => navigate.navigate('TransactionHistoryScreen')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/tuition_icon.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Transaction History</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => navigate.navigate('MyTuitorPostScreen')}
+                    onPress={() => navigate.navigate('TuitorMyPostScreen')}
                     style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/document_icon.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>My Post</Text>

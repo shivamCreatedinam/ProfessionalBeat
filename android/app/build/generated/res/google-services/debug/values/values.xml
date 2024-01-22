@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="firebase_database_url" translatable="false">https://tuition-bot-default-rtdb.asia-southeast1.firebasedatabase.app</string>
     <string name="gcm_defaultSenderId" translatable="false">592431823032</string>
     <string name="google_api_key" translatable="false">AIzaSyAUBR6Sx-WdSo1QaN2Z6ag6rqjqeXAdrIM</string>
     <string name="google_app_id" translatable="false">1:592431823032:android:06d6b39d79dc0c7ed95c4d</string>

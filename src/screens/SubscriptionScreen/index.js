@@ -12,7 +12,8 @@ import {
     TouchableOpacity,
     Text,
     FlatList,
-    Image
+    Image,
+    Share
 } from 'react-native';
 import axios from 'axios';
 import moment from 'moment';
@@ -21,7 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import globle from '../../../common/env';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { BlurView } from "@react-native-community/blur";
+import Modal from "react-native-modal";
 import RazorpayCheckout from 'react-native-razorpay';
 import TutorHeader from '../../components/TutorHeader';
 import styles from './styles';
@@ -32,13 +33,17 @@ const SubscriptionScreen = () => {
     const navigate = useNavigation();
     const [data, setData] = React.useState({});
     const [PackageData, setPackageData] = React.useState(null);
+    const [reffrelCode, setReffrelCode] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [isFetching, setIsFetching] = React.useState(false);
+    const [isActivePackage, setActivePackage] = React.useState(false);
     const [AvailableCalls, setAvailableCalls] = React.useState(null);
 
     useFocusEffect(
         React.useCallback(() => {
             getPaidSubscription();
             getSubscription();
+            loadProfile();
             return () => {
                 // Useful for cleanup functions
             };
@@ -48,6 +53,29 @@ const SubscriptionScreen = () => {
     const getTimesAgo = (created_at) => {
         const dateTimeAgo = moment(new Date(created_at)).fromNow();
         return dateTimeAgo;
+    }
+
+    const loadProfile = async () => {
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'getProfile',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('Profile', config);
+        axios.request(config)
+            .then((response) => {
+                let reffrelcode = response?.data?.user?.user_id;
+                setReffrelCode(reffrelcode);
+                console.log('loadProfile______________xx>', JSON.stringify(reffrelcode));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     const getSubscription = async () => {
@@ -76,6 +104,7 @@ const SubscriptionScreen = () => {
     const getPaidSubscription = async () => {
         setLoading(true)
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        console.log('getPaidSubscription', JSON.stringify(valueX))
         let data = JSON.parse(valueX)?.token;
         let config = {
             method: 'get',
@@ -87,9 +116,20 @@ const SubscriptionScreen = () => {
         };
         axios.request(config)
             .then((response) => {
-                setLoading(false)
-                setPackageData(response?.data?.data[0]);
-                setAvailableCalls(response.data?.free_call);
+                console.log('getSubscription', JSON.stringify())
+                if (response.data.status === true) {
+                    setLoading(false)
+                    setActivePackage(true);
+                    setPackageData(response?.data?.data[0]);
+                    setAvailableCalls(response.data?.free_call);
+                } else {
+                    setActivePackage(false);
+                    Toast.show({
+                        type: 'error',
+                        text1: 'No Active Package',
+                        text2: response.data?.message,
+                    });
+                }
             })
             .catch((error) => {
                 setLoading(false)
@@ -141,20 +181,24 @@ const SubscriptionScreen = () => {
             });
     }
 
+    function currencyFormat(num) {
+        return '₹ ' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
     const renderItem = (items) => {
         return (<View key={Number(items.index)} style={{ padding: 20, borderRadius: 10, backgroundColor: 'rgb(68,114,199)', flexGrow: 1, marginBottom: 40, elevation: 5 }}>
             <TouchableOpacity onPress={() => GenerateOrder(items?.item)} style={{ backgroundColor: '#fff', paddingHorizontal: 60, paddingVertical: 10, marginBottom: 20, borderRadius: 6, elevation: 5 }}>
-                <Text style={{ fontWeight: 'bold', color: '#000' }}>{items?.item?.title} – Rs {items?.item?.amount} /mo</Text>
+                <Text style={{ fontWeight: 'bold', color: '#000' }}>{items?.item?.title} – {currencyFormat(Number(items?.item?.amount))}</Text>
             </TouchableOpacity>
             <View style={{ marginBottom: 10 }}>
-                {items?.item?.details.map((data) => {
-                    return (
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image style={{ width: 15, height: 15, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/green_check.png')} />
-                            <Text style={{ color: '#fff' }}>{data?.pack_desc}</Text>
-                        </View>
-                    )
-                })}
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image style={{ width: 15, height: 15, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/green_check.png')} />
+                    <Text style={{ color: '#fff' }}>Get {items?.item?.acc_calls} Calls</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image style={{ width: 15, height: 15, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/green_check.png')} />
+                    <Text style={{ color: '#fff' }}>Unlimited Notification.</Text>
+                </View>
             </View>
         </View>)
     }
@@ -286,7 +330,28 @@ const SubscriptionScreen = () => {
     }
 
     const shareReffrelCode = async () => {
+        try {
+            const result = await Share.share({
+                title: 'Tuitionbot *Help to Find Tuition',
+                message: `Tuitionbot helps parents/students to find the best tutors or teachers for home tuition and online classes. Please Use My Reffrel Code ${reffrelCode} And you Earn Reward and Points, AppLink :https://play.google.com/store/apps/details?id=com.createdinam.professionbeat`,
+                url: 'https://play.google.com/store/apps/details?id=com.createdinam.professionbeat'
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    }
 
+    const onRefresh = () => {
+        getSubscription();
     }
 
     return (
@@ -298,9 +363,8 @@ const SubscriptionScreen = () => {
             />
             <TutorHeader />
             <View style={{ flex: 1, alignItems: 'center', marginTop: 10, }}>
-                <View
-                    style={{ padding: 10, backgroundColor: 'rgb(68,114,199)', marginBottom: 25, borderRadius: 15, width: '90%', elevation: 5, }}>
-                    <View style={{ padding: 5 }}>
+                {isActivePackage === true ? <View style={{ padding: 10, backgroundColor: 'rgb(68,114,199)', marginBottom: 25, borderRadius: 15, width: '90%', elevation: 5, }}>
+                    <View style={{ padding: 5, }} blurRadius={1}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={{ fontSize: 14, color: '#ffffff', flex: 1 }}>Current Package: {PackageData?.package_type}</Text>
                             <Text style={{ color: '#fff' }}>Order Id {PackageData?.order_number}</Text>
@@ -319,16 +383,19 @@ const SubscriptionScreen = () => {
                             <Text style={{ marginBottom: 10, color: '#ffffff', flex: 1 }} numberOfLines={1}>Transaction Id {PackageData?.transaction_signature}</Text>
                         </View>
                     </View>
-                </View>
+                </View> : null}
                 <FlatList
                     data={data}
                     style={{ marginTop: 0 }}
+                    showsVerticalScrollIndicator={false}
                     keyExtractor={(id) => id}
                     renderItem={(items) => renderItem(items)}
+                    onRefresh={() => onRefresh()}
+                    refreshing={isFetching}
                 />
                 <TouchableOpacity onPress={() => shareReffrelCode()} style={{ alignItems: 'center', padding: 20 }}>
                     <Text>Refer to any one person and get first <Text style={{ fontWeight: 'bold', color: 'rgb(68,114,199)' }}>2 calls</Text> for free</Text>
-                    <Text>Refer ID: <Text style={{ fontWeight: 'bold', color: 'rgb(68,114,199)' }}>TM09B91</Text>  <Text style={{ fontWeight: 'bold', color: 'rgb(68,114,199)' }}>Refer now</Text></Text>
+                    <Text>Refer ID: <Text style={{ fontWeight: 'bold', color: 'rgb(68,114,199)' }}>{reffrelCode}</Text>  <Text style={{ fontWeight: 'bold', color: 'rgb(68,114,199)' }}>Refer now</Text></Text>
                 </TouchableOpacity>
             </View>
         </View>
