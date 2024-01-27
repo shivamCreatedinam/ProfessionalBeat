@@ -71,7 +71,8 @@ const SubscriptionScreen = () => {
             .then((response) => {
                 let reffrelcode = response?.data?.user?.user_id;
                 setReffrelCode(reffrelcode);
-                console.log('loadProfile______________xx>', JSON.stringify(reffrelcode));
+                setAvailableCalls(response?.data?.user?.free_call);
+                console.log('loadProfile______________xx>', JSON.stringify(response?.data?.user?.free_call));
             })
             .catch((error) => {
                 console.log(error);
@@ -116,7 +117,7 @@ const SubscriptionScreen = () => {
         };
         axios.request(config)
             .then((response) => {
-                console.log('getSubscription', JSON.stringify())
+                console.log('getPaidSubscription', JSON.stringify(response?.data))
                 if (response.data.status === true) {
                     setLoading(false)
                     setActivePackage(true);
@@ -352,6 +353,7 @@ const SubscriptionScreen = () => {
 
     const onRefresh = () => {
         getSubscription();
+        getPaidSubscription();
     }
 
     return (
@@ -383,7 +385,12 @@ const SubscriptionScreen = () => {
                             <Text style={{ marginBottom: 10, color: '#ffffff', flex: 1 }} numberOfLines={1}>Transaction Id {PackageData?.transaction_signature}</Text>
                         </View>
                     </View>
-                </View> : null}
+                </View> : <View style={{ padding: 10, backgroundColor: 'rgb(68,114,199)', marginBottom: 25, borderRadius: 15, width: '90%', elevation: 5, paddingVertical: 15, flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ fontWeight: 'bold', color: '#fff', textAlign: 'left', flex: 1, marginLeft: 10 }}>Free Calls</Text>
+                    <View style={{ borderRadius: 150, borderWidth: 1, borderColor: '#fff', padding: 5, width: 35, height: 35, alignItems: 'center', elevation: 5, backgroundColor: 'rgb(68,114,199)' }}>
+                        <Text style={{ fontWeight: 'bold', color: '#fff', textAlign: 'right', flex: 1, marginTop: 4 }} adjustsFontSizeToFit={true}>{AvailableCalls}</Text>
+                    </View>
+                </View>}
                 <FlatList
                     data={data}
                     style={{ marginTop: 0 }}

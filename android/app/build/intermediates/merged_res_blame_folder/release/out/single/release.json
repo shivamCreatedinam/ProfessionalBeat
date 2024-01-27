@@ -316,6 +316,10 @@
         "source": "com.createdinam.professionbeat.app-react-53:/drawable-mdpi/node_modules_reactnativeratings_dist_images_airbnbstar.png"
     },
     {
+        "merged": "com.createdinam.professionbeat.app-merged_res-58:/drawable-mdpi_src_assets_exp_logo.png.flat",
+        "source": "com.createdinam.professionbeat.app-react-53:/drawable-mdpi/src_assets_exp_logo.png"
+    },
+    {
         "merged": "com.createdinam.professionbeat.app-merged_res-58:/drawable-mdpi_src_assets_share.png.flat",
         "source": "com.createdinam.professionbeat.app-react-53:/drawable-mdpi/src_assets_share.png"
     },

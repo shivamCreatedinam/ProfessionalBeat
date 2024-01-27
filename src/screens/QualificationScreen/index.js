@@ -386,7 +386,7 @@ const QualificationScreen = () => {
                         text1: 'Congratulations!',
                         text2: result?.message,
                     });
-                    navigate.replace('HomeBottomNavigation');
+                    navigate.replace('TutorExperienceScreen');
                 } else {
                     setLoading(false)
                     Toast.show({

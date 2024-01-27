@@ -189,6 +189,7 @@ const SplashAppScreen = () => {
     });
 
     const DisplayIncomingCall = async (info: any) => {
+        console.error('initializeCallKeep DisplayIncomingCall:1');
         RNNotificationCall.displayNotification(
             '22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad',
             null,
@@ -202,11 +203,12 @@ const SplashAppScreen = () => {
                 answerText: 'Answer',
                 declineText: 'Decline',
                 notificationColor: 'colorAccent',
-                notificationSound: null, //raw
+                // notificationSound: null, //raw
                 //mainComponent:'MyReactNativeApp',//AppRegistry.registerComponent('MyReactNativeApp', () => CustomIncomingCall);
                 payload: info
             }
         );
+        console.error('initializeCallKeep DisplayIncomingCall:2');
     }
 
     async function onDisplayNotificationx(chids: any, title: any, body: any) {

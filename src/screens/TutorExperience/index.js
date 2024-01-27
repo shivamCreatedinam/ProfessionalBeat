@@ -173,6 +173,7 @@ const TutorExperienceScreen = () => {
         axios.request(config)
             .then((response) => {
                 setLoading(false)
+                console.log('getExperienceData', JSON.stringify(response.data?.data));
                 setExperienceDate(response.data?.data);
                 setExp(response.data?.data?.experience); // year
                 setCompanyOrigination(response.data?.data?.experiences[0]?.organization);
@@ -186,8 +187,7 @@ const TutorExperienceScreen = () => {
                 setCollageSchoolName(response.data?.data?.college);
                 setPercentageCgpa(response.data?.data?.percentage);
                 setUploadCertificate(response.data?.data?.certificate_image);
-                setSelectedSpokenId(response.data?.data?.experience === null ? '2' : '1');
-                console.log('getExperienceData', JSON.stringify(response.data?.data?.experiences[0]?.emp_type));
+                setSelectedSpokenId(response.data?.data?.experiences?.length === 0 ? '2' : '1');
                 if (Number(response.data?.data?.qualification_id) !== 0) {
                     setQualificationSelected(true);
                 }
@@ -284,55 +284,31 @@ const TutorExperienceScreen = () => {
     };
 
     const validationCheck = () => {
-        if (value === null || value === '0') {
-            showErrorMessage("Please Select Qualifications");
+        if (selectedId === null) {
+            showErrorMessage("Please Select Language Prefrences");
         } else {
-            if (CollageSchoolName === null) {
-                showErrorMessage("Please Enter Collage / School");
+            if (selectedSpokenId === null) {
+                showErrorMessage("Please Select Experience");
             } else {
-                if (FormetDate === null) {
-                    showErrorMessage("Please Select Passing Date & Year");
+                if (selectedSpokenId === '2') {
+                    // upload without exp
+                    // showErrorMessage("All Set Without Experience");
+                    updateOrExpereance();
                 } else {
-                    if (PercentageCgpa === null) {
-                        showErrorMessage("Please Enter Percentage / CGPA");
+                    if (CompanyOrigination === null) {
+                        showErrorMessage("Please Enter Company / Organization Name");
                     } else {
-                        if (UploadCertificate === null) {
-                            showErrorMessage("Please Upload Certificate Image");
+                        if (Designation === null) {
+                            showErrorMessage("Please Enter Your Designation");
                         } else {
-                            if (valueExprence === null) {
-                                showErrorMessage("Please Select Employment Type");
+                            if (DateExperience === null) {
+                                showErrorMessage("Please Enter Experience in years (Digits 1 to 10)");
                             } else {
-                                if (selectedId === null) {
-                                    showErrorMessage("Please Select Language Prefrences");
+                                if (uploadAFProfile === null) {
+                                    showErrorMessage("Please Upload Certificate Image");
                                 } else {
-                                    if (selectedSpokenId === null) {
-                                        showErrorMessage("Please Select Experience");
-                                    } else {
-                                        if (selectedSpokenId === '2') {
-                                            // upload without exp
-                                            // showErrorMessage("All Set Without Experience");
-                                            updateQualificationOrExpereance();
-                                        } else {
-                                            if (CompanyOrigination === null) {
-                                                showErrorMessage("Please Enter Company / Organization Name");
-                                            } else {
-                                                if (Designation === null) {
-                                                    showErrorMessage("Please Enter Your Designation");
-                                                } else {
-                                                    if (DateExperience === null) {
-                                                        showErrorMessage("Please Enter Experience in years (Digits 1 to 10)");
-                                                    } else {
-                                                        if (uploadAFProfile === null) {
-                                                            showErrorMessage("Please Upload Certificate Image");
-                                                        } else {
-                                                            showErrorMessage("All Set");
-                                                            updateOrExpereance();
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    showErrorMessage("All Set");
+                                    updateOrExpereance();
                                 }
                             }
                         }
@@ -348,70 +324,6 @@ const TutorExperienceScreen = () => {
             text1: 'Your ' + msg,
             text2: msg,
         });
-    }
-
-    const updateQualificationOrExpereance = async () => {
-        setLoading(true)
-        const valueX = await AsyncStorage.getItem('@autoUserGroup');
-        let data = JSON.parse(valueX)?.token;
-        var formdata = new FormData();
-        if (uploadImageFirst === true) {
-            formdata.append("certificate_image", { uri: UploadCertificate, name: 'file_certificate_photo.png', filename: 'file_certificate_photo.png', type: 'image/png' });
-        }
-        formdata.append('qualification_id', value);
-        formdata.append('qualification_title', valueName);
-        formdata.append('college', CollageSchoolName);
-        formdata.append('pass_year', FormetDate);
-        formdata.append('percentage', PercentageCgpa);
-        formdata.append('university', CollageSchoolName);
-        formdata.append('',);
-        console.log('uploadProfile', valueX)
-        var requestOptions = {
-            method: 'POST',
-            body: formdata,
-            redirect: 'follow',
-            headers: {
-                'Authorization': 'Bearer ' + data
-            }
-        };
-        console.log('form in 376', JSON.stringify(formdata))
-        fetch(globle.API_BASE_URL + 'tutor_step_three_update_profile', requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log("result", result)
-                if (result.status) {
-                    setLoading(false)
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Congratulations!',
-                        text2: result?.message,
-                    });
-                    if (selectedSpokenId === '1') {
-                        updateOrExpereance();
-                    } else {
-                        setLoading(false)
-                        navigate.replace('HomeBottomNavigation');
-                        setLoading(false)
-                    }
-                } else {
-                    setLoading(false)
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Something went wrong!',
-                        text2: result?.message,
-                    });
-                }
-            })
-            .catch((error) => {
-                console.log('error', error);
-                Toast.show({
-                    type: 'success',
-                    text1: 'Something went wrong!',
-                    text2: error,
-                });
-                setLoading(false)
-            });
-
     }
 
     const updateOrExpereance = async () => {
@@ -487,7 +399,7 @@ const TutorExperienceScreen = () => {
     }
 
     return (
-        <View style={{ paddingTop: 15, backgroundColor: '#F1F6F9', padding: 10 }}>
+        <View style={{ paddingTop: 15, backgroundColor: '#F1F6F9', padding: 10, height: Dimensions.get('screen').height }}>
             <Spinner
                 visible={loading}
                 textContent={'Loading...'}

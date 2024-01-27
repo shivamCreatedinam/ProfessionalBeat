@@ -536,7 +536,7 @@ const EditTutorProfileScreen = () => {
                         text1: 'Congratulations! Profile, Update!',
                         text2: result?.message,
                     });
-                    navigate.navigate('HomeBottomNavigation');
+                    navigate.replace('QualificationScreen');
                     // loadProfile();
                 } else {
                     setLoading(false);

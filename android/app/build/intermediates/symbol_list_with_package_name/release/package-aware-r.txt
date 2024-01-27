@@ -3392,6 +3392,7 @@ drawable src_assets_distance
 drawable src_assets_document_icon
 drawable src_assets_driver_profile
 drawable src_assets_english_speak
+drawable src_assets_exp_logo
 drawable src_assets_filter
 drawable src_assets_flat_icon_app_removebg
 drawable src_assets_green_check
