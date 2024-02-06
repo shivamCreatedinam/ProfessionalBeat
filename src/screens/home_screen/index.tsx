@@ -58,7 +58,7 @@ const HomeScreen = () => {
     const [ProfileData, setProfileData] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [alert, setAlert] = React.useState(false);
-    const [callingStatus,setCallingStatus] = React.useState(false);
+    const [callingStatus, setCallingStatus] = React.useState(false);
     const [userData, setTutorData] = React.useState(null);
     const [isFetching, setIsFetching] = React.useState(false);
     const [CompleteProfileStatus, setCompleteProfileStatus] = React.useState(false);
@@ -382,7 +382,7 @@ const HomeScreen = () => {
                         type: 'error',
                         text1: result?.message,
                         text2: result?.message + ' Please recharge first!',
-                    }); 
+                    });
                     setCallingStatus(false);
                 }
             })
@@ -659,7 +659,7 @@ const HomeScreen = () => {
     }
 
     return (
-        <View style={{ flex: 1, marginTop: 5, backgroundColor: '#F1F6F9', padding: 10 }}>
+        <View style={{ flex: 1, backgroundColor: '#F1F6F9', paddingLeft: 5, paddingRight: 5 }}>
             <Spinner
                 visible={loading}
                 textContent={'Loading...'}

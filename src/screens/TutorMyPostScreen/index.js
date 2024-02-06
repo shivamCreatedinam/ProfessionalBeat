@@ -15,6 +15,7 @@ import {
     Dimensions,
     FlatList,
     Image,
+    StatusBar,
 } from 'react-native';
 import axios from 'axios';
 import globle from '../../../common/env';
@@ -139,9 +140,7 @@ const TuitorMyPostScreen = () => {
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
                 <Text style={{ marginTop: 5, flex: 1 }}>Lang Eng {items?.item?.lang_eng}</Text>
-                {items?.item?.boards.map((items) => (
-                    <Text style={{ marginTop: 5 }}>Boards: {items?.board_name}</Text>
-                ))}
+                <Text style={{ marginTop: 5 }}>Fess: {items?.item?.fees}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
                 <Text style={{ marginTop: 5, fontWeight: 'bold', flex: 1 }}>Locality {items?.item?.locality}</Text>
@@ -152,17 +151,17 @@ const TuitorMyPostScreen = () => {
 
     return (
         <View style={{ backgroundColor: '#F1F6F9', flex: 1 }}>
-            <Spinner
-                visible={loading}
-                textContent={'Loading...'}
-                textStyle={{ color: 'black', fontSize: 12 }}
-            />
             <View style={{ padding: 15, alignItems: 'center', flexDirection: 'row', elevation: 5, backgroundColor: '#fff' }}>
                 <TouchableOpacity onPress={() => navigate.goBack()}>
                     <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../assets/left_icon.png')} />
                 </TouchableOpacity>
                 <Text style={{ textAlign: 'center', flex: 1, fontWeight: 'bold' }}>My Post</Text>
             </View>
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={{ color: 'black', fontSize: 12 }}
+            />
             <View style={{ margin: 10, borderRadius: 5 }}>
                 <FlatList
                     style={{}}
