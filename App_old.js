@@ -28,7 +28,7 @@ const App = () => {
   }, []);
 
   return (
-    <View style={{ height: Dimensions.get('screen').height - 20, width: Dimensions.get('screen').width, marginTop: StatusBar.currentHeight, backgroundColor: 'black' }}>
+    <View style={{ height: Dimensions.get('screen').height - 40, width: Dimensions.get('screen').width, marginTop: StatusBar.currentHeight, backgroundColor: 'black' }}>
       <StatusBar backgroundColor='black' barStyle='light-content' translucent />
       <StackNavigation />
       <Toast />
