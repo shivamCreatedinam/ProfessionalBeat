@@ -117,6 +117,9 @@ const CallingScreen = () => {
             if (Platform.OS === 'android') { await getPermission() };
             agoraEngineRef.current = createAgoraRtcEngine();
             const agoraEngine = agoraEngineRef.current;
+            await agoraEngineRef.current?.enableAudio();
+            await agoraEngineRef.current?.muteLocalAudioStream(false);
+            await agoraEngineRef.current?.setEnableSpeakerphone(true);
             agoraEngine.registerEventHandler({
                 onJoinChannelSuccess: () => {
                     showMessage('Successfully joined the channel ' + channelName);
@@ -124,7 +127,6 @@ const CallingScreen = () => {
                 },
                 onUserJoined: (_connection, Uid) => {
                     showMessage('Remote user joined with uid ' + Uid);
-                    agoraEngineRef.current?.muteRemoteAudioStream(Uid, false);
                     setRemoteUid(Uid);
                 },
                 onUserOffline: (_connection, Uid) => {
@@ -205,6 +207,8 @@ const CallingScreen = () => {
             agoraEngineRef.current?.joinChannel(token, channelName, uid, {
                 clientRoleType: ClientRoleType.ClientRoleBroadcaster,
             });
+            agoraEngineRef.current?.setEnableSpeakerphone(true);
+            agoraEngineRef.current?.muteRemoteAudioStream(uid, false);
         } catch (e) {
             console.log(e);
         }

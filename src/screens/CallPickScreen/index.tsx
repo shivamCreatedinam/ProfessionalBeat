@@ -142,6 +142,9 @@ const CallPickScreen = () => {
             if (Platform.OS === 'android') { await getPermission() };
             agoraEngineRef.current = createAgoraRtcEngine();
             const agoraEngine = agoraEngineRef.current;
+            await agoraEngineRef.current?.enableAudio();
+            await agoraEngineRef.current?.muteLocalAudioStream(false);
+            await agoraEngineRef.current?.setEnableSpeakerphone(true);
             agoraEngine.registerEventHandler({
                 onJoinChannelSuccess: () => {
                     showMessage('Successfully joined the channel ' + channelName);
