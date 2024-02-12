@@ -784,7 +784,7 @@ const UserHomeScreen = () => {
 
     // DisplayIncomingCall bottomSheet.current.show()
     return (
-        <View style={{ flex: 1, paddingTop: 20, backgroundColor: '#F1F6F9' }}>
+        <View style={{ flex: 1, paddingTop: 10, backgroundColor: '#F1F6F9' }}>
             <Spinner
                 visible={loading}
                 textContent={'Loading...'}

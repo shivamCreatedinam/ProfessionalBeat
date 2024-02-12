@@ -58,7 +58,7 @@ const NewPostScreen = () => {
     const [selected, setSelected] = React.useState([]);
     const [isFocusGender, setIsFocusGender] = React.useState(false);
     // state
-    const [State, setState] = React.useState([]);
+    const [State, setCountryState] = React.useState([]);
     const [value, setValue] = React.useState(null);
     const [isFocus, setIsFocus] = React.useState(false);
     // fees
@@ -81,19 +81,47 @@ const NewPostScreen = () => {
     const [valueToClasses, setValueToClasses] = React.useState(null);
     const [isFocusToClasses, setIsFocusToClasses] = React.useState(false);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            // whatever
-            // loadSessionStorage();
+    React.useEffect(() => {
+        navigate.addListener('focus', () => {
             getChildList();
             loadCcity();
-            // getQualificationData();
             getSubjectsData();
-            getClasses();
-            getBoard();
-            // getFeeList();
-        }, [])
-    );
+            // getClasses();
+            // getBoard();
+            // new multi response
+            // fetchData();
+        });
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const valueX = await AsyncStorage.getItem('@autoUserGroup');
+            let data = JSON.parse(valueX)?.token;
+            const config = { headers: { 'Authorization': 'Bearer ' + data } };
+
+            const [childResponse, cityResponse, subjectsResponse, classesResponse, boardResponse] = await Promise.all([
+                axios.get(globle.API_BASE_URL + 'get-parent-child', config),
+                axios.get(globle.API_BASE_URL + 'states', config),
+                axios.get(globle.API_BASE_URL + 'subjects', config),
+                axios.get(globle.API_BASE_URL + 'classes', config),
+                axios.get(globle.API_BASE_URL + 'boards', config)
+            ]);
+            console.log(JSON.stringify(childResponse));
+            setLoading(false);
+            setChildList(childResponse.data?.data);
+            setCountryState(cityResponse.data?.data);
+            setSubjectsData(subjectsResponse.data?.data);
+            setClasses(classesResponse.data?.data);
+            setBoard(boardResponse.data?.data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const getQualificationData = async () => {
         setLoading(true);
@@ -176,7 +204,7 @@ const NewPostScreen = () => {
         };
         axios.request(config)
             .then((response) => {
-                if (response.status) {
+                if (response.data.status) {
                     setLoading(false);
                     setChildList(response.data?.data);
                 } else {
@@ -203,8 +231,12 @@ const NewPostScreen = () => {
         };
         axios.request(config)
             .then((response) => {
-                setLoading(false);
-                setState(response.data?.data);
+                if (response.data.status) {
+                    setLoading(false);
+                    setCountryState(response.data?.data);
+                } else {
+                    setLoading(false);
+                }
             })
             .catch((error) => {
                 setLoading(false);
