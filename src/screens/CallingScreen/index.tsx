@@ -68,7 +68,11 @@ const CallingScreen = () => {
                     setCallStatus('connected');
                 } else if (snapshot.val()?.status === 2) {
                     console.warn('disconnectd_call');
-                    callDisconnected();
+                    if (snapshot.val()?.callPrevious === 1) {
+
+                    } else {
+                        callDisconnected();
+                    }
                 } else if (snapshot.val()?.status === 3) {
                     console.warn('mute_call');
                     setCallStatus('Mute Call');
@@ -82,6 +86,7 @@ const CallingScreen = () => {
     const callDisconnected = async () => {
         const userDetails = {
             status: 2,
+            callPrevious: 1,
         }
         database()
             .ref(RevertCxtUser)
@@ -119,6 +124,7 @@ const CallingScreen = () => {
                 },
                 onUserJoined: (_connection, Uid) => {
                     showMessage('Remote user joined with uid ' + Uid);
+                    agoraEngineRef.current?.muteRemoteAudioStream(Uid, false);
                     setRemoteUid(Uid);
                 },
                 onUserOffline: (_connection, Uid) => {
@@ -151,8 +157,8 @@ const CallingScreen = () => {
     React.useEffect(() => {
         setIsSwitched(IsSwitched);
         console.log('IsSwitched', IsSwitched);
-        agoraEngineRef.current?.setDefaultAudioRouteToSpeakerphone(false); // Disable the default audio route.
-        agoraEngineRef.current?.setEnableSpeakerphone(IsSwitched); // Enable or disable the speakerphone temporarily.
+        agoraEngineRef.current?.setDefaultAudioRouteToSpeakerphone(true); // Disable the default audio route.
+        agoraEngineRef.current?.setEnableSpeakerphone(true); // Enable or disable the speakerphone temporarily.
     }, [IsSwitched]);
 
     const leave = () => {

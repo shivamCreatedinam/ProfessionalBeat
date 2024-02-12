@@ -86,10 +86,6 @@ const NewPostScreen = () => {
             getChildList();
             loadCcity();
             getSubjectsData();
-            // getClasses();
-            // getBoard();
-            // new multi response
-            // fetchData();
         });
     }, []);
 

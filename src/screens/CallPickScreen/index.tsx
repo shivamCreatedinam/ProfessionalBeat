@@ -149,6 +149,7 @@ const CallPickScreen = () => {
                 },
                 onUserJoined: (_connection, Uid) => {
                     showMessage('Remote user joined with uid ' + Uid);
+                    agoraEngineRef.current?.muteRemoteAudioStream(Uid, false);
                     setRemoteUid(Uid);
                 },
                 onUserOffline: (_connection, Uid) => {
