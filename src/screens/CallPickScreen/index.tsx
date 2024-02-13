@@ -116,6 +116,7 @@ const CallPickScreen = () => {
     const callDisconnected = async () => {
         const userDetails = {
             status: 2,
+            callPrevious: 2
         }
         database()
             .ref(RevertCxtUser)
@@ -227,6 +228,7 @@ const CallPickScreen = () => {
             return;
         }
         try {
+            agoraEngineRef.current?.setClientRole('audience');
             agoraEngineRef.current?.setChannelProfile(
                 ChannelProfileType.ChannelProfileCommunication,
             );

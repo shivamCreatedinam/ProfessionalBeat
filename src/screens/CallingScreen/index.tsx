@@ -23,7 +23,8 @@ import {
 import database from '@react-native-firebase/database';
 import { useNavigation, useFocusEffect, useRoute } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useCountdown, CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+import { useCountdown, CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { useRequestAudioHook } from './../AudioCallSetup/hooks';
 import axios from 'axios';
 import { Image } from 'react-native-elements';
 
@@ -67,10 +68,10 @@ const CallingScreen = () => {
                     console.warn('picked_call');
                     setCallStatus('connected');
                 } else if (snapshot.val()?.status === 2) {
-                    console.warn('disconnectd_call');
                     if (snapshot.val()?.callPrevious === 1) {
-
+                        console.warn('disconnectd_call_1');
                     } else {
+                        console.warn('disconnectd_call_2');
                         callDisconnected();
                     }
                 } else if (snapshot.val()?.status === 3) {
@@ -104,6 +105,7 @@ const CallingScreen = () => {
 
     React.useEffect(() => {
         // Initialize Agora engine when the app starts 
+        useRequestAudioHook();
         setupVoiceSDKEngine();
         join()
         console.warn('routes-----------------------><><>', JSON.stringify(routes?.params))
@@ -134,9 +136,9 @@ const CallingScreen = () => {
                     setRemoteUid(0);
                 },
             });
-            agoraEngine.initialize({
-                appId: appId,
-            });
+            // agoraEngine.initialize({
+            //     appId: appId,
+            // });
         } catch (e) {
             console.log(e);
         }
@@ -201,6 +203,7 @@ const CallingScreen = () => {
             return;
         }
         try {
+            agoraEngineRef.current?.setClientRole('host');
             agoraEngineRef.current?.setChannelProfile(
                 ChannelProfileType.ChannelProfileCommunication,
             );

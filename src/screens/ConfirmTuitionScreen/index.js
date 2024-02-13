@@ -107,19 +107,19 @@ const ConfirmTuiitionScreen = () => {
         return (
             <View style={{ padding: 10, backgroundColor: '#fff', margin: 5, elevation: 5, borderRadius: 15 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ marginTop: 5, flex: 1 }}>From Class {items?.item?.from_class_name}</Text>
-                    <Text style={{ marginTop: 5 }}>To Class {items?.item?.to_class_name}</Text>
+                    <Text style={{ marginTop: 5, flex: 1 }}>#{items?.item?.short_id}{items?.item?.city}{items?.item?.user_id}</Text>
+                    <Text style={{ marginTop: 5 }}></Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
                     <Text style={{ marginTop: 5, flex: 1 }}>State {items?.item?.state_name}</Text>
                     <Text style={{ marginTop: 5 }}>City {items?.item?.city_name}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
-                    <Text style={{ marginTop: 5, flex: 1 }}> {items?.item?.comfirmed_by}</Text>
-                    <Text style={{ marginTop: 5 }}>Status {items?.item?.is_request_sent === 0 ? 'No Status' : items?.item?.is_confirmed}</Text>
+                    <Text style={{ marginTop: 5, flex: 1 }}>Locality {items?.item?.locality}</Text>
+                    <Text style={{ marginTop: 5, fontWeight: 'bold', color: items?.item?.is_confirmed === 'Confirmed' ? 'green' : 'red' }}>Status {items?.item?.is_request_sent === 0 ? 'No Status' : items?.item?.is_confirmed}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
-                    <Text style={{ marginTop: 5, fontWeight: 'bold', flex: 1 }}>Locality {items?.item?.locality}</Text>
+                    <Text style={{ marginTop: 5, fontWeight: 'bold', flex: 1 }}></Text>
                     <Text style={{ marginTop: 5 }}>{getTimesAgo(items?.item?.created_date)}</Text>
                 </View>
                 {items?.item?.is_confirmed === 'Confirmed' ? null :

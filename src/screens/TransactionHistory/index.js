@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, Alert, FlatList } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Alert, FlatList, TextInput, } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
+import prompt from 'react-native-prompt-android';
 import Toast from 'react-native-toast-message';
 import globle from '../../../common/env';
 import axios from 'axios';
@@ -10,13 +11,17 @@ import axios from 'axios';
 const TransactionHistoryScreen = () => {
 
     const navigate = useNavigation();
-    const [value, setValue] = React.useState('');
+    const [inputText, setInputText] = React.useState('');
+    const [value, setValue] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [isFetching, setIsFetching] = React.useState(false);
     const [DataTransaction, setDataTransaction] = React.useState([]);
 
     useFocusEffect(
-        React.useCallback(() => {
+        React.useCallback(async () => {
+            const valueX = await AsyncStorage.getItem('@autoUserGroup');
+            let data = JSON.parse(valueX);
+            setValue(data);
             getTransaction();
             return () => {
                 // Useful for cleanup functions
@@ -58,6 +63,7 @@ const TransactionHistoryScreen = () => {
             });
     }
 
+
     const saveFeedBack = () => {
         Alert.alert(
             'Delete Account',
@@ -96,6 +102,23 @@ const TransactionHistoryScreen = () => {
         )
     }
 
+    const showAlertWithTextInput = () => {
+        prompt(
+            'Enter password',
+            'Enter your password to claim your $1.5B in lottery winnings',
+            [
+                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                { text: 'OK', onPress: password => console.log('OK Pressed, password: ' + password) },
+            ],
+            {
+                type: 'numeric',
+                cancelable: false,
+                defaultValue: 'test',
+                placeholder: 'placeholder'
+            }
+        );
+    };
+
     // api/get-order-transation
 
     return (
@@ -105,12 +128,23 @@ const TransactionHistoryScreen = () => {
                 textContent={'Loading...'}
                 textStyle={{ color: 'black', fontSize: 12 }}
             />
-            <View style={{ padding: 20, alignItems: 'center', flexDirection: 'row' }}>
+            <View style={{ padding: 20, alignItems: 'center', flexDirection: 'row', elevation: 5, backgroundColor: '#ffffff' }}>
                 <TouchableOpacity onPress={() => navigate.goBack()}>
                     <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../assets/left_icon.png')} />
                 </TouchableOpacity>
                 <Text style={{ textAlign: 'center', flex: 1, fontWeight: 'bold' }}>Transaction History</Text>
             </View>
+            <View style={{ padding: 5, backgroundColor: '#fff', elevation: 5, borderRadius: 5, margin: 10, }}>
+                <Image style={{ height: 200, width: '100%', borderRadius: 5 }} source={require('../../assets/card_design.jpeg')} />
+                <View style={{ position: 'absolute', left: 35, bottom: 30 }}>
+                    <Text style={{ color: '#fff', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: 4, marginBottom: 4 }}>{value?.token.slice(value?.token.length - 15, -1)}</Text>
+                    <Text style={{ color: '#fff', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: 4, marginBottom: 4 }}>Ankur Mishra</Text>
+                    <Text style={{ color: '#fff', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: 4 }}>₹ 1000.00/-</Text>
+                </View>
+            </View>
+            <TouchableOpacity onPress={() => showAlertWithTextInput()} style={{ backgroundColor: 'rgb(68,114,199)', paddingVertical: 10, paddingHorizontal: 5, borderRadius: 5, marginLeft: 10, marginRight: 10 }}>
+                <Text style={{ textAlign: 'center', color: '#fff', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: 4 }}>Request Transfer</Text>
+            </TouchableOpacity>
             <View style={{ margin: 10, borderRadius: 5 }}>
                 <FlatList
                     style={{}}

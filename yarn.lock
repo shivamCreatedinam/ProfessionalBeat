@@ -8384,6 +8384,11 @@ react-native-debug@^3.0.0:
   dependencies:
     ms "0.7.1"
 
+react-native-dialog@^9.3.0:
+  version "9.3.0"
+  resolved "https://registry.npmjs.org/react-native-dialog/-/react-native-dialog-9.3.0.tgz"
+  integrity sha512-JEOJY/0AzTM9grIl0BL8o/IJPIJru7k5MPj9POTE9RRezUEtgn0YSvCpTlBtG0obWgOdzg2otMz1OQvMXS0wMQ==
+
 react-native-dropdown-picker@^5.4.6:
   version "5.4.6"
   resolved "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.6.tgz"
@@ -8621,6 +8626,11 @@ react-native-popup-dialog@^0.18.3:
     prop-types "^15.6.0"
     react-native-root-siblings "^3.2.1"
 
+react-native-prompt-android@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/react-native-prompt-android/-/react-native-prompt-android-1.1.0.tgz"
+  integrity sha512-4JoyEaT2ZnK9IH+tDFpbTiQBgva8UIFGQf4/Uw/tnEVWBERlVlzcs5B82T9BkeEhEqXhp89JaiSBnLWj30lciw==
+
 react-native-push-notification@^8.1.1:
   version "8.1.1"
   resolved "https://registry.npmjs.org/react-native-push-notification/-/react-native-push-notification-8.1.1.tgz"
@@ -8749,7 +8759,7 @@ react-native-vector-icons@*, react-native-vector-icons@^10.0.0, "react-native-ve
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, "react-native@^0.0.0-0 || 0.60 - 0.72 || 1000.0.0", react-native@^0.41.2, react-native@^0.60.0, "react-native@> 0.50.0", "react-native@>= 0.51", "react-native@>= 0.55.x", "react-native@>= 0.59", react-native@>=0.33, react-native@>=0.39.0, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.46, react-native@>=0.47.0, react-native@>=0.47.1, react-native@>=0.48.4, react-native@>=0.50.0, react-native@>=0.56, react-native@>=0.57.0, react-native@>=0.58.4, react-native@>=0.59.5, react-native@>=0.63.3, react-native@>=0.65.0, react-native@>=0.66.0, react-native@0.71.7:
+react-native@*, "react-native@^0.0.0-0 || 0.60 - 0.72 || 1000.0.0", react-native@^0.41.2, react-native@^0.60.0, "react-native@> 0.50.0", "react-native@>= 0.51", "react-native@>= 0.55.x", "react-native@>= 0.59", react-native@>=0.33, react-native@>=0.39.0, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.46, react-native@>=0.47.0, react-native@>=0.47.1, react-native@>=0.48.4, react-native@>=0.50.0, react-native@>=0.56, react-native@>=0.57.0, react-native@>=0.58.4, react-native@>=0.59.5, react-native@>=0.63.0, react-native@>=0.63.3, react-native@>=0.65.0, react-native@>=0.66.0, react-native@0.71.7:
   version "0.71.7"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.71.7.tgz"
   integrity sha512-Id6iRLS581fJMFGbBl1jP5uSmjExtGOvw5Gvh7694zISXjsRAsFMmU+izs0pyCLqDBoHK7y4BT7WGPGw693nYw==

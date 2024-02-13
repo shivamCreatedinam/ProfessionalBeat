@@ -1,6 +1,6 @@
 {
   "name": "professionbeat",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -54,6 +54,7 @@
     "react-native-background-timer": "^2.4.1",
     "react-native-callkeep": "^4.3.12",
     "react-native-countdown-circle-timer": "^3.2.1",
+    "react-native-dialog": "^9.3.0",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-dropdown-select-list": "^2.0.5",
     "react-native-element-dropdown": "^2.10.0",
@@ -85,6 +86,7 @@
     "react-native-permissions": "^3.8.4",
     "react-native-permissions-modal": "^0.0.1",
     "react-native-popup-dialog": "^0.18.3",
+    "react-native-prompt-android": "^1.1.0",
     "react-native-push-notification": "^8.1.1",
     "react-native-radio-buttons-group": "^3.0.2",
     "react-native-ratings": "^8.1.0",
