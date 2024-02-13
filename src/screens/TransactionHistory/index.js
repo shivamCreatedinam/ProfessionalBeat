@@ -104,17 +104,25 @@ const TransactionHistoryScreen = () => {
 
     const showAlertWithTextInput = () => {
         prompt(
-            'Enter password',
-            'Enter your password to claim your $1.5B in lottery winnings',
+            'Please Enter your UPI ID',
+            'Enter your UPI ID to claim your ₹ 1000.00 in Reward Points',
             [
                 { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                { text: 'OK', onPress: password => console.log('OK Pressed, password: ' + password) },
+                {
+                    text: 'OK', onPress: password => {
+                        Toast.show({
+                            type: 'success',
+                            text1: 'Submit UPI ID: ' + password + ' Successfully',
+                            text2: 'Payment Processing ... \n We will update you.',
+                        });
+                    }
+                },
             ],
             {
-                type: 'numeric',
+                type: 'plain-text',
                 cancelable: false,
-                defaultValue: 'test',
-                placeholder: 'placeholder'
+                defaultValue: '',
+                placeholder: 'Enter Your UPI ID...',
             }
         );
     };

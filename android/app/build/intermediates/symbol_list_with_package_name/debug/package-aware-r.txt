@@ -2242,6 +2242,7 @@ color primary_text_default_material_dark
 color primary_text_default_material_light
 color primary_text_disabled_material_dark
 color primary_text_disabled_material_light
+color prompt_color
 color purple
 color red
 color ripple_material_dark
@@ -3246,6 +3247,7 @@ drawable design_ic_visibility
 drawable design_ic_visibility_off
 drawable design_password_eye
 drawable design_snackbar_background
+drawable edit_text_cursor
 drawable googleg_disabled_color_18
 drawable googleg_standard_color_18
 drawable ic_alert
@@ -4107,6 +4109,7 @@ layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout dev_loading_view
+layout edit_text
 layout fps_view
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
@@ -4876,6 +4879,8 @@ style ShapeAppearanceOverlay_MaterialComponents_MaterialCalendar_Day
 style ShapeAppearanceOverlay_MaterialComponents_MaterialCalendar_Window_Fullscreen
 style ShapeAppearanceOverlay_MaterialComponents_MaterialCalendar_Year
 style ShapeAppearanceOverlay_MaterialComponents_TextInputLayout_FilledBox
+style ShimoAlertDialogStyle
+style ShimoEditTextStyle
 style SpinnerDatePickerDialog
 style SpinnerDatePickerDialogBase
 style SpinnerDatePickerStyle

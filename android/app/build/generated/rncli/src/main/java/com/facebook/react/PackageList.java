@@ -79,6 +79,8 @@ import com.faizal.OtpVerify.OtpVerifyPackage;
 import com.reactnativepagerview.PagerViewPackage;
 // react-native-permissions
 import com.zoontek.rnpermissions.RNPermissionsPackage;
+// react-native-prompt-android
+import im.shimo.react.prompt.RNPromptPackage;
 // react-native-push-notification
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 // react-native-razorpay
@@ -182,6 +184,7 @@ public class PackageList {
       new OtpVerifyPackage(),
       new PagerViewPackage(),
       new RNPermissionsPackage(),
+      new RNPromptPackage(),
       new ReactNativePushNotificationPackage(),
       new RazorpayPackage(),
       new RestartPackage(),
