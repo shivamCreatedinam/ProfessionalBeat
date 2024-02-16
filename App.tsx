@@ -58,11 +58,11 @@ const App = () => {
           showMessage('Successfully joined the channel ' + channelName);
           setIsJoined(true);
         },
-        onUserJoined: (_connection, Uid) => {
+        onUserJoined: (_connection: any, Uid: any) => {
           showMessage('Remote user joined with uid ' + Uid);
           setRemoteUid(Uid);
         },
-        onUserOffline: (_connection, Uid) => {
+        onUserOffline: (_connection: any, Uid: any) => {
           showMessage('Remote user left the channel. uid: ' + Uid);
           setRemoteUid(0);
         },

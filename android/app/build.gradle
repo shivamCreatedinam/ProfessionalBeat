@@ -163,6 +163,7 @@ dependencies {
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.squareup.okhttp3', module:'okhttp'
     }
+    implementation project(':react-native-otp-verify')
     implementation project(':react-native-razorpay')
     implementation project(':react-native-inappbrowser-reborn')
     implementation project(path: ":@react-native-firebase_app")

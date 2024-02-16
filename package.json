@@ -1,6 +1,6 @@
 {
   "name": "professionbeat",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -23,7 +23,7 @@
     "@react-native-community/geolocation": "^3.0.6",
     "@react-native-community/progress-view": "^1.4.1",
     "@react-native-firebase/analytics": "^17.5.0",
-    "@react-native-firebase/app": "^17.5.0",
+    "@react-native-firebase/app": "^18.7.3",
     "@react-native-firebase/auth": "^17.5.0",
     "@react-native-firebase/database": "^17.4.3",
     "@react-native-firebase/dynamic-links": "^18.7.3",
@@ -81,7 +81,7 @@
     "react-native-modalize": "^2.1.1",
     "react-native-otp": "^1.0.0",
     "react-native-otp-textinput": "^1.1.1",
-    "react-native-otp-verify": "^1.1.6",
+    "react-native-otp-verify": "^1.1.8",
     "react-native-pager-view": "^6.2.0",
     "react-native-permissions": "^3.8.4",
     "react-native-permissions-modal": "^0.0.1",

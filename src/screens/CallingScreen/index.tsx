@@ -9,6 +9,7 @@ import {
     Platform,
     Dimensions,
     TouchableOpacity,
+    Image
 } from 'react-native';
 import messaging, {
     FirebaseMessagingTypes,
@@ -21,12 +22,9 @@ import {
     ChannelProfileType,
 } from 'react-native-agora';
 import database from '@react-native-firebase/database';
-import { useNavigation, useFocusEffect, useRoute } from "@react-navigation/native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useCountdown, CountdownCircleTimer } from 'react-native-countdown-circle-timer';
-import { useRequestAudioHook } from './../AudioCallSetup/hooks';
-import axios from 'axios';
-import { Image } from 'react-native-elements';
+import { useNavigation, useFocusEffect, useRoute } from "@react-navigation/native"; 
+import { useCountdown, CountdownCircleTimer } from 'react-native-countdown-circle-timer'; 
+import axios from 'axios'; 
 
 const appId = '3d117a30950e4724a73c9f8b07aef599';
 // const channelName = 'calling_testing_tester';
@@ -104,8 +102,7 @@ const CallingScreen = () => {
     }
 
     React.useEffect(() => {
-        // Initialize Agora engine when the app starts 
-        useRequestAudioHook();
+        // Initialize Agora engine when the app starts  
         setupVoiceSDKEngine();
         join()
         console.warn('routes-----------------------><><>', JSON.stringify(routes?.params))
@@ -118,20 +115,17 @@ const CallingScreen = () => {
             // use the helper function to get permissions
             if (Platform.OS === 'android') { await getPermission() };
             agoraEngineRef.current = createAgoraRtcEngine();
-            const agoraEngine = agoraEngineRef.current;
-            await agoraEngineRef.current?.enableAudio();
-            await agoraEngineRef.current?.muteLocalAudioStream(false);
-            await agoraEngineRef.current?.setEnableSpeakerphone(true);
+            const agoraEngine = agoraEngineRef.current; 
             agoraEngine.registerEventHandler({
                 onJoinChannelSuccess: () => {
                     showMessage('Successfully joined the channel ' + channelName);
                     setIsJoined(true);
                 },
-                onUserJoined: (_connection, Uid) => {
+                onUserJoined: (_connection: any, Uid: any) => {
                     showMessage('Remote user joined with uid ' + Uid);
                     setRemoteUid(Uid);
                 },
-                onUserOffline: (_connection, Uid) => {
+                onUserOffline: (_connection: any, Uid: any) => {
                     showMessage('Remote user left the channel. uid: ' + Uid);
                     setRemoteUid(0);
                 },
@@ -276,24 +270,9 @@ const CallingScreen = () => {
                     </View> : null
                 }
                 <TouchableOpacity style={styles.button} onPress={leave}>
-                    <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginLeft: 8, marginTop: 8, tintColor: '#fff' }} source={require('../../assets/call_drop.png')} />
+                    <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginTop: 8, tintColor: '#fff' }} source={require('../../assets/call_drop.png')} />
                 </TouchableOpacity>
             </View>
-            {/* <View
-                style={styles.scroll}
-                contentContainerStyle={styles.scrollContainer}>
-                {isJoined ? (
-                    <Text>Local user uid: {uid}</Text>
-                ) : (
-                    <Text>Join a channel</Text>
-                )}
-                {isJoined && remoteUid !== 0 ? (
-                    <Text>Remote user uid: {remoteUid}</Text>
-                ) : (
-                    <Text>Waiting for a remote user to join</Text>
-                )}
-                <Text>{message}</Text>
-            </View> */}
         </SafeAreaView>
     );
 }

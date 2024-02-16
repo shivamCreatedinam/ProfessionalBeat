@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.createdinam.professionbeat.app-mergeDebugResources-56:/values/values.xml",
+            "outputFile": "com.createdinam.professionbeat.app-mergeDebugResources-59:/values/values.xml",
             "map": [
                 {
                     "source": "/Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-full-screen-notification-incoming-call/android/build/intermediates/packaged_res/debug/values/values.xml",
@@ -110,6 +110,23 @@
                     }
                 },
                 {
+                    "source": "/Users/apple/.gradle/caches/transforms-3/22f18fa17adf71534055a27d46a42707/transformed/jetified-firebase-messaging-23.4.0/res/values/values.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "81",
+                        "endOffsets": "132"
+                    },
+                    "to": {
+                        "startLines": "2195",
+                        "startColumns": "4",
+                        "startOffsets": "147137",
+                        "endColumns": "81",
+                        "endOffsets": "147214"
+                    }
+                },
+                {
                     "source": "/Users/apple/Documents/MyApps/ProfessionalBeat/node_modules/react-native-prompt-android/android/build/intermediates/packaged_res/debug/values/values.xml",
                     "from": {
                         "startLines": "2,5",
@@ -181,23 +198,6 @@
                         "endLines": "10421",
                         "endColumns": "24",
                         "endOffsets": "689664"
-                    }
-                },
-                {
-                    "source": "/Users/apple/.gradle/caches/transforms-3/eeb8b6d825fc36f2224fdbd96d99b021/transformed/jetified-firebase-messaging-23.1.2/res/values/values.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "81",
-                        "endOffsets": "132"
-                    },
-                    "to": {
-                        "startLines": "2195",
-                        "startColumns": "4",
-                        "startOffsets": "147137",
-                        "endColumns": "81",
-                        "endOffsets": "147214"
                     }
                 },
                 {
@@ -438,25 +438,6 @@
                     }
                 },
                 {
-                    "source": "/Users/apple/.gradle/caches/transforms-3/875e0a06bea457834cb4b29df207d036/transformed/fragment-1.3.6/res/values/values.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,10",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "55,112,177,241,411",
-                        "endLines": "2,3,4,9,13",
-                        "endColumns": "56,64,63,24,24",
-                        "endOffsets": "107,172,236,406,555"
-                    },
-                    "to": {
-                        "startLines": "1938,1974,2012,11217,11222",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "127272,129092,131064,731615,731785",
-                        "endLines": "1938,1974,2012,11221,11225",
-                        "endColumns": "56,64,63,24,24",
-                        "endOffsets": "127324,129152,131123,731780,731929"
-                    }
-                },
-                {
                     "source": "/Users/apple/.gradle/caches/transforms-3/24f6f0487fb4f32c279d13bbb9e262fd/transformed/jetified-lottie-5.1.1/res/values/values.xml",
                     "from": {
                         "startLines": "2,3,4",
@@ -473,6 +454,25 @@
                         "endLines": "338,1946,11530",
                         "endColumns": "62,46,24",
                         "endOffsets": "16762,127669,747797"
+                    }
+                },
+                {
+                    "source": "/Users/apple/.gradle/caches/transforms-3/8e2eb2a84500aad7833573946eb3f44b/transformed/fragment-1.5.7/res/values/values.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,10",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,112,177,241,411",
+                        "endLines": "2,3,4,9,13",
+                        "endColumns": "56,64,63,24,24",
+                        "endOffsets": "107,172,236,406,555"
+                    },
+                    "to": {
+                        "startLines": "1938,1974,2012,11217,11222",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "127272,129092,131064,731615,731785",
+                        "endLines": "1938,1974,2012,11221,11225",
+                        "endColumns": "56,64,63,24,24",
+                        "endOffsets": "127324,129152,131123,731780,731929"
                     }
                 },
                 {

@@ -132,6 +132,7 @@ const TutorCallHistoryScreen = () => {
                         callTokenOne: response?.data?.token1,
                         callTokenTwo: response?.data?.token2,
                     }
+                    // console.log(JSON.stringify(information));
                     setCallNotification(info, response?.data?.token1, response?.data?.channelName, information);
                     // navigate.navigate('CallingScreen', information);
                     // navigate.navigate('CallingScreen', information);
