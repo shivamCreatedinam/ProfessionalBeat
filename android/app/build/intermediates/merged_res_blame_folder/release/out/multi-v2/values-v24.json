@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.createdinam.professionbeat.app-mergeReleaseResources-56:/values-v24/values-v24.xml",
+            "outputFile": "com.createdinam.professionbeat.app-mergeReleaseResources-58:/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "/Users/apple/.gradle/caches/transforms-3/3ac078317e5851c7b35e0699f635d82c/transformed/appcompat-1.6.1/res/values-v24/values-v24.xml",
+                    "source": "/Users/apple/.gradle/caches/transforms-3/98f4b45047c382b2fe2408dad753bab3/transformed/appcompat-1.5.0/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

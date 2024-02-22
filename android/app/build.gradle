@@ -101,8 +101,8 @@ android {
         applicationId "com.createdinam.professionbeat"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 21
-        versionName "Tuitour Bot: 1.1.21"
+        versionCode 25
+        versionName "Tuitour Bot: 1.1.25"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -172,8 +172,7 @@ dependencies {
     implementation 'com.facebook.fresco:webpsupport:2.0.0'
     implementation project(':react-native-restart')
     implementation project(':react-native-share')
-    implementation project(':react-native-maps')
-    implementation project(':react-native-sensors')
+    implementation project(':react-native-maps') 
     implementation project(':react-native-callkeep')
     implementation project(':react-native-full-screen-notification-incoming-call')
     implementation project(':react-native-background-timer')

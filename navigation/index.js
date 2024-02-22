@@ -55,6 +55,7 @@ import ConfirmedTuitionScreen from '../src/screens/ConfirmedTuition';
 import CallPickScreen from '../src/screens/CallPickScreen';
 import TuitorMyPostScreen from '../src/screens/TutorMyPostScreen';
 import TutorExperienceScreen from '../src/screens/TutorExperience';
+import CashBackTransactionScreen from '../src/screens/CashBackScreen';
 // Theme.
 const MyTheme = {
     dark: false,
@@ -742,9 +743,18 @@ function StackNavigation() {
                         headerTintColor: '#fff',
                         headerTitleStyle: { fontWeight: 'bold', },
                     }} />
+                <Stack.Screen
+                    name="CashBackTransactionScreen"
+                    component={CashBackTransactionScreen}
+                    options={{
+                        title: 'CashBackTransactionScreen',
+                        headerStyle: { backgroundColor: 'black', },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: { fontWeight: 'bold', },
+                    }} />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
-export default StackNavigation; // TutorExperienceScreen
+export default StackNavigation; // CashBackTransactionScreen

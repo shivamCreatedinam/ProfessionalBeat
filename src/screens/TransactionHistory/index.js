@@ -22,12 +22,37 @@ const TransactionHistoryScreen = () => {
             const valueX = await AsyncStorage.getItem('@autoUserGroup');
             let data = JSON.parse(valueX);
             setValue(data);
+            loadProfile();
             getTransaction();
             return () => {
                 // Useful for cleanup functions
             };
         }, [])
     );
+
+    const loadProfile = async () => {
+        setLoading(true)
+        const valueX = await AsyncStorage.getItem('@autoUserGroup');
+        let data = JSON.parse(valueX)?.token;
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: globle.API_BASE_URL + 'getProfile',
+            headers: {
+                'Authorization': 'Bearer ' + data
+            }
+        };
+        console.log('Profile', config);
+        axios.request(config)
+            .then((response) => {
+                setLoading(false)
+                console.log('Profile', JSON.stringify(response?.data));
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error);
+            });
+    }
 
     const getTransaction = async () => {
         setLoading(true)

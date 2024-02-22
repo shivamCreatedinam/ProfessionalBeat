@@ -16,11 +16,7 @@ import {
     Image,
     TouchableOpacity,
     FlatList,
-} from 'react-native';
-import {
-    setUpdateIntervalForType,
-    SensorTypes,
-} from 'react-native-sensors';
+} from 'react-native'; 
 import * as geolib from 'geolib';
 import Modal from "react-native-modal";
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -39,9 +35,7 @@ import { locationPermission, getCurrentLocation } from '../../../common/helperFu
 import Loader from '../../../common/Loader';
 
 const { width, height } = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-
-setUpdateIntervalForType(SensorTypes.accelerometer, 15);
+const ASPECT_RATIO = width / height; 
 
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 const GOOGLE_MAP_KEY = 'AIzaSyDIpZFQnU2tms1EdAqK-H9K4PfNN17zLdc';

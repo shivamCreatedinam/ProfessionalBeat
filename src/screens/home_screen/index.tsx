@@ -351,7 +351,7 @@ const HomeScreen = () => {
 
 
     const setCallNotification = async (info: any, token: any, channelName: any, information: any) => {
-        console.log('setCallNotification', JSON.stringify(info))
+        console.log('setCallNotification', JSON.stringify(info));
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         const fcmToken = await messaging().getToken();
         AsyncStorage.setItem('@tokenKey', fcmToken);
@@ -365,17 +365,17 @@ const HomeScreen = () => {
             body: formdata,
             redirect: 'follow',
             headers: {
-                'Authorization': 'Bearer ' + data
+                'Authorization': 'Bearer ' + data,
             }
         };
-        console.log('setCallNotification', JSON.stringify(formdata))
+        console.log('setCallNotification', JSON.stringify(formdata));
         fetch('https://tuitionbot.com/Profession-beat/public/api/tutor_request_call_for_post', requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log('CallTuitorNotification----->', JSON.stringify(result))
                 if (result.status) {
                     setCallingStatus(false);
-                    console.log('inner_data:', JSON.stringify(info))
+                    console.log('inner_data:', JSON.stringify(info));
                     navigate.navigate('CallingScreen', information);
                 } else {
                     Toast.show({

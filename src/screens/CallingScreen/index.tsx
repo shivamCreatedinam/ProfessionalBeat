@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     Text,
     StyleSheet,
@@ -9,26 +9,15 @@ import {
     Platform,
     Dimensions,
     TouchableOpacity,
-    Image
+    Image,
 } from 'react-native';
-import messaging, {
-    FirebaseMessagingTypes,
-} from '@react-native-firebase/messaging';
 import Toast from 'react-native-toast-message';
-import {
-    createAgoraRtcEngine,
-    ClientRoleType,
-    IRtcEngine,
-    ChannelProfileType,
-} from 'react-native-agora';
+import { createAgoraRtcEngine, ClientRoleType, IRtcEngine, ChannelProfileType } from 'react-native-agora';
 import database from '@react-native-firebase/database';
-import { useNavigation, useFocusEffect, useRoute } from "@react-navigation/native"; 
-import { useCountdown, CountdownCircleTimer } from 'react-native-countdown-circle-timer'; 
-import axios from 'axios'; 
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import Globle from '../../../common/env';
 
-const appId = '3d117a30950e4724a73c9f8b07aef599';
-// const channelName = 'calling_testing_tester';
-// const token = '007eJxTYOjS0Kg69PfIbG2+OV/SL3xaFfHz+iyNmiWW4Qv3n7SomSmnwGCcYmhonmhsYGlqkGpibmSSaG6cbJlmkWRgnpiaZmppaTNzSWpDICODscZ2BkYoBPHFGJITc3Iy89LjS1KLS2B0ahEDAwBNPifB';
 const uid = 0;
 
 const CallingScreen = () => {
@@ -36,18 +25,18 @@ const CallingScreen = () => {
     const routes = useRoute();
     const navigate = useNavigation();
     const RevertCxtUser = `calling/${routes?.params?.callerId}`;
-    console.warn('CallingScreen_routes', JSON.stringify(routes.params?.Name))
+    console.warn('CallingScreen_routes', JSON.stringify(routes?.params?.Name))
     const agoraEngineRef = useRef<IRtcEngine>(); // Agora engine instance
     const [isJoined, setIsJoined] = useState(false); // Indicates if the local user has joined the channel
     const [IsSwitched, setIsSwitched] = useState(false); // Indicates if the local user has joined the channel
     const [isMuted, setisMuted] = useState(false);
     const [saveCallStatus, setCallStatus] = useState('');
     // dynamice token
-    const [token, setCallToken] = useState(routes.params?.callTokenOne);
-    const [channelName, setCallChannel] = useState(routes.params?.channelName);
-
-    const [callerName, setCallerName] = useState(routes.params?.Name);
-    const [remoteUid, setRemoteUid] = useState(0); // Uid of the remote user
+    const [token, setCallToken] = useState(routes?.params?.callTokenOne);
+    const [channelName, setCallChannel] = useState(routes?.params?.channelName);
+    const [counter, setCounter] = useState(0); // volume to the user
+    const [callerName, setCallerName] = useState(routes?.params?.Name);
+    const [remoteUid, setRemoteUid] = useState(1); // Uid of the remote user
     const [message, setMessage] = useState(''); // Message to the user
     const [volume, setVolume] = useState(10); // volume to the user 
 
@@ -65,13 +54,8 @@ const CallingScreen = () => {
                 } else if (snapshot.val()?.status === 1) {
                     console.warn('picked_call');
                     setCallStatus('connected');
-                } else if (snapshot.val()?.status === 2) {
-                    if (snapshot.val()?.callPrevious === 1) {
-                        console.warn('disconnectd_call_1');
-                    } else {
-                        console.warn('disconnectd_call_2');
-                        callDisconnected();
-                    }
+                } else if (snapshot.val()?.call_disconnect_parents === 1) {
+                    callDisconnected();
                 } else if (snapshot.val()?.status === 3) {
                     console.warn('mute_call');
                     setCallStatus('Mute Call');
@@ -85,7 +69,8 @@ const CallingScreen = () => {
     const callDisconnected = async () => {
         const userDetails = {
             status: 2,
-            callPrevious: 1,
+            call_disconnect_parents: 0,
+            call_disconnect_tuitor: 1
         }
         database()
             .ref(RevertCxtUser)
@@ -97,25 +82,26 @@ const CallingScreen = () => {
                     text1: 'Call Disconnected',
                     text2: 'Your Call is Disconnected Successfully!',
                 });
+                removeKeyDelete();
                 navigate.goBack();
             });
     }
 
-    React.useEffect(() => {
-        // Initialize Agora engine when the app starts  
-        setupVoiceSDKEngine();
-        join()
-        console.warn('routes-----------------------><><>', JSON.stringify(routes?.params))
-        // setCallNotification(routes.params?.callerId, routes.params?.callTokenOne, routes.params?.channelName);
-    });
+    const removeKeyDelete = async () => {
+        database().ref(RevertCxtUser).remove();
+    }
 
+    React.useEffect(() => {
+        // Initialize Agora engine when the app starts
+        setupVoiceSDKEngine();
+    });
 
     const setupVoiceSDKEngine = async () => {
         try {
             // use the helper function to get permissions
             if (Platform.OS === 'android') { await getPermission() };
             agoraEngineRef.current = createAgoraRtcEngine();
-            const agoraEngine = agoraEngineRef.current; 
+            const agoraEngine = agoraEngineRef.current;
             agoraEngine.registerEventHandler({
                 onJoinChannelSuccess: () => {
                     showMessage('Successfully joined the channel ' + channelName);
@@ -130,9 +116,9 @@ const CallingScreen = () => {
                     setRemoteUid(0);
                 },
             });
-            // agoraEngine.initialize({
-            //     appId: appId,
-            // });
+            agoraEngine.initialize({
+                appId: Globle.AppIdAgora,
+            });
         } catch (e) {
             console.log(e);
         }
@@ -148,25 +134,24 @@ const CallingScreen = () => {
 
     React.useEffect(() => {
         const engine = createAgoraRtcEngine();
-        engine.initialize({ appId: '2496c3f2c06d46f2a3b500bab9c45952' });
-        console.warn('All Setup Done')
+        engine.initialize({ appId: Globle.AppIdAgora });
+        console.warn('All Setup Done');
     }, []);
 
     React.useEffect(() => {
         setIsSwitched(IsSwitched);
         console.log('IsSwitched', IsSwitched);
-        agoraEngineRef.current?.setDefaultAudioRouteToSpeakerphone(true); // Disable the default audio route.
-        agoraEngineRef.current?.setEnableSpeakerphone(true); // Enable or disable the speakerphone temporarily.
+        agoraEngineRef.current?.setDefaultAudioRouteToSpeakerphone(false); // Disable the default audio route.
+        agoraEngineRef.current?.setEnableSpeakerphone(IsSwitched); // Enable or disable the speakerphone temporarily.
     }, [IsSwitched]);
 
     const leave = () => {
         try {
             agoraEngineRef.current?.leaveChannel();
-            callDisconnected();
             setRemoteUid(0);
             setIsJoined(false);
             showMessage('You left the channel');
-            navigate.goBack();
+            callDisconnected();
         } catch (e) {
             console.log(e);
         }
@@ -197,50 +182,37 @@ const CallingScreen = () => {
             return;
         }
         try {
-            agoraEngineRef.current?.setClientRole('host');
             agoraEngineRef.current?.setChannelProfile(
                 ChannelProfileType.ChannelProfileCommunication,
             );
             agoraEngineRef.current?.joinChannel(token, channelName, uid, {
                 clientRoleType: ClientRoleType.ClientRoleBroadcaster,
             });
-            agoraEngineRef.current?.setEnableSpeakerphone(true);
-            agoraEngineRef.current?.muteRemoteAudioStream(uid, false);
         } catch (e) {
             console.log(e);
         }
     };
-
-    const setMuteEnable = () => {
-        if (isMuted) {
-            setisMuted(false);
-            console.log('isMuted', false);
-            agoraEngineRef.current?.muteRemoteAudioStream(remoteUid, false);
-        } else {
-            setisMuted(true);
-            console.log('isMuted', true);
-            agoraEngineRef.current?.muteRemoteAudioStream(remoteUid, true);
-        }
-        const userDetails = {
-            status: isMuted === false ? 1 : 3,
-        }
-        database()
-            .ref(RevertCxtUser)
-            .update(userDetails)
-            .then(() => {
-                console.log('saveLoation', true);
-            });
-    }
-
-    const setSpeakerEnable = () => {
-
-    }
 
     return (
         <SafeAreaView style={styles.main}>
             <Image style={{ height: 120, width: 120, resizeMode: 'contain', marginTop: 90 }} source={require('../../assets/notification_logo.png')} />
             <Text style={styles.head}>{callerName}</Text>
             <Text style={[styles.head, { marginBottom: Dimensions.get('screen').width / 2, fontSize: 12, marginTop: 5 }]}>{saveCallStatus}</Text>
+            <ScrollView
+                style={[styles.scroll, { display: 'none' }]}
+                contentContainerStyle={styles.scrollContainer}>
+                {isJoined ? (
+                    <Text style={{ color: '#fff' }}>Local user uid: {uid}</Text>
+                ) : (
+                    <Text style={{ color: '#fff' }}>Join a channel</Text>
+                )}
+                {isJoined && remoteUid !== 0 ? (
+                    <Text style={{ color: '#fff' }}>Remote user uid: {remoteUid}</Text>
+                ) : (
+                    <Text style={{ color: '#fff' }}>Waiting for a remote user to join</Text>
+                )}
+                <Text style={{ color: '#fff' }}>{message}</Text>
+            </ScrollView>
             <View style={{ marginBottom: 40 }}>
                 <CountdownCircleTimer
                     isPlaying
@@ -259,19 +231,22 @@ const CallingScreen = () => {
                 </CountdownCircleTimer>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                {saveCallStatus === 'connected' || saveCallStatus === 'Mute Call' ?
+                {isJoined === true || saveCallStatus === 'connected' ?
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: 'green' }]} onPress={() => setMuteEnable()}>
+                        <TouchableOpacity style={[styles.button, { backgroundColor: 'green' }]} onPress={() => setisMuted(!isMuted)}>
                             <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginLeft: 8, marginTop: 8, tintColor: saveCallStatus === 'Mute Call' ? 'grey' : '#fff' }} source={require('../../assets/mute-icon.png')} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: 'orange' }]} onPress={() => setSpeakerEnable()}>
+                        <TouchableOpacity style={[styles.button, { backgroundColor: 'orange' }]} onPress={() => setIsSwitched(!IsSwitched)}>
                             <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginLeft: 8, marginTop: 8, tintColor: '#fff' }} source={require('../../assets/speaker_icon.png')} />
                         </TouchableOpacity>
-                    </View> : null
+                        <TouchableOpacity style={styles.button} onPress={leave}>
+                            <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginTop: 8, tintColor: '#fff' }} source={require('../../assets/call_drop.png')} />
+                        </TouchableOpacity>
+                    </View> :
+                    <TouchableOpacity style={[styles.button, { backgroundColor: 'rgb(68,114,199)' }]} onPress={join}>
+                        <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginTop: 8, }} source={require('../../assets/Oval.png')} />
+                    </TouchableOpacity>
                 }
-                <TouchableOpacity style={styles.button} onPress={leave}>
-                    <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginTop: 8, tintColor: '#fff' }} source={require('../../assets/call_drop.png')} />
-                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );

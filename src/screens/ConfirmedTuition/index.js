@@ -121,7 +121,7 @@ const ConfirmedTuitionScreen = () => {
                 <Text style={{ marginTop: 5 }}>{items?.item?.city_name}</Text>
                 <Text style={{ marginTop: 5 }}>{items?.item?.user_id}</Text>
                 <View>
-                    {items?.item?.child.map((items) =>
+                    {items?.item?.child?.map((items) =>
                         <Text>{items?.child_name}</Text>
                     )}
                 </View>

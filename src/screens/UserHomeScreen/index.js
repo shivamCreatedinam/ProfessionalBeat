@@ -536,9 +536,12 @@ const UserHomeScreen = () => {
                     campaign: 'banner',
                 },
             });
+
+            let message = `\n Name: ${info?.name}\n To class: ${info?.from_class_name}\n From class: ${info?.to_class_name}\n Fees: ${info?.fees}\n  Locality: ${info?.locality}\n  State: ${info?.state_name} \n\n`;
+
             const result = await Share.share({
                 title: 'Post By - ' + info?.name,
-                message: 'Share Post by : ' + info?.name + ', Please install this Tuitorbot app and stay safe, open post here : ' + link + ' , download app here from here :https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en',
+                message: 'Share Post by : ' + info?.name + ', \n Post Info : ' + message + ',    Please install this Tuitorbot app and stay safe, open post here : ' + link + ' , download app here from here :https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en',
                 url: 'https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en'
             });
             if (result.action === Share.sharedAction) {
@@ -593,6 +596,9 @@ const UserHomeScreen = () => {
     }
 
     const renderHistoryView = (item) => {
+
+        let exp = item?.item?.tutor_experience?.length > 0 ? item?.item?.tutor_experience[0]?.year + ' Years' : 'No Experience';
+
         return (
             <View style={{ backgroundColor: '#fff', marginBottom: 10, borderRadius: 10, padding: 15, margin: 5, borderRadius: 10, elevation: 5 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
@@ -633,8 +639,8 @@ const UserHomeScreen = () => {
                         <View style={{ flex: 1 }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/profile_icon.png')} /> */}
-                                <Text style={{ fontSize: 12 }}>Qualification: </Text>
-                                <Text style={{ fontSize: 12 }}>{item.item?.qualifications?.length === undefined ? 'No Qualification' : JSON.stringify(item.item?.qualifications)}</Text>
+                                <Text style={{ fontSize: 12 }}>Qualification:</Text>
+                                <Text style={{ fontSize: 12 }}>{item.item?.tutor_qualifications?.qualifications === '' ? 'No Qualification' : item.item?.tutor_qualifications?.qualifications}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {/* <Image style={{ width: 10, height: 10, resizeMode: 'contain', marginRight: 5 }} source={require('../../assets/presentation.png')} /> */}
@@ -660,7 +666,7 @@ const UserHomeScreen = () => {
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <Text style={{ fontSize: 12 }}>Experience: </Text>
-                                <Text style={{ fontSize: 12 }}>5+ years</Text>
+                                <Text style={{ fontSize: 12 }}>{exp}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <Text style={{ fontSize: 12 }}>City: </Text>

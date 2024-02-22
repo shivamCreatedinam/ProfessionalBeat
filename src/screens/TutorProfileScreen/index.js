@@ -206,6 +206,12 @@ const TutorProfileScreen = () => {
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/exp_logo.png')} />
                     <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Experience</Text>
                     <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: Number(data?.user?.tutor_is_update) === 4 ? null : 'red' }} source={require('../../assets/verified.png')} />
+                </TouchableOpacity> 
+                <TouchableOpacity
+                    onPress={() => navigate.navigate('CashBackTransactionScreen')}
+                    style={{ flexDirection: 'row', alignItems: 'center', padding: 15, alignSelf: 'flex-start', elevation: 5, backgroundColor: '#ffffff', width: '100%', borderRadius: 50, marginTop: 15 }}>
+                    <Image style={{ width: 20, height: 20, resizeMode: 'contain', tintColor: '#000000' }} source={require('../../assets/money-back.png')} />
+                    <Text style={{ fontWeight: 'bold', color: '#000000', marginLeft: 10, flex: 1 }}>Cashback & History</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => navigate.navigate('TransactionHistoryScreen')}

@@ -42,4 +42,5 @@ AppRegistry.registerComponent(appName, () => HeadlessCheck);
 const AppFake = () => {
     return null;
 }
+
 export default AppFake;

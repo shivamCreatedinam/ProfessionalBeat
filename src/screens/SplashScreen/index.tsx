@@ -113,8 +113,8 @@ const SplashAppScreen = () => {
 
     messaging().onMessage(async remoteMessage => {
         if (remoteMessage?.data?.call_token !== undefined) {
-            saveToCallInfo(remoteMessage?.data?.user_type, remoteMessage?.data?.tutor_ids, remoteMessage?.data?.id);
             onDisplayIncomingCall(remoteMessage);
+            saveToCallInfo(remoteMessage?.data?.user_type, remoteMessage?.data?.tutor_ids, remoteMessage?.data?.id);
         } else {
             onDisplayNotificationx(remoteMessage?.notification?.android?.channelId, remoteMessage?.notification?.title, remoteMessage?.notification?.body);
         }
@@ -164,7 +164,7 @@ const SplashAppScreen = () => {
         try {
             let caller_id = null;
             caller_id = uuid.v4();
-            console.log('calling....', JSON.stringify(info?.data));
+            console.log('calling....cc', JSON.stringify(info?.data));
             if (info?.data?.user_type === 'Parent') {
                 DisplayIncomingCall(info);
             } else {
@@ -189,7 +189,7 @@ const SplashAppScreen = () => {
     });
 
     const DisplayIncomingCall = async (info: any) => {
-        console.error('initializeCallKeep DisplayIncomingCall:1');
+        console.log('initializeCallKeep DisplayIncomingCall:1');
         RNNotificationCall.displayNotification(
             '22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad',
             null,

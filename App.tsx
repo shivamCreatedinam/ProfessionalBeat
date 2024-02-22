@@ -24,8 +24,8 @@ import {
 import Globle from './common/env';
 
 const appId = '3d117a30950e4724a73c9f8b07aef599';
-const channelName = 'callingtestingapp';
-const token = '007eJxTYDC880X9sYM4nyG/kO8cbea2ThWt47fL1ZV0y5XTZohpv1VgME4xNDRPNDawNDVINTE3Mkk0N062TLNIMjBPTE0ztbR82xya2hDIyBAduYCJkQECQXxBhuTEnJzMvPSS1OISIJVYUMDAAAB8OCCH';
+const channelName = 'KBC1';
+const token = '0063d117a30950e4724a73c9f8b07aef599IAASZYYa9rTp1u+8H8Fxaq5fOU/8zphU1JYxuwTakLMBdnJFxZQh39v0IgDhDgEAnCjTZQQAAQAs5dFlAwAs5dFlAgAs5dFlBAAs5dFl';
 const uid = 0;
 
 const App = () => {
@@ -86,7 +86,7 @@ const App = () => {
   React.useEffect(() => {
     const engine = createAgoraRtcEngine();
     engine.initialize({ appId: Globle.AppIdAgora });
-    console.warn('All Setup Done')
+    console.warn('All Setup Done');
   }, []);
 
   React.useEffect(() => {

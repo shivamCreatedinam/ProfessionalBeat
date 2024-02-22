@@ -669,7 +669,6 @@ attr indicatorColor
 attr indicatorDirectionCircular
 attr indicatorDirectionLinear
 attr indicatorInset
-attr indicatorName
 attr indicatorSize
 attr initialActivityCount
 attr insetForeground
@@ -2242,6 +2241,7 @@ color primary_text_default_material_dark
 color primary_text_default_material_light
 color primary_text_disabled_material_dark
 color primary_text_disabled_material_light
+color prompt_color
 color purple
 color red
 color ripple_material_dark
@@ -3246,6 +3246,7 @@ drawable design_ic_visibility
 drawable design_ic_visibility_off
 drawable design_password_eye
 drawable design_snackbar_background
+drawable edit_text_cursor
 drawable googleg_disabled_color_18
 drawable googleg_standard_color_18
 drawable ic_alert
@@ -3385,7 +3386,7 @@ drawable src_assets_call_block
 drawable src_assets_call_drop
 drawable src_assets_call_icon
 drawable src_assets_camera
-drawable src_assets_car_pointer
+drawable src_assets_card_design
 drawable src_assets_clock
 drawable src_assets_data_auto_rickshaw
 drawable src_assets_distance
@@ -3409,6 +3410,7 @@ drawable src_assets_loader_driver
 drawable src_assets_logo
 drawable src_assets_map_pointer
 drawable src_assets_medium
+drawable src_assets_moneyback
 drawable src_assets_muteicon
 drawable src_assets_navigation_icon
 drawable src_assets_no_record_found
@@ -4191,6 +4193,7 @@ layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout dev_loading_view
+layout edit_text
 layout fps_view
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
@@ -4555,9 +4558,6 @@ string ucrop_mutate_exception_hint
 string ucrop_rotate
 string ucrop_scale
 string wallet_buy_button_place_holder
-style AVLoadingIndicatorView
-style AVLoadingIndicatorView_Large
-style AVLoadingIndicatorView_Small
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light
 style Animation_AppCompat_Dialog
@@ -4960,6 +4960,8 @@ style ShapeAppearanceOverlay_MaterialComponents_MaterialCalendar_Day
 style ShapeAppearanceOverlay_MaterialComponents_MaterialCalendar_Window_Fullscreen
 style ShapeAppearanceOverlay_MaterialComponents_MaterialCalendar_Year
 style ShapeAppearanceOverlay_MaterialComponents_TextInputLayout_FilledBox
+style ShimoAlertDialogStyle
+style ShimoEditTextStyle
 style SpinnerDatePickerDialog
 style SpinnerDatePickerDialogBase
 style SpinnerDatePickerStyle
@@ -5705,7 +5707,6 @@ style ucrop_TextViewWidget
 style ucrop_TextViewWidgetText
 style ucrop_WrapperIconState
 style ucrop_WrapperRotateButton
-styleable AVLoadingIndicatorView indicatorColor indicatorName maxHeight maxWidth minHeight minWidth
 styleable ActionBar background backgroundSplit backgroundStacked contentInsetEnd contentInsetEndWithActions contentInsetLeft contentInsetRight contentInsetStart contentInsetStartWithNavigation customNavigationLayout displayOptions divider elevation height hideOnContentScroll homeAsUpIndicator homeLayout icon indeterminateProgressStyle itemPadding logo navigationMode popupTheme progressBarPadding progressBarStyle subtitle subtitleTextStyle title titleTextStyle
 styleable ActionBarLayout android_layout_gravity
 styleable ActionMenuItemView android_minWidth
@@ -5869,6 +5870,7 @@ styleable ucrop_AspectRatioTextView ucrop_artv_ratio_title ucrop_artv_ratio_x uc
 styleable ucrop_UCropView ucrop_aspect_ratio_x ucrop_aspect_ratio_y ucrop_circle_dimmed_layer ucrop_dimmed_color ucrop_frame_color ucrop_frame_stroke_size ucrop_grid_color ucrop_grid_column_count ucrop_grid_row_count ucrop_grid_stroke_size ucrop_show_frame ucrop_show_grid ucrop_show_oval_crop_frame
 xml data_extraction_rules
 xml file_provider_path
+xml ga_ad_services_config
 xml image_share_filepaths
 xml ivpusic_imagepicker_provider_paths
 xml rn_dev_preferences

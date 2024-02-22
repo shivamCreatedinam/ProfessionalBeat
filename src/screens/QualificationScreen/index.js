@@ -187,7 +187,7 @@ const QualificationScreen = () => {
                 setPercentageCgpa(response.data?.data?.percentage);
                 setUploadCertificate(response.data?.data?.certificate_image);
                 setSelectedSpokenId(response.data?.data?.experience === null ? '2' : '1');
-                console.log('getExperienceData', JSON.stringify(response.data?.data?.experiences[0]?.emp_type));
+                console.log('getExperienceData', JSON.stringify(response.data?.data));
                 if (Number(response.data?.data?.qualification_id) !== 0) {
                     setQualificationSelected(true);
                 }

@@ -69,8 +69,6 @@ import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.proyecto26.inappbrowser.RNInAppBrowserPackage;
 // react-native-invoke-app
 import com.codegulp.invokeapp.ReactNativeInvokeAppPackage;
-// react-native-loader-kit
-import com.reactnativeloaderkit.LoaderKitPackage;
 // react-native-maps
 import com.airbnb.android.react.maps.MapsPackage;
 // react-native-otp-verify
@@ -91,8 +89,6 @@ import com.reactnativerestart.RestartPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
 import com.swmansion.rnscreens.RNScreensPackage;
-// react-native-sensors
-import com.sensors.RNSensorsPackage;
 // react-native-share
 import cl.json.RNSharePackage;
 // react-native-svg
@@ -179,7 +175,6 @@ public class PackageList {
       new PickerPackage(),
       new RNInAppBrowserPackage(),
       new ReactNativeInvokeAppPackage(),
-      new LoaderKitPackage(),
       new MapsPackage(),
       new OtpVerifyPackage(),
       new PagerViewPackage(),
@@ -190,7 +185,6 @@ public class PackageList {
       new RestartPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
-      new RNSensorsPackage(),
       new RNSharePackage(),
       new SvgPackage(),
       new VectorIconsPackage(),

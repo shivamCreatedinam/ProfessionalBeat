@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.createdinam.professionbeat.app-mergeReleaseResources-56:/values-pa/values-pa.xml",
+            "outputFile": "com.createdinam.professionbeat.app-mergeReleaseResources-58:/values-pa/values-pa.xml",
             "map": [
                 {
                     "source": "/Users/apple/.gradle/caches/transforms-3/269c9f868e782062e0af1d1dc0411f28/transformed/jetified-play-services-base-18.1.0/res/values-pa/values.xml",
@@ -91,7 +91,7 @@
                     }
                 },
                 {
-                    "source": "/Users/apple/.gradle/caches/transforms-3/3ac078317e5851c7b35e0699f635d82c/transformed/appcompat-1.6.1/res/values-pa/values-pa.xml",
+                    "source": "/Users/apple/.gradle/caches/transforms-3/98f4b45047c382b2fe2408dad753bab3/transformed/appcompat-1.5.0/res/values-pa/values-pa.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
