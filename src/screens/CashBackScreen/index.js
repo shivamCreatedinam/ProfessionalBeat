@@ -148,6 +148,7 @@ const CashBackTransactionScreen = () => {
 
     const onRefresh = () => {
         getTransaction();
+        loadProfile();
     }
 
     const renderHistoryView = (items) => {
@@ -203,7 +204,7 @@ const CashBackTransactionScreen = () => {
                     <Text style={{ color: '#fff', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: 4 }}>₹ {DataProfile?.user?.wallet_amount}/-</Text>
                 </View>
             </View>
-            <TouchableOpacity disabled={DataProfile?.user?.status === 0 ? true : false} onPress={() => showAlertWithTextInput()} style={{ backgroundColor: DataProfile?.user?.status === 0 ? 'gray' : 'rgb(68,114,199)', paddingVertical: 15, paddingHorizontal: 5, borderRadius: 5, marginLeft: 10, marginRight: 10 }}>
+            <TouchableOpacity disabled={DataProfile?.user?.transfer_status === 1 ? true : false} onPress={() => showAlertWithTextInput()} style={{ backgroundColor: DataProfile?.user?.transfer_status === 1 ? 'gray' : 'rgb(68,114,199)', paddingVertical: 15, paddingHorizontal: 5, borderRadius: 5, marginLeft: 10, marginRight: 10 }}>
                 <Text style={{ textAlign: 'center', color: '#fff', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: 4, fontSize: 15 }}>Request Transfer</Text>
             </TouchableOpacity>
             <View style={{ margin: 10, borderRadius: 5 }}>

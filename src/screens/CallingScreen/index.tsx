@@ -10,6 +10,7 @@ import {
     Dimensions,
     TouchableOpacity,
     Image,
+    Animated
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { createAgoraRtcEngine, ClientRoleType, IRtcEngine, ChannelProfileType } from 'react-native-agora';
@@ -25,7 +26,6 @@ const CallingScreen = () => {
     const routes = useRoute();
     const navigate = useNavigation();
     const RevertCxtUser = `calling/${routes?.params?.callerId}`;
-    console.warn('CallingScreen_routes', JSON.stringify(routes?.params?.Name))
     const agoraEngineRef = useRef<IRtcEngine>(); // Agora engine instance
     const [isJoined, setIsJoined] = useState(false); // Indicates if the local user has joined the channel
     const [IsSwitched, setIsSwitched] = useState(false); // Indicates if the local user has joined the channel
@@ -38,7 +38,7 @@ const CallingScreen = () => {
     const [callerName, setCallerName] = useState(routes?.params?.Name);
     const [remoteUid, setRemoteUid] = useState(1); // Uid of the remote user
     const [message, setMessage] = useState(''); // Message to the user
-    const [volume, setVolume] = useState(10); // volume to the user 
+    const [volume, setVolume] = useState(10); // volume to the user  
 
     function showMessage(msg: string) {
         setMessage(msg);
@@ -243,8 +243,10 @@ const CallingScreen = () => {
                             <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginTop: 8, tintColor: '#fff' }} source={require('../../assets/call_drop.png')} />
                         </TouchableOpacity>
                     </View> :
-                    <TouchableOpacity style={[styles.button, { backgroundColor: 'rgb(68,114,199)' }]} onPress={join}>
-                        <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginTop: 8, }} source={require('../../assets/Oval.png')} />
+                    <TouchableOpacity style={[{ backgroundColor: 'rgb(68,114,199)', width: Dimensions.get('screen').width, height: Dimensions.get('screen').width }]} onPress={join}>
+                        <View>
+                            <Text style={{ textAlign: 'center', marginTop: Dimensions.get('screen').width / 4, fontWeight: 'bold', textTransform: 'capitalize', color: '#ffffff', fontSize: 22 }}>Click To Join Call</Text>
+                        </View>
                     </TouchableOpacity>
                 }
             </View>

@@ -39,10 +39,11 @@ const ConfirmedTuitionScreen = () => {
         };
         axios.request(config)
             .then((response) => {
+                console.log('get-post-for-conformation', JSON.stringify(response?.data?.data));
                 if (response?.data?.status) {
                     setLoading(false);
                     setDataTransaction(response?.data?.data);
-                    console.log('getNotificationUser', JSON.stringify(response?.data?.data));
+                    console.log('get-post-for-conformation', JSON.stringify(response?.data?.data));
                 } else {
                     setDataTransaction([]);
                     Toast.show({
@@ -91,7 +92,7 @@ const ConfirmedTuitionScreen = () => {
                     });
                     getTransaction();
                 } else {
-                    setLoading(false)
+                    setLoading(false);
                     Toast.show({
                         type: 'success',
                         text1: 'Something went wrong!',
@@ -112,10 +113,9 @@ const ConfirmedTuitionScreen = () => {
 
     const renderHistoryView = (items) => {
 
-
         return (
             <View style={{ padding: 10, backgroundColor: '#fff', margin: 5, elevation: 5, borderRadius: 15 }}>
-                <Text style={{ marginTop: 5 }}>{items?.item?.locality}</Text>
+                <Text style={{ marginTop: 5 }}>{items?.item?.locality} -- {items?.item?.posted_by}</Text>
                 <Text style={{ marginTop: 5 }}>{items?.item?.created_date}</Text>
                 <Text style={{ marginTop: 5 }}>{items?.item?.state_name}</Text>
                 <Text style={{ marginTop: 5 }}>{items?.item?.city_name}</Text>

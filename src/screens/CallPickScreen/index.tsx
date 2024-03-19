@@ -266,8 +266,10 @@ const CallPickScreen = () => {
                 <TouchableOpacity style={styles.button} onPress={leave}>
                     <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginLeft: 8, marginTop: 8, tintColor: '#fff' }} source={require('../../assets/call_drop.png')} />
                 </TouchableOpacity>
-            </View> : <TouchableOpacity style={[styles.button, { backgroundColor: 'rgb(68,114,199)' }]} onPress={join}>
-                <Image style={{ width: 40, height: 40, alignSelf: 'center', alignContent: 'center', marginTop: 8, marginLeft: 7 }} source={require('../../assets/Oval.png')} />
+            </View> : <TouchableOpacity style={[{ backgroundColor: 'rgb(68,114,199)', width: Dimensions.get('screen').width, height: Dimensions.get('screen').width }]} onPress={join}>
+                <View>
+                    <Text style={{ textAlign: 'center', marginTop: Dimensions.get('screen').width / 4, fontWeight: 'bold', textTransform: 'capitalize', color: '#ffffff', fontSize: 22 }}>Click To Join Call</Text>
+                </View>
             </TouchableOpacity>}
         </SafeAreaView>
     );

@@ -167,7 +167,7 @@ const TransactionHistoryScreen = () => {
                 </TouchableOpacity>
                 <Text style={{ textAlign: 'center', flex: 1, fontWeight: 'bold' }}>Transaction History</Text>
             </View>
-            <View style={{ padding: 5, backgroundColor: '#fff', elevation: 5, borderRadius: 5, margin: 10, }}>
+            {/* <View style={{ padding: 5, backgroundColor: '#fff', elevation: 5, borderRadius: 5, margin: 10, }}>
                 <Image style={{ height: 200, width: '100%', borderRadius: 5 }} source={require('../../assets/card_design.jpeg')} />
                 <View style={{ position: 'absolute', left: 35, bottom: 30 }}>
                     <Text style={{ color: '#fff', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: 4, marginBottom: 4 }}>{value?.token.slice(value?.token.length - 15, -1)}</Text>
@@ -177,7 +177,7 @@ const TransactionHistoryScreen = () => {
             </View>
             <TouchableOpacity onPress={() => showAlertWithTextInput()} style={{ backgroundColor: 'rgb(68,114,199)', paddingVertical: 10, paddingHorizontal: 5, borderRadius: 5, marginLeft: 10, marginRight: 10 }}>
                 <Text style={{ textAlign: 'center', color: '#fff', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: 4 }}>Request Transfer</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <View style={{ margin: 10, borderRadius: 5 }}>
                 <FlatList
                     style={{}}

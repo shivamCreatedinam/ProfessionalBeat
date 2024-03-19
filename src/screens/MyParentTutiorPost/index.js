@@ -60,10 +60,10 @@ const MyTuitorPostScreen = () => {
                 'Authorization': 'Bearer ' + data
             }
         };
-        console.log('getNotificationUser', JSON.stringify(config));
+        console.log('get-tutor-shortlisted-post', JSON.stringify(config));
         axios.request(config)
             .then((response) => {
-                console.log('getNotificationUser', JSON.stringify(response?.data));
+                console.log('get-tutor-shortlisted-post', JSON.stringify(response?.data));
                 if (response?.data?.status) {
                     setLoading(false);
                     setDataTransaction(response?.data?.data);
@@ -124,7 +124,7 @@ const MyTuitorPostScreen = () => {
     const renderHistoryView = (items) => {
         return (<View style={{ display: items?.item?.is_confirmed !== "Confirmed" ? 'none' : 'flex', padding: 10, backgroundColor: '#fff', margin: 5, elevation: 5, borderRadius: 15 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ marginTop: 5, flex: 1 }}>From Class {items?.item?.from_class_name}</Text>
+                <Text style={{ marginTop: 5, flex: 1 }}>From Class {items?.item?.from_class_name} {items?.item?.posted_by}</Text>
                 <Text style={{ marginTop: 5 }}>To Class {items?.item?.to_class_name}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
