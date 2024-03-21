@@ -42,23 +42,6 @@
                     }
                 },
                 {
-                    "source": "/Users/apple/.gradle/caches/transforms-3/708dc108e7e6b211b5cd923e1383f982/transformed/jetified-checkout-1.6.36/res/values/values.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "38",
-                        "endOffsets": "89"
-                    },
-                    "to": {
-                        "startLines": "548",
-                        "startColumns": "4",
-                        "startOffsets": "28227",
-                        "endColumns": "38",
-                        "endOffsets": "28261"
-                    }
-                },
-                {
                     "source": "/Users/apple/.gradle/caches/transforms-3/15a57b7be4a044055cfebf45f345142e/transformed/jetified-play-services-basement-18.2.0/res/values/values.xml",
                     "from": {
                         "startLines": "4,7",
@@ -530,6 +513,23 @@
                         "startOffsets": "130834",
                         "endColumns": "53",
                         "endOffsets": "130883"
+                    }
+                },
+                {
+                    "source": "/Users/apple/.gradle/caches/transforms-3/53433355eee6f282acbf059a99b7b36d/transformed/jetified-checkout-1.6.37/res/values/values.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "38",
+                        "endOffsets": "89"
+                    },
+                    "to": {
+                        "startLines": "548",
+                        "startColumns": "4",
+                        "startOffsets": "28227",
+                        "endColumns": "38",
+                        "endOffsets": "28261"
                     }
                 },
                 {

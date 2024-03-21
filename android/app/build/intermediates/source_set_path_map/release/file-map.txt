@@ -18,11 +18,11 @@ com.createdinam.professionbeat.app-lifecycle-runtime-2.5.1-16 /Users/apple/.grad
 com.createdinam.professionbeat.app-jetified-play-services-wallet-18.1.3-17 /Users/apple/.gradle/caches/transforms-3/51523299b862454926548e78f123f226/transformed/jetified-play-services-wallet-18.1.3/res
 com.createdinam.professionbeat.app-lifecycle-viewmodel-2.5.1-18 /Users/apple/.gradle/caches/transforms-3/525cd94c924e4fa8c93f271c691d8d83/transformed/lifecycle-viewmodel-2.5.1/res
 com.createdinam.professionbeat.app-jetified-react-android-0.71.7-release-19 /Users/apple/.gradle/caches/transforms-3/5303f395dbcbe419487fba8ca36bccb8/transformed/jetified-react-android-0.71.7-release/res
-com.createdinam.professionbeat.app-jetified-BlurView-version-2.0.3-20 /Users/apple/.gradle/caches/transforms-3/544822f332a9397e8683f85b19cdffd5/transformed/jetified-BlurView-version-2.0.3/res
-com.createdinam.professionbeat.app-browser-1.4.0-21 /Users/apple/.gradle/caches/transforms-3/58f201ae8d58e6730b260f80337be765/transformed/browser-1.4.0/res
-com.createdinam.professionbeat.app-jetified-startup-runtime-1.1.1-22 /Users/apple/.gradle/caches/transforms-3/5d15338c672fb5d4d342963a817de029/transformed/jetified-startup-runtime-1.1.1/res
-com.createdinam.professionbeat.app-jetified-activity-1.5.1-23 /Users/apple/.gradle/caches/transforms-3/68aaa3b3c91bcf2b138c4883eba92710/transformed/jetified-activity-1.5.1/res
-com.createdinam.professionbeat.app-jetified-checkout-1.6.36-24 /Users/apple/.gradle/caches/transforms-3/708dc108e7e6b211b5cd923e1383f982/transformed/jetified-checkout-1.6.36/res
+com.createdinam.professionbeat.app-jetified-checkout-1.6.37-20 /Users/apple/.gradle/caches/transforms-3/53433355eee6f282acbf059a99b7b36d/transformed/jetified-checkout-1.6.37/res
+com.createdinam.professionbeat.app-jetified-BlurView-version-2.0.3-21 /Users/apple/.gradle/caches/transforms-3/544822f332a9397e8683f85b19cdffd5/transformed/jetified-BlurView-version-2.0.3/res
+com.createdinam.professionbeat.app-browser-1.4.0-22 /Users/apple/.gradle/caches/transforms-3/58f201ae8d58e6730b260f80337be765/transformed/browser-1.4.0/res
+com.createdinam.professionbeat.app-jetified-startup-runtime-1.1.1-23 /Users/apple/.gradle/caches/transforms-3/5d15338c672fb5d4d342963a817de029/transformed/jetified-startup-runtime-1.1.1/res
+com.createdinam.professionbeat.app-jetified-activity-1.5.1-24 /Users/apple/.gradle/caches/transforms-3/68aaa3b3c91bcf2b138c4883eba92710/transformed/jetified-activity-1.5.1/res
 com.createdinam.professionbeat.app-transition-1.2.0-25 /Users/apple/.gradle/caches/transforms-3/72243880e567251249f267f83edd6087/transformed/transition-1.2.0/res
 com.createdinam.professionbeat.app-jetified-core-ktx-1.9.0-26 /Users/apple/.gradle/caches/transforms-3/760674718b6a0767b1094b411f19fc4e/transformed/jetified-core-ktx-1.9.0/res
 com.createdinam.professionbeat.app-jetified-otpless-android-sdk-2.1.7-27 /Users/apple/.gradle/caches/transforms-3/7609b9faa7380f9fcba826b3fd88b6f3/transformed/jetified-otpless-android-sdk-2.1.7/res

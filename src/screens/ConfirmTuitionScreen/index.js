@@ -119,7 +119,7 @@ const ConfirmTuiitionScreen = () => {
                     <Text style={{ marginTop: 5, fontWeight: 'bold', color: items?.item?.is_confirmed === 'Confirmed' ? 'green' : 'red' }}>Status {items?.item?.is_request_sent === 0 ? 'No Status' : items?.item?.is_confirmed}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
-                    <Text style={{ marginTop: 5, fontWeight: 'bold', flex: 1 }}></Text>
+                    <Text style={{ marginTop: 5, fontWeight: 'bold', flex: 1 }}>Name: {items?.item?.posted_by}</Text>
                     <Text style={{ marginTop: 5 }}>{getTimesAgo(items?.item?.created_date)}</Text>
                 </View>
                 {items?.item?.is_confirmed === 'Confirmed' ? null :

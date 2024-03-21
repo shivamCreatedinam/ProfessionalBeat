@@ -104,6 +104,7 @@ const CallPickScreen = () => {
                     text2: 'Your Call is Disconnected Successfully!',
                 });
             });
+        leave();
         removeKeyDelete();
         navigate.goBack();
     }

@@ -122,33 +122,34 @@ const MyTuitorPostScreen = () => {
     }
 
     const renderHistoryView = (items) => {
-        return (<View style={{ display: items?.item?.is_confirmed !== "Confirmed" ? 'none' : 'flex', padding: 10, backgroundColor: '#fff', margin: 5, elevation: 5, borderRadius: 15 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ marginTop: 5, flex: 1 }}>From Class {items?.item?.from_class_name} {items?.item?.posted_by}</Text>
-                <Text style={{ marginTop: 5 }}>To Class {items?.item?.to_class_name}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
-                <Text style={{ marginTop: 5, flex: 1 }}>State {items?.item?.state_name}</Text>
-                <Text style={{ marginTop: 5 }}>City {items?.item?.city_name}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
-                <Text style={{ marginTop: 5, flex: 1 }}> {items?.item?.comfirmed_by}</Text>
-                <Text style={{ marginTop: 5 }}>Status {items?.item?.is_request_sent === 0 ? 'No Status' : items?.item?.is_confirmed}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
-                <Text style={{ marginTop: 5, fontWeight: 'bold', flex: 1 }}>Locality {items?.item?.locality}</Text>
-                <Text style={{ marginTop: 5 }}>{getTimesAgo(items?.item?.created_date)}</Text>
-            </View>
-            {items?.item?.is_confirmed === 'Confirmed' ? null :
+        return (
+            <View style={{ display: items?.item?.is_confirmed !== "Confirmed" ? 'none' : 'flex', padding: 10, backgroundColor: '#fff', margin: 5, elevation: 5, borderRadius: 15 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
-                    <TouchableOpacity
-                        disabled={items?.item?.is_request_sent === 0 ? false : true}
-                        onPress={() => sendConfirmationRequest(items?.item?.short_id)}
-                        style={{ flex: 1, padding: 10, marginRight: 5, backgroundColor: items?.item?.is_request_sent === 0 ? 'green' : 'grey', elevation: 5, borderRadius: 5 }}>
-                        <Text style={{ textAlign: 'center', color: '#ffffff', textTransform: 'uppercase' }}>Send Request</Text>
-                    </TouchableOpacity>
-                </View>}
-        </View>)
+                    <Text style={{ marginTop: 5, flex: 1, fontWeight: 'bold' }}>Name: {items?.item?.posted_by}</Text>
+                    <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Status {items?.item?.is_request_sent === 0 ? 'No Status' : items?.item?.is_confirmed}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
+                    <Text style={{ marginTop: 5, flex: 1 }}>From Class {items?.item?.from_class_name}</Text>
+                    <Text style={{ marginTop: 5 }}>To Class {items?.item?.to_class_name}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
+                    <Text style={{ marginTop: 5, flex: 1 }}>State {items?.item?.state_name}</Text>
+                    <Text style={{ marginTop: 5 }}>City {items?.item?.city_name}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
+                    <Text style={{ marginTop: 5, fontWeight: 'bold', flex: 1 }}>Locality {items?.item?.locality}</Text>
+                    <Text style={{ marginTop: 5 }}>{getTimesAgo(items?.item?.created_date)}</Text>
+                </View>
+                {items?.item?.is_confirmed === 'Confirmed' ? null :
+                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
+                        <TouchableOpacity
+                            disabled={items?.item?.is_request_sent === 0 ? false : true}
+                            onPress={() => sendConfirmationRequest(items?.item?.short_id)}
+                            style={{ flex: 1, padding: 10, marginRight: 5, backgroundColor: items?.item?.is_request_sent === 0 ? 'green' : 'grey', elevation: 5, borderRadius: 5 }}>
+                            <Text style={{ textAlign: 'center', color: '#ffffff', textTransform: 'uppercase' }}>Send Request</Text>
+                        </TouchableOpacity>
+                    </View>}
+            </View>)
     }
 
     return (

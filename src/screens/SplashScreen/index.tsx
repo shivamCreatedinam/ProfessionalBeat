@@ -179,8 +179,8 @@ const SplashAppScreen = () => {
     RNNotificationCall.addEventListener('answer', (data: any) => {
         RNNotificationCall.backToApp();
         const { callUUID, payload } = data;
-        console.log('press answer', callUUID, payload);
-        navigation.navigate('CallPickScreen', payload);
+        console.log('press answer______>', callUUID, payload);
+        // navigation.navigate('CallPickScreen', payload);
     });
 
     RNNotificationCall.addEventListener('endCall', (data: any) => {
