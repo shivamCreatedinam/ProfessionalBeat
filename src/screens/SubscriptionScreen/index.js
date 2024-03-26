@@ -252,7 +252,7 @@ const SubscriptionScreen = () => {
             description: 'Credits towards consultation',
             image: 'https://i.imgur.com/3g7nmJC.png',
             currency: 'INR',
-            key: 'rzp_test_ab2tkx2iprYBt8', // Your api key
+            key: 'rzp_live_HUhCqiMf9hdlMA', // Your api key
             amount: (Number(info?.amount) * 100),
             order_id: razorpayOrderId,
             name: 'foo',

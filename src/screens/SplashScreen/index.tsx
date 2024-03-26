@@ -114,7 +114,6 @@ const SplashAppScreen = () => {
     messaging().onMessage(async remoteMessage => {
         if (remoteMessage?.data?.call_token !== undefined) {
             onDisplayIncomingCall(remoteMessage);
-            saveToCallInfo(remoteMessage?.data?.user_type, remoteMessage?.data?.tutor_ids, remoteMessage?.data?.id);
         } else {
             onDisplayNotificationx(remoteMessage?.notification?.android?.channelId, remoteMessage?.notification?.title, remoteMessage?.notification?.body);
         }
@@ -130,7 +129,7 @@ const SplashAppScreen = () => {
         }
     });
 
-    const saveToCallInfo = async (user_type: any, user_id: any, post_id: any) => {
+    const saveToCallInfo = async (user_type: any, user_id: any, post_id: any, payload: any) => {
         try {
             const valueX = await AsyncStorage.getItem('@autoUserGroup');
             let data = JSON.parse(valueX)?.token;
@@ -151,6 +150,7 @@ const SplashAppScreen = () => {
                 .then(response => response.json())
                 .then(result => {
                     console.log('saveToCallInfo', JSON.stringify(result));
+                    navigation.navigate('CallPickScreen', payload);
                 })
                 .catch((error) => {
                     console.log('error--->', error);
@@ -180,7 +180,7 @@ const SplashAppScreen = () => {
         RNNotificationCall.backToApp();
         const { callUUID, payload } = data;
         console.log('press answer______>', callUUID, payload);
-        // navigation.navigate('CallPickScreen', payload);
+        saveToCallInfo(payload?.data?.user_type, payload?.data?.tutor_ids, payload?.data?.id, payload);
     });
 
     RNNotificationCall.addEventListener('endCall', (data: any) => {
