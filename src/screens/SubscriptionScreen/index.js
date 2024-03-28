@@ -32,6 +32,7 @@ const SubscriptionScreen = () => {
 
     const navigate = useNavigation();
     const [data, setData] = React.useState({});
+    const [UserData, setUserData] = React.useState(null);
     const [PackageData, setPackageData] = React.useState(null);
     const [reffrelCode, setReffrelCode] = React.useState('');
     const [loading, setLoading] = React.useState(false);
@@ -71,6 +72,7 @@ const SubscriptionScreen = () => {
             .then((response) => {
                 let reffrelcode = response?.data?.user?.user_id;
                 setReffrelCode(reffrelcode);
+                setUserData(response?.data?.user);
                 setAvailableCalls(response?.data?.user?.free_call);
                 console.log('loadProfile______________xx>', JSON.stringify(response?.data?.user?.free_call));
             })
@@ -205,8 +207,8 @@ const SubscriptionScreen = () => {
     }
 
     const GenerateOrder = async (fullInfo) => {
-        console.log('GenerateOrder', JSON.stringify(fullInfo));
-        setLoading(true)
+        console.log('GenerateOrder', JSON.stringify(fullInfo?.id));
+        setLoading(true);
         const valueX = await AsyncStorage.getItem('@autoUserGroup');
         let data = JSON.parse(valueX)?.token;
         var formdata = new FormData();
@@ -252,14 +254,14 @@ const SubscriptionScreen = () => {
             description: 'Credits towards consultation',
             image: 'https://i.imgur.com/3g7nmJC.png',
             currency: 'INR',
-            key: 'rzp_live_HUhCqiMf9hdlMA', // Your api key
-            amount: (Number(info?.amount) * 100),
+            key: 'rzp_live_fwbY405uJRbixL', // Your api key rzp_test_ab2tkx2iprYBt8 | rzp_live_fwbY405uJRbixL
+            amount: (Number(1) * 100), // info?.amount
             order_id: razorpayOrderId,
-            name: 'foo',
+            name: UserData?.name,
             prefill: {
-                email: 'info@tutiorbot.com',
-                contact: '9999888877',
-                name: 'TutiorBot'
+                email: UserData?.email,
+                contact: UserData?.mobile,
+                name: UserData?.name
             },
             theme: { color: '#F37254' }
         }
@@ -269,6 +271,7 @@ const SubscriptionScreen = () => {
             console.log(`Success:`, JSON.stringify(data));
             PaymentSuccessFully(data, order_number)
         }).catch((error) => {
+            console.log(`Error: ${JSON.stringify(error)} | ${error.description}`);
             // handle failure
             setLoading(false)
             Toast.show({

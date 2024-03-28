@@ -1,2 +1,6 @@
 key_id,key_secret
 rzp_test_kCnUPLUinzJGTj,WN2My6OSHRTb82joB1QKyfis
+
+
+RAZORPAY_KEY=rzp_live_HUhCqiMf9hdlMA
+RAZORPAY_SECRET=PV2Cdatux4NC2NQsxvaLcj5G
