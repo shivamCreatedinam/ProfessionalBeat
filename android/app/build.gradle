@@ -101,8 +101,8 @@ android {
         applicationId "com.createdinam.professionbeat"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 28
-        versionName "Tuitour Bot: 1.1.28"
+        versionCode 29
+        versionName "Tuitour Bot: 1.1.29"
         vectorDrawables.useSupportLibrary = true
     }
 
